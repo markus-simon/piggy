@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #ffdddc;
+}
+#background {
+    background-image: url("../assets/images/dagobert.jpg");
+    opacity: 0.1;
+    top: 0;
+    left: 50%;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    background-position: 100% 5%;
+    background-size: cover;
+    z-index: 0;
+}
+.axis {
+    font-family: 'Butterfly Kids', cursive;
+    font-size: 30px;
+}
+.group {
+    float: left;
+}
+.active {
+    opacity: 0.5;
+}
