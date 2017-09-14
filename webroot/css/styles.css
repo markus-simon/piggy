@@ -16,8 +16,10 @@ body {
     z-index: 0;
 }
 .axis {
+    /*
     font-family: 'Butterfly Kids', cursive;
-    font-size: 30px;
+    */
+    font-size: 14px;
 }
 .group {
     float: left;

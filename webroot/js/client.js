@@ -1,20 +1,23 @@
 var eb = new vertx.EventBus(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/eventbus');
+
+var dataBars = [
+    { type: "1",   amount: 0},
+    { type: "2",   amount: 0},
+    { type: "5",   amount: 0},
+    { type: "10",  amount: 0},
+    { type: "20",  amount: 0},
+    { type: "50",  amount: 0},
+    { type: "100", amount: 0},
+    { type: "200", amount: 0}
+];
+
 eb.onopen = function() {
 
-    var dataBars = [
-        { type: "1",   amount: 0},
-        { type: "2",   amount: 0},
-        { type: "5",   amount: 0},
-        { type: "10",  amount: 0},
-        { type: "20",  amount: 0},
-        { type: "50",  amount: 0},
-        { type: "100", amount: 0},
-        { type: "200", amount: 0}
-    ];
-
-    render(dataBars);
-
     eb.registerHandler('saved', function() {
+        updateData();
+    });
+
+    var updateData = function() {
         var query = {
             "aggregate" : "piggy",
             "pipeline" :[
@@ -22,7 +25,8 @@ eb.onopen = function() {
                     "$group": {
                         "_id": "$amount",
                         "amount": { "$sum" : 1 },
-                        "type": { "$first": "$amount" }
+                        "type": { "$first": "$amount" },
+                        "message_created_at": { "$first": "$message_created_at" }
                     }
                 },{
                     "$sort" : {
@@ -32,14 +36,28 @@ eb.onopen = function() {
             ]
         };
         eb.send("runCommand", JSON.stringify(query), function (res, res_err) {
-            if (res.ok == 1) {
+            if (res.ok === 1) {
                 updateBars(res.result);
+                updatePie(res.result);
             } else {
                 alert('Something is fishy ... :-(');
             }
         });
-    });
+    };
 
+
+
+
+
+    // init
+    updateData();
+
+
+
+
+
+
+    // error handling
     window.onerror = function (errorMsg, url, lineNumber, column, errorObj) {
         console.log('jetzte, wa?!');
         if (errorMsg.indexOf('INVALID_STATE_ERR') > -1) {

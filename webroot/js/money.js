@@ -1,51 +1,54 @@
-var render = function(data) {
-    var margin = {top: 5, right: 5, bottom: 5, left: 0};
-    var width  = window.innerWidth / 2;
-    var height = window.innerHeight / 2;
+var margin = {top: 5, right: 5, bottom: 5, left: 0};
+var width  = window.innerWidth / 2;
+var height = window.innerHeight / 2;
+
+var color = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231"]);
+
+var radius   = Math.min(width, height) / 2;
+
+
 
 /*
-    var radius   = Math.min(width, height) / 2;
-
-    /!*    var dataPie = [
-            { goal:"Teddy",        done:75, todo:25  },
-            { goal:"Führerschein", done:0,  todo:100 }
-        ];*!/
-
-    var data2 = [75,25];
-
-
-
-    var pie = d3.pie()
-        .sort(null)
-        .value(function(d) { return d });
-
-    var path = d3.arc()
-        .outerRadius(radius - 10)
-        .innerRadius(-0);
-
-    var svg1 = d3.select("#group1")
-        .append("svg")
-        .attr("id", "svg1")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", "translate(" + radius + "," + radius + ")");
-
-    var arc = svg1.selectAll(".arc")
-        .data(pie(data2))
-        .enter().append("g")
-        .attr("class", "arc")
-        .style("fill", "steelblue");
-
-
-    arc.append("path")
-        .attr("d", path)
-        .attr("stroke-width", 1)
-        .attr("stroke", "#000");
-
-
-
+var amounts = dataBars.map(function(d) { return d.amount; });
 */
+
+
+var data = [300,25,88,12,56,19,99,112];
+
+
+
+
+var pie1 = d3.pie()
+    .value(function(d) { return d; })
+    .sort(null);
+
+var arc1 = d3.arc()
+    .innerRadius(radius - 100)
+    .outerRadius(radius - 20)
+    .cornerRadius(8);
+
+var svg1 = d3.select("#group1")
+    .append("svg")
+    .attr("id", "svg1")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g")
+    .attr("transform", "translate(" + radius + "," + radius + ")");
+
+var path1 = svg1.datum(data).selectAll("path")
+    .data(pie1)
+    .enter().append("path")
+    .attr("id", function(d, i) { return "path_" + i })
+    .attr("class", "pieces")
+    .attr("fill", function(d, i) { return color(i); })
+    .attr("stroke-width", 4)
+    .attr("stroke", "#ffdddc")
+    .attr("d", arc1)
+    .each(function(d) { this._current = d; });
+
+
+
+
 
 
 
@@ -57,8 +60,6 @@ var render = function(data) {
 
 
     // BARS #############################################
-
-    var dataBars = data;
 
     var types   = dataBars.map(function(d) { return d.type; });
     var amounts = dataBars.map(function(d) { return d.amount; });
@@ -102,50 +103,41 @@ var render = function(data) {
         .attr("x", -15)
         .attr("dy", "0.71em")
         .attr("fill", "#000")
-        .text("Amount");
+        .text("Menge");
+
 
     var bar = svg2.selectAll(".rect")
         .data(dataBars)
         .enter().append("g");
 
-
     bar.append("rect")
-        .style("fill", "steelblue")
         .attr("x", function(d) { return x(d.type) + 15; })
         .attr("width", 50)
         .attr("y", function(d) { return y(d.amount); })
-        .attr("height", function(d) { return height - 50 - y(d.amount); });
+        .attr("height", function(d) { return height - 50 - y(d.amount); })
+        .style("fill", function(d, i) { console.log(d);console.log(i);console.log(color(i));return color(i); });
 
 
 
 
 
-
-
-
-
-/*
-
-    var dataLine = [
-        { date: 0, amount: 0       },
-        { date: 1, amount: 1623.27 },
-        { date: 2, amount: 126     },
-        { date: 3, amount: 4587.55 }
-    ];
 
     var deta = [
-        {date: 0, amount: 0}
+        { message_created_at: new Date(2014, 0, 2), amount: 0       },
+        { message_created_at: new Date(2015, 0, 2), amount: 1623.27 },
+        { message_created_at: new Date(2016, 0, 2), amount: 1268     },
+        { message_created_at: new Date(2017, 0, 2), amount: 4587.55 },
+        { message_created_at: new Date(2018, 0, 2), amount: 7587.55 },
+        { message_created_at: new Date(2019, 0, 2), amount: 84587.55 },
+        { message_created_at: new Date(2020, 0, 2), amount: 9587.55 },
+        { message_created_at: new Date(2021, 0, 2), amount: 11587.55 },
+        { message_created_at: new Date(2022, 0, 2), amount: 14587.55 }
     ];
-    for (var i = 1; i < 10; i++) {
-        deta.push({
-            date: i,
-            amount: Math.random() * 10 + i
-        });
-    }
 
-    var xLine = d3.scaleLinear()
-        .domain(d3.extent(deta, function(d) { return d.date; }))
-        .range([40, width * 2 - 25]);
+
+    var xLine = d3.scaleTime()
+        .domain([new Date(2014, 0, 2), new Date(2022, 1, 1)])
+        .range([80, width * 2 - 50]);
 
     var yLine = d3.scaleLinear()
         .domain([d3.min(deta, function(d) { return d.amount; }), d3.max(deta, function(d) { return d.amount; })])
@@ -156,15 +148,8 @@ var render = function(data) {
     var yAxisLine = d3.axisLeft(yLine);
 
 
-
-
-
-
-
-
-
     var valueline = d3.line().curve(d3.curveMonotoneX)
-        .x(function(d) { return xLine(d.date); })
+        .x(function(d) { return xLine(d.message_created_at); })
         .y(function(d) { return yLine(d.amount); });
 
     var svg3 = d3.select('#group3')
@@ -187,7 +172,7 @@ var render = function(data) {
 
     svg3.append("g")
         .attr("class", "y axis")
-        .attr("transform", "translate(40, 0)")
+        .attr("transform", "translate(80, 0)")
         .call(yAxisLine)
         .append("text")
         .attr("transform", "rotate(-90)")
@@ -206,103 +191,8 @@ var render = function(data) {
         .attr("stroke-width", 1)
         .style("fill", "none");
 
-    svg3.append("rect")
-        .attr("id","scroller-container")
-        .attr("x", 40)
-        .attr("y", height - 30)
-        .attr("width", xLine(d3.max(deta, function(d) { return d.date; })) - 40)
-        .attr("height", 20)
-        .attr("stroke", "black")
-        .style("fill", "white");
 
-    var scroller = svg3.append("rect")
-        .attr("x", d3.select("#scroller-container").attr("x") + 4)
-        .attr("y", height - 26)
-        .attr("width", xLine(d3.max(deta, function(d) { return d.date; })) - 48)
-        .attr("height", 12)
-        .attr("stroke", "black")
-        .style("fill", "steelblue")
-        .call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
-
-    /!*
-        var scrollerStart = svg3.append("rect")
-            .attr("id", "scroller-start")
-            .attr("x", d3.select("#scroller-container").attr("x") + 4)
-            .attr("y", height - 26)
-            .attr("width", 10)
-            .attr("height", 12)
-            .attr("stroke", "black")
-            .style("fill", "black")
-            .call(d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended));
-
-        var scrollerEnd = svg3.append("rect")
-            .attr("id", "scroller-end")
-            .attr("x", xLine(d3.max(deta, function(d) { return d.date; })) - 16)
-            .attr("y", height - 26)
-            .attr("width", 10)
-            .attr("height", 12)
-            .attr("stroke", "black")
-            .style("fill", "black")
-            .call(d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended));
-    *!/
-
-    function dragstarted(d) {
-        d3.select(this).raise().classed("active", true);
-    }
-
-    function dragged(d) {
-        if (checkBoundary(this.id, d3.event.x)) {
-
-            d3.select(this)
-                .attr("x", d3.event.x);
-            if(this.id === "scroller-start") {
-                scroller.attr("x", d3.event.x);
-                scroller.attr("width", d3.select("#scroller-end").attr("x") - d3.event.x);
-
-            } else if(this.id === "scroller-end") {
-                scroller.attr("width", d3.event.x - d3.select("#scroller-start").attr("x"));
-            }
-
-            xLine.domain(d3.select("#scroller-start").attr("x"), d3.select("#scroller-end").attr("x") - d3.event.x);
-            svg3.transition().select(".x.axis")
-                .duration(750)
-                .call(xAxisLine);
-        }
-    }
-
-    function dragended(d) {
-        d3.select(this).classed("active", false);
-    }
-
-    function checkBoundary(id, x) {
-        /!*        if (id === "scroller-start") {
-                    if (x < 44 || x > d3.select("#scroller-end").attr("x")) {
-                        return false;
-                    }
-                }
-                if (id === "scroller-end") {
-                    if (x > 1084/!* || x < d3.select("#scroller-start").attr("x")*!/) {
-                        return false;
-                    }
-                }*!/
-        return true;
-    }*/
-};
-
-
-
-var updateBars = function(data) {
-
-    console.log(data);
+function updateBars(data) {
 
     var height = window.innerHeight / 2;
 
@@ -325,4 +215,26 @@ var updateBars = function(data) {
     chart.transition().select(".y.axis")
         .duration(750)
         .call(yAxis);
-};
+}
+
+
+function updatePie(data) {
+    var data = data.map(function(d) { return d.amount; });
+
+    svg1.datum(data).selectAll("path").data(pie1);
+    pie1.value(function(d) { return d; });
+    path1.data(pie1)
+        .transition()
+        .duration(750)
+        .attrTween("d", arcTween);
+
+}
+
+
+function arcTween(a) {
+    var i = d3.interpolate(this._current, a);
+    this._current = i(0);
+    return function(t) {
+        return arc1(i(t));
+    };
+}
