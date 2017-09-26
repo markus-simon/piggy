@@ -2,24 +2,24 @@ body {
     margin: 0;
     overflow: hidden;
     background-color: #ffdddc;
+    font-family: 'Quicksand', sans-serif;
+    /*font-family: 'Butterfly Kids', cursive;*/
 }
 #background {
-    background-image: url("../assets/images/dagobert.jpg");
-    opacity: 0.1;
+    background-image: url(../assets/images/dagobert.jpg);
+    opacity: 0.2;
     top: 0;
-    left: 50%;
+    left: 15%;
     bottom: 0;
-    right: 0;
+    right: 635px;
     position: absolute;
-    background-position: 100% 5%;
+    background-position: 32% 8%;
     background-size: cover;
     z-index: 0;
 }
 .axis {
-    /*
-    font-family: 'Butterfly Kids', cursive;
-    */
     font-size: 14px;
+    font-family: 'Quicksand', sans-serif;
 }
 .group {
     float: left;

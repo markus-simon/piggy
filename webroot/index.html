@@ -1,15 +1,14 @@
 <html>
     <head>
         <title>Piggy</title>
-        <link href="https://fonts.googleapis.com/css?family=Butterfly+Kids" rel="stylesheet">
+<!--    <link href="https://fonts.googleapis.com/css?family=Butterfly+Kids" rel="stylesheet"> -->
+        <link href="https://fonts.googleapis.com/css?family=Quicksand:400,700&amp;subset=latin-ext" rel="stylesheet">
         <link rel="stylesheet" href="/css/styles.css">
     </head>
     <body>
-    <defs>
-        <filter id="clippy" x="0" y="1" height="248" width="356">
-            <feColorMatrix type="identity"/>
-        </filter>
-    </defs>
+<!--
+        <div id="background"></div>
+-->
         <div>
             <div class="group" id="group1"></div>
             <div class="group" id="group2"></div>
@@ -18,10 +17,14 @@
         </div>
         <script type="text/javascript" src="js/external/sockjs.min.js"></script>
         <script type="text/javascript" src="js/external/vertxbus.js"></script>
-        <script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <script type="text/javascript" src="js/external/d3.v4.min.js"></script>
+        <script type="text/javascript" src="js/external/jquery-2.2.4.min.js"></script>
         <script type="text/javascript" src="js/client.js"></script>
-        <script type="text/javascript" src="js/money.js"></script>
+        <script type="text/javascript" src="js/svgFilter.js"></script>
+        <script type="text/javascript" src="js/setup.js"></script>
+        <script type="text/javascript" src="js/pie.js"></script>
+        <script type="text/javascript" src="js/bars.js"></script>
+        <script type="text/javascript" src="js/line.js"></script>
         <script type="text/javascript" src="js/external/crossfilter.min.js"></script>
     </body>
 </html>

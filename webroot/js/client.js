@@ -37,8 +37,9 @@ eb.onopen = function() {
         };
         eb.send("runCommand", JSON.stringify(query), function (res, res_err) {
             if (res.ok === 1) {
-                updateBars(res.result);
-                updatePie(res.result);
+                var result = res.result;
+                updateBars(result);
+                updatePie(result);
             } else {
                 alert('Something is fishy ... :-(');
             }
@@ -52,6 +53,14 @@ eb.onopen = function() {
     // init
     updateData();
 
+
+
+
+    // orientation change
+    window.addEventListener("resize", function() {
+        // poor mans resize charts
+        location.reload(true);
+    }, false);
 
 
 
