@@ -13,7 +13,8 @@ var dataBars = [
 
 eb.onopen = function() {
 
-    eb.registerHandler('saved', function() {
+    eb.registerHandler('saved', function(document) {
+        console.log(document);
         updateData();
     });
 
