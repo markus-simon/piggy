@@ -64,6 +64,7 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .data(pie1)
     .enter().append("path")
     .attr("id", function(d, i) { return "path_" + i })
+    .attr("class", "pie-parts")
     .attr("fill", function(d, i) { return color(i); })
     .attr("stroke-width", 4)
     .attr("stroke", "#ffdddc")
@@ -100,7 +101,14 @@ function updatePie(result) {
         totalSum += row.amount * row.type;
     });
 
-    sumTotalLabel.text(totalSum);
+    var calculatedTotalSum = totalSum / 100;
+    var value = calculatedTotalSum.toLocaleString('de-DE', {
+        minimumFractionDigits: 2,
+        style: 'currency',
+        currency: 'EUR'
+    });
+
+    sumTotalLabel.text(value);
 
     /*    line1.data(pie1)
             .transition()

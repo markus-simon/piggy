@@ -33,7 +33,7 @@ var yAxisLine = d3.axisLeft(yLine);*/
 
 var x = d3.scaleLinear()
     .domain([0, n - 1])
-    .range([0, width * 2 - 50]);
+    .range([0, width * 2 - 60]);
 var y = d3.scaleLinear()
     .domain([0, 1])
     .range([height - 75, 0]);
@@ -43,44 +43,35 @@ var line = d3.line().curve(d3.curveBasis)
     .x(function(d, i) { return x(i); })
     .y(function(d, i) { return y(d); });
 
-
-
 var svg3 = d3.select('#group3')
     .append("svg")
     .attr("id", "svg3")
-    .attr("width", width * 2)
-    .attr("height", height)
+    .attr("width", width * 2 - 100)
+    .attr("height", height - 100)
     .append("g")
-    .attr("transform", "translate(0,0)");
+    .attr("transform", "translate(0,-100)");
+
 svg3.append("g")
-        .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + y(0) + ")")
-        .call(d3.axisBottom(x));
-svg3.append("g")
-        .attr("class", "axis axis--y")
-        .attr("transform", "translate(50,0")
-        .call(d3.axisLeft(y));
-/*svg3.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + (height - 75) + ")")
-    .call(xAxisLine)
+    .attr("class", "axis axis--x")
+    .attr("transform", "translate(0," + (height - 100) + ")")
+    .call(d3.axisBottom(x))
     .append("text")
-    .attr("x", (width - margin.right - 50) * 2)
-    .attr("dy", "-5px")
+    .attr("x", (width - margin.right - 100) * 2)
+    .attr("dy", "-25px")
     .attr("fill", "black")
     .text("Datum");
 
 svg3.append("g")
-    .attr("class", "y axis")
-    .attr("transform", "translate(80, 0)")
-    .call(yAxisLine)
+    .attr("class", "axis axis--y")
+    .attr("transform", "translate(80, 99)")
+    .call(d3.axisLeft(y))
     .append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 6)
     .attr("x", -15)
     .attr("dy", "0.71em")
     .attr("fill", "#000")
-    .text("Menge");*/
+    .text("Menge");
 
 svg3.append("g").append("defs").append("clipPath")
     .attr("id", "clip")
@@ -94,7 +85,7 @@ svg3.append("g")
     .datum(deta)
     .attr("class", "line")
     .style("stroke","#000")
-    .style("stroke-width","1.5px")
+    .style("stroke-width","1px")
     .style("fill","none")
     .transition()
     .duration(500)
@@ -103,7 +94,6 @@ svg3.append("g")
 
 
 function tick() {
-    console.log(deta);
     // Push a new data point onto the back.
     deta.push(random());
     // Redraw the line.

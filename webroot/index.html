@@ -1,7 +1,6 @@
 <html>
     <head>
         <title>Piggy</title>
-<!--    <link href="https://fonts.googleapis.com/css?family=Butterfly+Kids" rel="stylesheet"> -->
         <link href="https://fonts.googleapis.com/css?family=Quicksand:400,700&amp;subset=latin-ext" rel="stylesheet">
         <link rel="stylesheet" href="/css/styles.css">
     </head>
@@ -13,8 +12,116 @@
             <div class="group" id="group1"></div>
             <div class="group" id="group2"></div>
             <div class="group" id="group3"></div>
-            <div class="group" id="group4"></div>
         </div>
+
+
+        <!-- ERM -->
+        <div id="erm">
+            <ul class="erm-ul">
+
+                <!-- ERM Collection-->
+                <li id="erm-list">
+                    <section>
+                        <div class="tbl-header">
+                            <table class="erm-collection" cellpadding="0" cellspacing="0" border="0">
+                                <thead>
+                                <tr>
+                                    <th>Created at</th>
+                                    <th>Name</th>
+                                    <th>Matcher</th>
+                                    <th>Show</th>
+                                    <th>Hue</th>
+                                    <th>Disable</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </li>
+
+                <!-- Add ERM -->
+                <li id="erm-add">
+                    <form id="erm-add-form">
+                        <ul>
+
+                            <!-- name -->
+                            <li class="input">
+                                <label for="erm-add-name">Name</label>
+                                <input id="erm-add-name" name="name" placeholder="Name" required/>
+                            </li>
+
+                            <!-- matcher -->
+                            <li class="input textarea">
+                                <label for="erm-add-matcher">Matcher</label>
+                                <textarea id="erm-add-matcher" cols="40" rows="6" name="matcher" placeholder="Mongo Syntax"></textarea>
+                            </li>
+
+                            <!-- show -->
+                            <li class="input">
+                                <input name="show" type="hidden" value="off" />
+                                <label for="erm-add-show">Show</label>
+                                <input id="erm-add-show" name="show" type="checkbox" unchecked/>
+                            </li>
+                            <li class="input show">
+                                <label for="erm-add-showurl">URL</label>
+                                <input id="erm-add-showurl" name="showurl" placeholder="http://localhost/random.mp4" required/>
+                            </li>
+                            <li class="input show">
+                                <label for="erm-add-showtts">TTS</label>
+                                <input id="erm-add-showtts" name="showtts" placeholder="Danke!" required/>
+                            </li>
+
+                            <!-- hue -->
+                            <li class="input">
+                                <input name="hue" type="hidden" value="off" />
+                                <label for="erm-add-hue">Hue</label>
+                                <input id="erm-add-hue" name="hue" type="checkbox" unchecked/>
+                            </li>
+                            <li class="input hue">
+                                <label for="erm-add-hueurl">URL</label>
+                                <input id="erm-add-hueurl" name="hueurl" placeholder="http://192.168.1.2" required/>
+                            </li>
+                            <li class="input hue">
+                                <label for="erm-add-huekey">Key</label>
+                                <input id="erm-add-huekey" name="huekey" placeholder="IKQDytcsdi4kunzk4GuTXUu8s34c8y3iKRCKLxVh" required/>
+
+                            </li>
+                            <li class="input hue">
+                                <label for="erm-add-hueconnect">Connect</label>
+                                <button id="erm-add-hueconnect" type="button">Test Connection</button>
+                            </li>
+                            <li class="input textarea hue">
+                                <label for="erm-add-huesetting">Setting</label>
+                                <textarea id="erm-add-huesetting" cols="40" rows="6" name="huesetting" placeholder="Json ..."></textarea>
+                            </li>
+
+                            <!-- save ERM -->
+                            <li class="input">
+                                <input id="erm-add-collection" type="hidden" name="collection" value="erm">
+                                <input id="erm-add-target-collection" type="hidden" name="target_collection" value="piggy">
+                                <label for="erm-add-send">Ready?</label>
+                                <button id="erm-add-send" type="button">Save ERM</button>
+                            </li>
+                        </ul>
+
+                        <div id="matcher-examples">
+                            <h4>Examples</h4>
+                            <pre>{ "amount": "200" }</pre>
+                            <pre>{ "amount": { "$gte": "50" } }</pre>
+                            <pre>{ "amount": { "$regex": "20", "$options": "i" } }</pre>
+                        </div>
+
+                    </form>
+                </li>
+            </ul>
+        </div>
+
+        <div id="show"><div id="show-content"></div></div>
+        <div id="notice"><div id="notice-content"></div></div>
+
+
         <script type="text/javascript" src="js/external/sockjs.min.js"></script>
         <script type="text/javascript" src="js/external/vertxbus.js"></script>
         <script type="text/javascript" src="js/external/d3.v4.min.js"></script>
