@@ -38,7 +38,6 @@ consumerSave.handler(function (message) {
 var consumerFind = eb.consumer('find');
 consumerFind.handler(function (message) {
     var document = message.body();
-    console.log(JSON.stringify(document));
     client.find(document.collection, document.matcher, function (res, res_err) {
         if (res_err == null) {
             message.reply(res);
@@ -70,10 +69,17 @@ consumerDelete.handler(function (message) {
 var consumerEdit = eb.consumer('edit');
 consumerEdit.handler(function (message) {
     var document = message.body();
-    document.updated_at = calculateDate();
-    client.replace(document.collection, {_id: document._id} , document, function (res, res_err) {
-        if (res_err == null) {
-            eb.publish('edited', document);
+    console.log(JSON.stringify(document));
+    if (!document.message_created_at) {
+        document.message_created_at = calculateDate();
+    }
+    // document.updated_at = calculateDate(); // TODO ...
+    client.replace(document.collection, {_id: document._id}, document, function (res, res_err) {
+        if (res_err === null) {
+            console.log(JSON.stringify(res));
+            document._id = res;
+            message.reply(res);
+            eb.publish('saved', document);
         } else {
             message.reply(res_err);
             res_err.printStackTrace();

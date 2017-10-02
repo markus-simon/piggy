@@ -12,6 +12,7 @@
             <div class="group" id="group1"></div>
             <div class="group" id="group2"></div>
             <div class="group" id="group3"></div>
+            <div class="group" id="group4"></div>
         </div>
 
 
@@ -86,9 +87,8 @@
                             <li class="input hue">
                                 <label for="erm-add-huekey">Key</label>
                                 <input id="erm-add-huekey" name="huekey" placeholder="IKQDytcsdi4kunzk4GuTXUu8s34c8y3iKRCKLxVh" required/>
-
                             </li>
-                            <li class="input hue">
+                            <li id="connect-li" class="input hue">
                                 <label for="erm-add-hueconnect">Connect</label>
                                 <button id="erm-add-hueconnect" type="button">Test Connection</button>
                             </li>
@@ -101,8 +101,10 @@
                             <li class="input">
                                 <input id="erm-add-collection" type="hidden" name="collection" value="erm">
                                 <input id="erm-add-target-collection" type="hidden" name="target_collection" value="piggy">
+                                <input id="erm-add-id" type="hidden" name="_id">
                                 <label for="erm-add-send">Ready?</label>
-                                <button id="erm-add-send" type="button">Save ERM</button>
+                                <button id="erm-add-update" type="button">Update</button>
+                                <button id="erm-add-send" type="button">Save</button>
                             </li>
                         </ul>
 
@@ -118,6 +120,52 @@
             </ul>
         </div>
 
+
+
+
+
+        <!-- Checkout -->
+        <div id="checkout">
+            <div id="pin">
+                <div class="numbers">
+                    <div class="number" id="display"></div>
+                    <div class="number field">1</div>
+                    <div class="number field">2</div>
+                    <div class="number field">3</div>
+                    <div class="number field">4</div>
+                    <div class="number field">5</div>
+                    <div class="number field">6</div>
+                    <div class="number field">7</div>
+                    <div class="number field">8</div>
+                    <div class="number field">9</div>
+                    <div class="number" id="withdraw">&darr;</div>
+                    <div class="number" id="point">.</div>
+                    <div class="number" id="place">&uarr;</div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- History -->
+        <div id="history">
+            <div class="tbl-header">
+                <table class="history-collection" cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                    <tr>
+                        <th>Created at</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+
         <div id="show"><div id="show-content"></div></div>
         <div id="notice"><div id="notice-content"></div></div>
 
@@ -126,12 +174,14 @@
         <script type="text/javascript" src="js/external/vertxbus.js"></script>
         <script type="text/javascript" src="js/external/d3.v4.min.js"></script>
         <script type="text/javascript" src="js/external/jquery-2.2.4.min.js"></script>
+        <script type="text/javascript" src="js/external/jqColorPicker.min.js"></script>
         <script type="text/javascript" src="js/client.js"></script>
         <script type="text/javascript" src="js/svgFilter.js"></script>
         <script type="text/javascript" src="js/setup.js"></script>
         <script type="text/javascript" src="js/pie.js"></script>
         <script type="text/javascript" src="js/bars.js"></script>
         <script type="text/javascript" src="js/line.js"></script>
+        <script type="text/javascript" src="js/sum.js"></script>
         <script type="text/javascript" src="js/external/crossfilter.min.js"></script>
     </body>
 </html>

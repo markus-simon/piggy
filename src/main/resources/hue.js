@@ -3,32 +3,49 @@ var eb = vertx.eventBus();
 var consumerHue = eb.consumer('hue');
 consumerHue.handler(function (message) {
 
-    var config     = message.body();
-    var hueurl     = config.hueurl;
-    var huekey     = config.huekey;
-    var huesetting = JSON.stringify(config.huesetting).replace(
-        new RegExp( "randomColor\\(+?.*\\)", 'gi' ),
-        function($0) {return eval($0)}
-    );
+    var config         = message.body();
+    var hueurl         = config.hueurl;
+    var huekey         = config.huekey;
+    var huepath        = config.huepath;
+    var huerequesttype = config.huerequesttype;
 
-    var payload = JSON.parse(huesetting);
-/*
-    console.log(payload);
-*/
-/*
-    payload.hue = parseInt(payload.hue);
-*/
+    console.log(JSON.stringify(config));
+
     var client = vertx.createHttpClient();
-    //  var request = client.put(80, hueurl, '/api/' + huekey + '/lights/1/state', function (response) {
-    var request = client.putAbs(hueurl + '/api/' + huekey + '/lights'/*/1/state'*/, function (response) {
-        response.bodyHandler(function (totalBuffer) {
-            console.log('Hue says: ' + totalBuffer.toString())
+
+    if (huerequesttype === 'get') {
+        var request = client.getAbs(hueurl + '/api/' + huekey + '/lights', function (response) {
+            response.bodyHandler(function (totalBuffer) {
+                console.log('Hue says: ' + totalBuffer.toString());
+                message.reply(totalBuffer.toString());
+            });
         });
-    });
-    request.setChunked(true);
-    request.write(payload);
-    request.end();
-    client.close();
+        request.end();
+        client.close();
+    } else if (huerequesttype === 'put') {
+        if (config.huesetting) {
+            var huesetting = JSON.stringify(config.huesetting).replace(
+                new RegExp( "randomColor\\(+?.*\\)", 'gi' ),
+                function($0) {return eval($0)}
+            );
+            var payload = JSON.parse(huesetting);
+        }
+
+        var request = client.putAbs(hueurl + '/api/' + huekey + huepath, function (response) {
+            response.bodyHandler(function (totalBuffer) {
+                console.log('Hue says: ' + totalBuffer.toString());
+                message.reply(totalBuffer.toString());
+            });
+        });
+
+        request.setChunked(true);
+        if (payload) {
+            request.write(payload);
+        }
+        request.end();
+        client.close();
+    }
+
 });
 
 

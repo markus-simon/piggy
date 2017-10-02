@@ -26,6 +26,7 @@ consumerErm.handler(function (message) {
 
                         // TODO toString is bad, on/off even worse
                         if (typeof result.hue !== 'undefined' && result.hue.toString() == 'on') { // 1x runter
+                            result.huerequesttype = 'put';
                             eb.publish('hue', result);
                         }
 

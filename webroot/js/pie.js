@@ -1,6 +1,7 @@
 var radius   = Math.min(width, height) / 2;
 
 var pie1 = d3.pie()
+   // .value(function(d) { return d; })
     .value(function(d) { return d; })
     .sort(null);
 
@@ -38,7 +39,7 @@ var pathData = lineGenerator([
     .attr("stroke-opacity", 0);*/
 
 var valueline1 = d3.line().curve(d3.curveCatmullRom)
-    .x(function(d) { console.log(d); return arc1.centroid(d)[0]; })
+    .x(function(d) { return arc1.centroid(d)[0]; })
     .y(function(d) { return arc1.centroid(d)[1]; });
 
 var path2 = svg1.datum(dataBars).append("g").attr("id","glabel").selectAll("path")
@@ -73,17 +74,6 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
 
 
 
-var sumTotalLabel = svg1.append("text")
-    .attr("id","total-sum-pie")
-    .attr("x",0)
-    .attr("y",0)
-    .style("font-size", "80px")
-    .style("text-anchor", "middle")
-    .style("alignment-baseline", "central");
-
-
-
-
 
 
 function updatePie(result) {
@@ -96,19 +86,7 @@ function updatePie(result) {
         .duration(750)
         .attrTween("d", arcTween);
 
-    var totalSum = 0;
-    result.forEach(function(row) {
-        totalSum += row.amount * row.type;
-    });
 
-    var calculatedTotalSum = totalSum / 100;
-    var value = calculatedTotalSum.toLocaleString('de-DE', {
-        minimumFractionDigits: 2,
-        style: 'currency',
-        currency: 'EUR'
-    });
-
-    sumTotalLabel.text(value);
 
     /*    line1.data(pie1)
             .transition()
