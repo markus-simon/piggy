@@ -11,13 +11,10 @@ var dataBars = [
     { type: "200", amount: 0}
 ];
 
+console.log('dataBars');
+console.log(dataBars);
+
 eb.onopen = function() {
-
-
-
-
-
-
 
     eb.registerHandler('saved', function (document) {
         updateData();
@@ -120,14 +117,14 @@ eb.onopen = function() {
                 var result = res.result;
                 updateBars(result);
                 updatePie(result);
-//                updateLine(result);
+                updateLine(result);
                 updateSum(result);  // wirklich 4x übergeben!? ne ...
+
             } else {
                 alert('Something is fishy ... :-(');
             }
         });
     };
-
 
     // init
     updateData();

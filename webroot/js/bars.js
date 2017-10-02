@@ -120,7 +120,18 @@ bar.append("rect")
 
 function updateBars(data) {
 
+
+    var realTypes = data.map(function(d) { return d.type; });
     var height = window.innerHeight / 2;
+
+
+    var x = d3.scalePoint()
+        .domain(realTypes)
+        .range([40, width - 40]).padding(0.9);
+
+    var xAxis = d3.axisBottom(x);
+
+
 
     var y = d3.scaleLinear()
         .domain([0, d3.max(data, function(d) { return d.amount })])
@@ -135,8 +146,13 @@ function updateBars(data) {
         .data(data)
         .transition()
         .duration(750)
+        .attr("x", function(d) { console.log(d); return x(d.type) + 12.5 })
         .attr("y", function(d) { return y(d.amount); })
         .attr("height", function(d) { return height - y(d.amount) -50; });
+
+    chart.transition().select(".x.axis")
+        .duration(750)
+        .call(xAxis);
 
     chart.transition().select(".y.axis")
         .duration(750)

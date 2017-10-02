@@ -108,3 +108,7 @@ function tick() {
     // Pop the old data point off the front.
     deta.shift();
 }
+
+function updateLine(data) {
+
+}
