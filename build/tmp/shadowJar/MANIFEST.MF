@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Main-Verticle: js:main.js
-Main-Class: io.vertx.core.Starter
-
