@@ -15,12 +15,11 @@ consumerSave.handler(function (message) {
     if (!document.message_created_at) {
         document.message_created_at = calculateDate();
     }
-
     // TODO this is, how dates (like message_created_at) in mongo should be used ...
     //document.date = {'$date': '1937-09-21T00:00:00+00:00'};
 
     client.save(document.collection, document, function (res, res_err) {
-        if (res_err == null) {
+        if (res_err === null) {
             document._id = res;
             message.reply(res);
             eb.publish('saved', document);
@@ -37,7 +36,7 @@ var consumerFind = eb.consumer('find');
 consumerFind.handler(function (message) {
     var document = message.body();
     client.find(document.collection, document.matcher, function (res, res_err) {
-        if (res_err == null) {
+        if (res_err === null) {
             message.reply(res);
         } else {
             message.reply(res_err);
@@ -52,7 +51,7 @@ var consumerDelete = eb.consumer('delete');
 consumerDelete.handler(function (message) {
     var document = message.body();
     client.remove(document.collection, document.matcher, function (res, res_err) {
-        if (res_err == null) {
+        if (res_err === null) {
             eb.publish('deleted', document);
         } else {
             message.reply(res_err);
@@ -62,7 +61,6 @@ consumerDelete.handler(function (message) {
 });
 
 
-// TODO untested ... but should work
 // another handler to edit messages
 var consumerEdit = eb.consumer('edit');
 consumerEdit.handler(function (message) {

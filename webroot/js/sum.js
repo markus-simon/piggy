@@ -1,14 +1,15 @@
 var svg4 = d3.select('#group4')
     .append("svg")
     .attr("id", "svg4")
-    .attr("width", width)
-    .attr("height", height)
+    .attr("width", ((width * 2) - 300))
+    .attr("height", 100)
     .append("g")
-    .attr("transform", "translate(120," + (height / 2) + ")");
+    .attr("transform", "translate(0," + (($("#header")[0].clientHeight)/2) + ")");
 
 var sumTotalLabel = svg4.append("text")
     .attr("id","total-sum-pie")
-    .style("font-size", "80px");
+    .attr("alignment-baseline", "central")
+    .style("font-size", "7vh");
 
 function updateSum(result) {
     var sumTotal = 0;
@@ -25,6 +26,6 @@ function updateSum(result) {
         currency: 'EUR'
     });
 
-    sumTotalLabel.text(sumValue);
-    sumTotalLabel.style("fill", axisColor);
+    sumTotalLabel.text(sumValue); // axisColor
+    sumTotalLabel.style("fill", '#fff');
 }

@@ -312,10 +312,10 @@ eb.onopen = function() {
             "<td>" + value.message_created_at + "</td>" +
             "<td>" + value.name + "</td>" +
             "<td>" + value.matcher + "</td>" +
-            "<td>" + value.show + "</td>" +
-            "<td>" + value.hue + "</td>" +
-            "<td id='disable-erm-" + value._id + "'>&empty;</td>" +
-            "<td id='delete-erm-" + value._id + "'>X</td>" +
+            "<td><span class='" + value.show + "'>" + value.show + "</span></td>" +
+            "<td><span class='" + value.hue + "'>" + value.hue + "</span></td>" +
+            "<td id='disable-erm-" + value._id + "'><span class='btn'>&empty;</span></td>" +
+            "<td id='delete-erm-" + value._id + "'><span class='btn'>X</span></td>" +
             "</tr>"
         );
         $('#disable-erm-' + value._id).click(function () {
@@ -418,7 +418,8 @@ eb.onopen = function() {
 
 
         eb.send(action, erm, function (reply) {
-            if (reply === 'ok') {
+            console.log(action);
+            if (reply) {
                 $('#erm-add-form')[0].reset();
                 $('.show, .hue').hide();
                 $('.invalid-input').removeClass('invalid-input');

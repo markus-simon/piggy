@@ -2,7 +2,7 @@
 
 var margin = {top: 5, right: 5, bottom: 5, left: 0};
 var width  = window.innerWidth / 2;
-var height = window.innerHeight / 2;
+var height = (window.innerHeight / 2) - 80;
 
 var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231","#ff55d2"]);
 var lineColor       = "#000";
