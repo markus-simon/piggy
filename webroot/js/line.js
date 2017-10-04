@@ -17,7 +17,7 @@
 
 n = 40;
 //var random = d3.randomNormal(0, .2);
-var random = d3.randomUniform(1, 1);
+var random = d3.randomUniform(0, 0);
 var deta = d3.range(n).map(random);
 
 var duration = 500;
@@ -26,8 +26,6 @@ var now = new Date(Date.now() - duration);
 var x = d3.scaleLinear()
     .domain([0, n - 1])
     .range([0, width + 20]);
-
-
 
 var xAxis = d3.scaleTime()
     .domain([now - (n - 2) * duration, now - duration])
@@ -81,7 +79,7 @@ svg3.append("g").append("defs").append("clipPath")
 svg3.append("g")
     .attr("id", "clippath")
     .attr("clip-path", "url(#clip)")
-    .attr("transform", "translate(0,49)")
+    .attr("transform", "translate(0,46)")
     .style("stroke", lineColor)
     .append("path")
     .datum(deta)
@@ -95,20 +93,15 @@ svg3.append("g")
 
 var sumTotal = 0;
 function tick() {
-    // Push a new data point onto the back.
     deta.push(sumTotal/100);
-    console.log(deta[deta.length - 1]);
-    // Redraw the line.
     d3.select(this)
         .attr("d", line)
         .attr("transform", null);
-    // Slide it to the left.
     d3.active(this)
         .attr("transform", "translate(" + x(-1) + ",0)")
         .transition()
         .duration(500)
         .on("start", tick);
-    // Pop the old data point off the front.
     deta.shift();
 }
 
