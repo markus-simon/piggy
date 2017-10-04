@@ -54,6 +54,16 @@ body {
 
 
 
+/* Config ############################################# */
+#config {
+    display: none;
+    position: absolute;
+    background-color: #ffdddc;
+    z-index: 1003;
+    min-height: 100%;
+    width: 100%;
+}
+
 
 
 /* Checkout ############################################# */
@@ -349,15 +359,6 @@ table.erm-collection tbody tr:hover td {
     -moz-box-shadow: inset 0 0 40px #fff;
     -webkit-box-shadow: inset 0 0 40px #fff;
     box-shadow: inset 0 0 40px #fff;
-}
-
-#total-sum-pie {
-    paint-order: stroke;
-    stroke: #fff;
-    stroke-width: 21px;
-    stroke-linecap: butt;
-    stroke-linejoin: miter;
-    font-weight: 800;
 }
 
 

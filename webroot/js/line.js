@@ -16,75 +16,76 @@
 ];*/
 
 n = 40;
-random = d3.randomNormal(0, .2);
-deta = d3.range(n).map(random);
+//var random = d3.randomNormal(0, .2);
+var random = d3.randomUniform(1, 1);
+var deta = d3.range(n).map(random);
 
-
-/*var xAxisLine = d3.scaleTime()
-    .domain([new Date(2014, 0, 2), new Date(2022, 1, 1)])
-    .range([80, width * 2 - 50]);
-
-var yAxisLine = d3.scaleLinear()
-    .domain([d3.min(deta, function(d) { return d.amount; }), d3.max(deta, function(d) { return d.amount; })])
-    .range([height - 75, 25]);*/
-
-/*var xAxisLine = d3.axisBottom(xLine);
-var yAxisLine = d3.axisLeft(yLine);*/
+var duration = 500;
+var now = new Date(Date.now() - duration);
 
 var x = d3.scaleLinear()
     .domain([0, n - 1])
-    .range([0, width]);
-var y = d3.scaleLinear()
-    .domain([0, 1])
-    .range([height - 75, 0]);
+    .range([0, width + 20]);
 
+
+
+var xAxis = d3.scaleTime()
+    .domain([now - (n - 2) * duration, now - duration])
+    .range([0, width]);
+
+var y = d3.scaleLinear()
+    .domain([0, 0])
+    .range([height, 0]);
 
 var line = d3.line().curve(d3.curveBasis)
     .x(function(d, i) { return x(i); })
-    .y(function(d, i) { return y(d); });
+    .y(function(d) { return y(d); });
 
 var svg3 = d3.select('#group3')
     .append("svg")
     .attr("id", "svg3")
     .attr("width", width)
-    .attr("height", height - 100)
+    .attr("height", height)
     .append("g")
-    .attr("transform", "translate(0,-100)");
+    .attr("transform", "translate(0,0)");
 
-svg3.append("g")
+var axisX = svg3.append("g")
     .attr("class", "axis axis--x")
-    .attr("transform", "translate(0," + (height - 100) + ")")
-    .call(d3.axisBottom(x))
-    .append("text")
+    .attr("transform", "translate(50," + (height - 30) + ")")
+    .call(d3.axisBottom(xAxis));
+
+axisX.append("text")
     .attr("x", (width - margin.right))
     .attr("dy", "-25px")
-    .attr("fill", "black")
     .text("Datum");
 
-svg3.append("g")
+var axisY = svg3.append("g")
     .attr("class", "axis axis--y")
-    .attr("transform", "translate(80, 99)")
-    .call(d3.axisLeft(y))
-    .append("text")
+    .attr("transform", "translate(50, 45)")
+    .call(d3.axisLeft(y));
+
+axisY.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 6)
     .attr("x", -15)
     .attr("dy", "0.71em")
-    .attr("fill", "#000")
     .text("Menge");
 
 svg3.append("g").append("defs").append("clipPath")
     .attr("id", "clip")
     .append("rect")
+    .attr("transform", "translate(50,0)")
     .attr("width", width)
-    .attr("height", height);
+    .attr("height", height + 50);
 
 svg3.append("g")
+    .attr("id", "clippath")
     .attr("clip-path", "url(#clip)")
+    .attr("transform", "translate(0,49)")
+    .style("stroke", lineColor)
     .append("path")
     .datum(deta)
     .attr("class", "line")
-    .style("stroke","#000")
     .style("stroke-width","1px")
     .style("fill","none")
     .transition()
@@ -92,10 +93,11 @@ svg3.append("g")
     .ease(d3.easeLinear)
     .on("start", tick);
 
-
+var sumTotal = 0;
 function tick() {
     // Push a new data point onto the back.
-    deta.push(random());
+    deta.push(sumTotal/100);
+    console.log(deta[deta.length - 1]);
     // Redraw the line.
     d3.select(this)
         .attr("d", line)
@@ -104,11 +106,32 @@ function tick() {
     d3.active(this)
         .attr("transform", "translate(" + x(-1) + ",0)")
         .transition()
+        .duration(500)
         .on("start", tick);
     // Pop the old data point off the front.
     deta.shift();
 }
 
-function updateLine(data) {
+function updateLine(result) {
+    sumTotal = 0;
+    // TODO sumTotal weiter nach "vorne" verschieben ...
+    result.forEach(function(row) {
+        sumTotal += row.sumTotal;
+    });
 
+    y = d3.scaleLinear()
+        .domain([0, sumTotal / 100])
+        .range([height - 75, 0]);
+
+    //random = d3.randomNormal(0, sumTotal/400 );
+    random = d3.randomUniform(1, sumTotal/100);
+
+    axisY.transition()
+        .duration(500)
+        .call(d3.axisLeft(y));
+
+    d3.select('#clippath').style("stroke",lineColor);
+    svg3.selectAll('.domain').transition().duration(500).style('stroke', axisColor);
+    svg3.selectAll('line').transition().duration(500).style('stroke', axisColor);
+    svg3.selectAll('text').transition().duration(500).style('fill', axisColor);
 }

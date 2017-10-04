@@ -164,17 +164,34 @@
         </div>
 
 
-
+        <!-- Config -->
+        <div id="config">
+            <form id="config-save-form">
+                <ul>
+                    <li id="theme-li" class="input">
+                        <label for="config-themes">GeckoType</label>
+                        <select id="config-themes" name="theme"></select>
+                    </li>
+                    <li class="input">
+                        <input id="config-save-collection" type="hidden" name="collection" value="config">
+                        <input id="config-save-id" type="hidden" name="_id">
+                        <label for="config-save">Ready?</label>
+                        <button id="config-save" type="button">Save</button>
+                    </li>
+                </ul>
+            </form>
+        </div>
 
         <div id="show"><div id="show-content"></div></div>
         <div id="notice"><div id="notice-content"></div></div>
-
 
         <script type="text/javascript" src="js/external/sockjs.min.js"></script>
         <script type="text/javascript" src="js/external/vertxbus.js"></script>
         <script type="text/javascript" src="js/external/d3.v4.min.js"></script>
         <script type="text/javascript" src="js/external/jquery-2.2.4.min.js"></script>
         <script type="text/javascript" src="js/external/jqColorPicker.min.js"></script>
+        <script type="text/javascript" src="js/problem.js"></script>
+        <script type="text/javascript" src="js/helper.js"></script>
         <script type="text/javascript" src="js/client.js"></script>
         <script type="text/javascript" src="js/svgFilter.js"></script>
         <script type="text/javascript" src="js/setup.js"></script>

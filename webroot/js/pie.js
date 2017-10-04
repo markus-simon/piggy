@@ -1,13 +1,12 @@
 var radius   = Math.min(width, height) / 2;
 
 var pie1 = d3.pie()
-   // .value(function(d) { return d; })
     .value(function(d) { return d; })
     .sort(null);
 
 var arc1 = d3.arc()
     .innerRadius(radius - 100)
-    .outerRadius(radius - 20)
+    .outerRadius(radius - 10)
     .cornerRadius(8);
 
 var svg1 = d3.select("#group1")
@@ -54,6 +53,7 @@ var path2 = svg1.datum(dataBars).append("g").attr("id","glabel").selectAll("path
     .duration(750)
     .ease(d3.easeSin)
     .style("stroke-opacity", 1)
+
     .attrTween("stroke-dasharray", function() {
         var len = this.getTotalLength();
         return function(t) { return (d3.interpolateString("0," + len, len + ",0"))(t) };
@@ -61,14 +61,31 @@ var path2 = svg1.datum(dataBars).append("g").attr("id","glabel").selectAll("path
 
 
 
+
+var arc2 = d3.arc()
+    .innerRadius(radius - 100)
+    .outerRadius(radius - 20)
+    .cornerRadius(0);
+
 var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .data(pie1)
     .enter().append("path")
     .attr("id", function(d, i) { return "path_" + i })
     .attr("class", "pie-parts")
+/*    .on("mouseover", function() {
+        d3.select(this).transition()
+            .duration(750)
+            .attr("d", arc2);
+    })
+    .on("mouseout", function() {
+        d3.select(this).transition()
+            .duration(750)
+            .attr("d", arc1);
+    })*/
+
     .attr("fill", function(d, i) { return color(i); })
     .attr("stroke-width", 4)
-    .attr("stroke", "#ffdddc")
+    .attr("stroke", backgroundColor)
     .attr("d", arc1)
     .each(function(d) { this._current = d; });
 
@@ -77,16 +94,30 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
 
 
 function updatePie(result) {
-    var data = result.map(function(d) { return d.amount; });
+
+    var newData = [];
+    result.forEach(function(row) {
+        if (row.type !== 'virtual') {
+            newData.push(row);
+        }
+    });
+
+    var data = newData.map(function(d) { return d.sum; });
 
     svg1.datum(data).select("#gpie").selectAll("path").data(pie1);
     pie1.value(function(d) { return d; });
+
     path1.data(pie1)
         .transition()
         .duration(750)
+        .style("fill", function(d, i) { return color(i); })
+        .style('stroke', backgroundColor)
+
+/*    .on("mouseout", function() {
+        arc1.innerRadius(radius - 100)
+            .outerRadius(radius - 20);
+    })*/
         .attrTween("d", arcTween);
-
-
 
     /*    line1.data(pie1)
             .transition()
