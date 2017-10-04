@@ -8,7 +8,7 @@ var x = d3.scalePoint()
 
 var y = d3.scaleLinear()
     .domain([0, d3.max(sum, function(d) { return d; })])
-    .range([height - 50, 25]);
+    .range([height - 25, 25]);
 
 var xAxis = d3.axisBottom(x);
 var yAxis = d3.axisLeft(y);
@@ -21,47 +21,20 @@ var svg2 = d3.select('#group2')
     .append("g")
     .attr("transform", "translate(0,0)");
 
-
-var defs = d3.select("#svg2").append("defs");
-
-
-
-var filter = defs.append("filter")
-    .attr("id", "glow");
-
-filter.append("feGaussianBlur")
-    .attr("in", "SourceAlpha")
-    .attr("stdDeviation", 2.5)
-    .attr("result", "coloredBlur");
-filter.append("feOffset")
-    .attr("in", "coloredBlur")
-    .attr("dx", 2)
-    .attr("dy", 2)
-    .attr("result", "offsetBlur");
-
-var feMerge = filter.append("feMerge");
-
-feMerge.append("feMergeNode")
-    .attr("in", "coloredBlur");
-feMerge.append("feMergeNode")
-    .attr("in", "SourceGraphic");
-
-
 var bar = svg2.selectAll(".rect")
     .data(dataBars)
     .enter().append("g");
 
 bar.append("rect")
-    .attr("x", function(d) { return x(d.amount) + 15; })
-    .attr("width", 50)
+    .attr("x", function(d) { return x(d.amount) - barWidth / 2; })
+    .attr("width", barWidth)
     .attr("y", function(d) { return y(d.sum); })
-    .attr("height", function(d) { return height - 50 - y(d.amount); })
-    .attr("filter", "url(#glow)")
+    .attr("height", function(d) { return height - 25 - y(d.amount); })
     .style("fill", function(d, i) { return color(i); });
 
 svg2.append("g")
     .attr("class", "x axis")
-    .attr("transform", "translate(40," + (height - 50) + ")")
+    .attr("transform", "translate(0," + (height - 25) + ")")
     .call(xAxis)
     .append("text")
     .attr("x", width - margin.right - 80)
@@ -72,7 +45,7 @@ svg2.append("g")
 
 svg2.append("g")
     .attr("class", "y axis")
-    .attr("transform", "translate(80, 0)")
+    .attr("transform", "translate(40, 0)")
     .call(yAxis)
     .append("text")
     .attr("transform", "rotate(-90)")
@@ -94,8 +67,6 @@ function updateBars(result) {
     });
 
     var realTypes = newData.map(function(d) { return d.amount; });
-    var height = window.innerHeight / 2;
-
 
     var x = d3.scalePoint()
         .domain(realTypes)
@@ -105,7 +76,7 @@ function updateBars(result) {
 
     var y = d3.scaleLinear()
         .domain([0, d3.max(newData, function(d) { return d.sum })])
-        .range([height - 50, 25]);
+        .range([height - 25, 25]);
 
 
     var yAxis = d3.axisLeft(y);
@@ -115,21 +86,21 @@ function updateBars(result) {
     chart.selectAll("rect")
         .data(newData)
         .transition()
-        .duration(750)
-        .attr("x", function(d) { return x(d.amount) + 15; })
+        .duration(500)
+        .attr("x", function(d) { return x(d.amount) - barWidth / 2; })
         .attr("y", function(d) { return y(d.sum); })
-        .attr("height", function(d) { return height - y(d.sum) -50; })
+        .attr("height", function(d) { return height - y(d.sum) - 25; })
         .style("fill", function(d, i) { return color(i); });
 
     chart.transition().select(".x.axis")
-        .duration(750)
+        .duration(500)
         .call(xAxis);
 
     chart.transition().select(".y.axis")
-        .duration(750)
+        .duration(500)
         .call(yAxis);
 
-    chart.selectAll('.domain').transition().duration(750).style('stroke', axisColor);
-    chart.selectAll('line').transition().duration(750).style('stroke', axisColor);
-    chart.selectAll('text').transition().duration(750).style('fill', axisColor);
+    chart.selectAll('.domain').transition().duration(500).style('stroke', axisColor);
+    chart.selectAll('line').transition().duration(500).style('stroke', axisColor);
+    chart.selectAll('text').transition().duration(500).style('fill', axisColor);
 }

@@ -13,6 +13,9 @@ var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5
 var lineColor       = "#000";
 var axisColor       = "000";
 
+
+var barWidth = 50;
+
 var locale = {
     "decimal": ",",
     "thousands": ".",

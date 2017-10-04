@@ -1,22 +1,4 @@
-
-
-
-
-
-/*var deta = [
-    { message_created_at: new Date(2014, 0, 2), amount: 0       },
-    { message_created_at: new Date(2015, 0, 2), amount: 1623.27 },
-    { message_created_at: new Date(2016, 0, 2), amount: 1268     },
-    { message_created_at: new Date(2017, 0, 2), amount: 4587.55 },
-    { message_created_at: new Date(2018, 0, 2), amount: 7587.55 },
-    { message_created_at: new Date(2019, 0, 2), amount: 84587.55 },
-    { message_created_at: new Date(2020, 0, 2), amount: 9587.55 },
-    { message_created_at: new Date(2021, 0, 2), amount: 11587.55 },
-    { message_created_at: new Date(2022, 0, 2), amount: 14587.55 }
-];*/
-
-n = 40;
-//var random = d3.randomNormal(0, .2);
+var n = 40;
 var random = d3.randomUniform(0, 0);
 var deta = d3.range(n).map(random);
 
@@ -25,15 +7,15 @@ var now = new Date(Date.now() - duration);
 
 var x = d3.scaleLinear()
     .domain([0, n - 1])
-    .range([0, width + 20]);
+    .range([0, width * 2 - 25]);
 
 var xAxis = d3.scaleTime()
     .domain([now - (n - 2) * duration, now - duration])
-    .range([0, width]);
+    .range([0, width * 2 - 25]);
 
 var y = d3.scaleLinear()
     .domain([0, 0])
-    .range([height, 0]);
+    .range([height, 25]);
 
 var line = d3.line().curve(d3.curveBasis)
     .x(function(d, i) { return x(i); })
@@ -42,24 +24,24 @@ var line = d3.line().curve(d3.curveBasis)
 var svg3 = d3.select('#group3')
     .append("svg")
     .attr("id", "svg3")
-    .attr("width", width)
+    .attr("width", width * 2 - 25)
     .attr("height", height)
     .append("g")
     .attr("transform", "translate(0,0)");
 
 var axisX = svg3.append("g")
     .attr("class", "axis axis--x")
-    .attr("transform", "translate(50," + (height - 30) + ")")
+    .attr("transform", "translate(25," + (height - 25) + ")")
     .call(d3.axisBottom(xAxis));
 
 axisX.append("text")
-    .attr("x", (width - margin.right))
+    .attr("x", (width * 2))
     .attr("dy", "-25px")
     .text("Datum");
 
 var axisY = svg3.append("g")
     .attr("class", "axis axis--y")
-    .attr("transform", "translate(50, 45)")
+    .attr("transform", "translate(25, 0)")
     .call(d3.axisLeft(y));
 
 axisY.append("text")
@@ -72,14 +54,13 @@ axisY.append("text")
 svg3.append("g").append("defs").append("clipPath")
     .attr("id", "clip")
     .append("rect")
-    .attr("transform", "translate(50,0)")
-    .attr("width", width)
-    .attr("height", height + 50);
+    .attr("transform", "translate(25,0)")
+    .attr("width", width * 2 - 25)
+    .attr("height", height - 25);
 
 svg3.append("g")
     .attr("id", "clippath")
     .attr("clip-path", "url(#clip)")
-    .attr("transform", "translate(0,46)")
     .style("stroke", lineColor)
     .append("path")
     .datum(deta)
@@ -114,9 +95,8 @@ function updateLine(result) {
 
     y = d3.scaleLinear()
         .domain([0, sumTotal / 100])
-        .range([height - 75, 0]);
+        .range([height - 25, 25]);
 
-    //random = d3.randomNormal(0, sumTotal/400 );
     random = d3.randomUniform(1, sumTotal/100);
 
     axisY.transition()
