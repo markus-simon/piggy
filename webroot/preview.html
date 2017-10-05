@@ -12,22 +12,35 @@
     }
 
 </style>
-<svg width="960" height="500">
 
-</svg>
+<div id="group3"></div>
+
 <script src="//d3js.org/d3.v4.min.js"></script>
 <script>
+
+
+    var width  = window.innerWidth / 2;
+    var height = (window.innerHeight / 2) - 60;
+    var lineColor       = "#000";
+
+
+
 
     var n = 40;
     var duration = 1000;
     var now = new Date(Date.now() - duration);
+    var random = d3.randomUniform(0, 0);
+    var deta = d3.range(n).map(random);
 
 
 
-
-    var svg = d3.select("svg"),
-        width = +svg.attr("width"),
-        height = +svg.attr("height");
+    var svg3 = d3.select('#group3')
+        .append("svg")
+        .attr("id", "svg3")
+        .attr("width", width * 2 - 25)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(0,0)");
 
     var zoom = d3.zoom()
         .scaleExtent([1, 40])
@@ -43,11 +56,11 @@
         .tickSize(height)
         .tickPadding(8 - height);
 
-    var gX = svg.append("g")
+    var gX = svg3.append("g")
         .attr("class", "axis axis--x")
         .call(xAxis);
 
-    svg.call(zoom);
+    svg3.call(zoom);
 
     function zoomed() {
         gX.call(xAxis.scale(d3.event.transform.rescaleX(x)));
@@ -55,7 +68,56 @@
 
 
 
+    svg3.append("g").append("defs").append("clipPath")
+        .attr("id", "clip")
+        .append("rect")
+        .attr("transform", "translate(25,0)")
+        .attr("width", width * 2 - 25)
+        .attr("height", height - 25);
+
+    svg3.append("g")
+        .attr("id", "clippath")
+        .attr("clip-path", "url(#clip)")
+        .style("stroke", lineColor)
+        .append("path")
+        .datum(deta)
+        .attr("class", "line")
+        .style("stroke-width","1px")
+        .style("fill","none")
+        .transition()
+        .duration(1000)
+        .ease(d3.easeLinear)
+        .on("start", tick);
+
+    var y = d3.scaleLinear()
+        .domain([0, 0])
+        .range([height, 25]);
 
 
+    var line = d3.line().curve(d3.curveBasis)
+        .x(function(d, i) { return x(i); })
+        .y(function(d) { return y(d); });
+
+    var sumTotal = 0;
+    function tick() {
+/*        deta.push(sumTotal/100);
+        d3.select(this)
+            .attr("d", line)
+            .attr("transform", null);
+
+        now = new Date(Date.now() - duration);
+        x.domain([now - (n - 2) * duration, now - duration]);
+        axisX.transition()
+            .duration(1000)
+            .ease(d3.easeLinear)
+            .call(d3.axisBottom(xAxis));
+
+        d3.active(this)
+            .attr("transform", "translate(" + x(-1) + ",0)")
+            .transition()
+            .duration(1000)
+            .on("start", tick);
+        deta.shift();*/
+    }
 
 </script>
