@@ -598,6 +598,11 @@ body table.table td span.off:after {
 body table.table td span.btn {
 
 }
+
+#header {
+    position: relative;
+    z-index: 9;
+}
 #header > div {
     float: right;
 }
@@ -605,21 +610,17 @@ body table.table td span.btn {
     padding-left: 10px;
     color: #fff;
     font-size: 7vh;
-    float: left;
-}
+    float: left; }
 
 #history {
-    padding: 20px;
-}
+    padding: 20px; }
 
 form label {
-    float: none!important;
-}
+    float: none!important; }
 
 .theme-preview-container {
     margin-left: 70px;
-    margin-top: 10px;
-}
+    margin-top: 10px; }
 
 .theme-preview,
 .theme-preview-line,
@@ -629,5 +630,76 @@ form label {
     height: 20px;
     width: 20px;
     border: 1px solid #000;
-    margin-right: 10px;
-}
+    margin-right: 10px; }
+
+#menu {
+    background: #CB3577;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    padding-right: 50px;
+    padding-top: 100px; }
+
+#header.open + #menu {
+    display: block; }
+
+#menu li {
+    list-style: none; }
+
+#menu li a {
+    text-decoration: none;
+    color: #fff; }
+
+/* Menu */
+#nav-icon3 {
+    width: 60px;
+    height: 45px;
+    position: relative;
+    margin: 50px auto;
+    transform: rotate(0deg);
+    transition: .5s ease-in-out;
+    cursor: pointer; }
+
+#nav-icon3 {
+    position: absolute;
+    left: 26px;
+    top: -25px; }
+
+#nav-icon3 span {
+    display: block;
+    position: absolute;
+    height: 5px;
+    width: 100%;
+    background: #fff;
+    border-radius: 9px;
+    opacity: 1;
+    left: 0;
+    transform: rotate(0deg);
+    transition: .25s ease-in-out; }
+
+#nav-icon3 span:nth-child(1) {
+    top: 0; }
+
+#nav-icon3 span:nth-child(2),#nav-icon3 span:nth-child(3) {
+    top: 18px; }
+
+#nav-icon3 span:nth-child(4) {
+    top: 36px; }
+
+#nav-icon3.open span:nth-child(1) {
+    top: 18px;
+    width: 0;
+    left: 50%; }
+
+#nav-icon3.open span:nth-child(2) {
+    transform: rotate(45deg); }
+
+#nav-icon3.open span:nth-child(3) {
+    transform: rotate(-45deg); }
+
+#nav-icon3.open span:nth-child(4) {
+    top: 18px;
+    width: 0;
+    left: 50%; }

@@ -226,6 +226,8 @@ eb.onopen = function() {
         });
     });
 
+   // $().click(function)
+
     var renderLights = function (parsed) {
         $('.light').remove();
 
@@ -271,13 +273,17 @@ eb.onopen = function() {
         var i = 0;
 
         eb.send('find', {collection: 'themes', matcher: { name: t }}, function (res) {
-            console.log(res);
             $.each(res[0].amountColors, function(key, value){
                 $(previewFields[i++]).css('background', value);
             });
             $('.theme-preview-line').css('background', res[0].axisColor);
             $('.theme-preview-bg').css('background', res[0].backgroundColor);
         });
+    });
+
+    $('#nav-icon3').click(function(){
+        $(this).toggleClass('open');
+        $('#header').toggleClass('open');
     });
 
     $('#config-save').click(function () {

@@ -6,7 +6,7 @@ var svgHeader = d3.select('#header')
     .style("background", headerColor);
 
 var piggyLabel = svgHeader.append("text")
-    .attr("transform", "translate(20,70)")
+    .attr("transform", "translate(110,70)")
     .attr("class","header-text")
     .style("fill", headerColor)
     .style("font-size", headerFontSize)
