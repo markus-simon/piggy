@@ -181,3 +181,9 @@ var themes = [
 themes.forEach(function(theme) {
     eb.send('save', theme);
 });
+
+var config = {
+    collection: 'config',
+    theme: 'blossom'
+};
+eb.send('save', config);

@@ -391,6 +391,7 @@ table.erm-collection tbody tr:hover td {
     text-shadow: 0 1px 1px rgba(0,0,0,0.8);
     transition: all .5s ease;
     backface-visibility: hidden;
+    pointer-events: none;
 }
 
 .error {
@@ -525,18 +526,11 @@ body #erm form li.input textarea {
     box-shadow: inset 0 0 5px 2px #ab3978;
 }
 
-
-
-/* ^-^-^ äh .... anders ... */
 body #config form li.input input:not([type="checkbox"]),
 body #config form li.input textarea,
 body #config form li.input select {
     box-shadow: inset 0 0 5px 2px #ab3978;
 }
-/* ^-^-^ äh .... anders ... */
-
-
-
 
 body table.table {
     box-shadow: none;

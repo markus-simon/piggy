@@ -17,10 +17,9 @@ eb.onopen = function() {
      */
     eb.send('find', {collection: 'config', matcher: {}}, function (reply) {
         config = reply[0];
-        if (!$.isEmptyObject(config)) {
-            $('#config-save-id').val(config._id);
-            fillColorFields(config.name);
-        }
+        $('#config-save-id').val(config._id);
+        fillColorFields(config.name);
+        changeTheme(config.theme);
         updateData();
     });
 
@@ -315,31 +314,38 @@ eb.onopen = function() {
         eb.send(action, document, function (reply) {
             if (reply) {
                 $('#config-save-id').val(reply);
-
-                eb.send('find', {collection: 'themes', matcher: { name: reply.theme }}, function (res) {
-                    color           = d3.scaleOrdinal(res[0].amountColors);
-                    backgroundColor = res[0].backgroundColor;
-                    axisColor       = res[0].axisColor;
-                    lineColor       = res[0].axisColor;
-                    var colorParts  = ['body', '#config', '#erm', '#history', '#checkout'];
-                    $('#config-themes').empty();
-                    $('#config').fadeOut('slow');
-
-                    $.each(colorParts, function(key, value) {
-                        d3.select(value)
-                          .transition()
-                          .duration(500)
-                          .style('background-color', backgroundColor)
-                    });
-
-                    d3.select('#erm-add-form').selectAll('label').transition().duration(500).style('color', axisColor);
-                    updateData();
-                });
+                changeTheme(reply.theme);
             } else {
                 alert('Hoppala, irgendwas ging halt nicht!');
             }
         });
     });
+
+    /**
+     * Change theme colors undso
+     */
+    var changeTheme = function(theme) {
+        eb.send('find', {collection: 'themes', matcher: { name: theme }}, function (res) {
+            color = d3.scaleOrdinal(res[0].amountColors);
+            backgroundColor = res[0].backgroundColor;
+            axisColor = res[0].axisColor;
+            lineColor = res[0].axisColor;
+            var colorParts = ['body', '#config', '#erm', '#history', '#checkout'];
+            $('#config-themes').empty();
+            $('#config').fadeOut('slow');
+
+            $.each(colorParts, function (key, value) {
+                d3.select(value)
+                    .transition()
+                    .duration(500)
+                    .style('background-color', backgroundColor)
+            });
+
+            d3.select('#erm-add-form').selectAll('label').transition().duration(500).style('color', axisColor);
+            updateData();
+        });
+    };
+
 
     /**
      * Show erm overlay

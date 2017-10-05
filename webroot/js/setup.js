@@ -2,12 +2,14 @@
 
 var margin = {top: 5, right: 5, bottom: 5, left: 0};
 
+var width, height;
+
 if (window.innerWidth < 600) {
-    var width  = window.innerWidth;
-    var height = (window.innerHeight) - 60;
+    width  = window.innerWidth;
+    height = (window.innerHeight) - 60;
 } else {
-    var width  = window.innerWidth / 2;
-    var height = (window.innerHeight / 2) - 60;
+    width  = window.innerWidth / 2;
+    height = (window.innerHeight / 2) - 60;
 }
 
 
