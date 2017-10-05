@@ -1,12 +1,12 @@
 var svgHeader = d3.select('#header')
     .append("svg")
     .attr("id", "svgHeader")
-    .attr("width", ((width * 2)))
+    .attr("width", (window.innerWidth))
     .attr("height", headerHeight)
     .style("background", headerColor);
 
 var piggyLabel = svgHeader.append("text")
-    .attr("transform", "translate(110,70)")
+    .attr("transform", "translate(110," + ($('#header').outerHeight() / 1.5) + ")")
     .attr("class","header-text")
     .style("fill", headerColor)
     .style("font-size", headerFontSize)
@@ -15,7 +15,7 @@ var piggyLabel = svgHeader.append("text")
 var sumTotalLabel = svgHeader.append("text")
     .attr("id","total-sum-pie")
     .attr("class","header-text")
-    .attr("transform", "translate(" + (width * 2 - 20) + ",70)")
+    .attr("transform", "translate(" + (window.innerWidth - 20) + "," + ($('#header').outerHeight() / 1.5) + ")")
     .attr("text-anchor", "end")
     .style("fill", headerColor)
     .style("font-size", headerFontSize);

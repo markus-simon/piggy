@@ -18,6 +18,7 @@ eb.onopen = function() {
     eb.send('find', {collection: 'config', matcher: {}}, function (reply) {
         config = reply[0];
         if (!$.isEmptyObject(config)) {
+            $('#config-save-id').val(config._id);
             fillColorFields(config.name);
         }
         updateData();
@@ -156,9 +157,9 @@ eb.onopen = function() {
                 $('#checkout, #erm, #history, #config, #show').fadeOut('slow');
             }
             if (e.keyCode === 67) {
-                if (config) {
+/*                if (config) {
                     $('#config-save-id').val(config._id);
-                }
+                }*/
                 showConfigOverlay();
             }
 
@@ -320,7 +321,7 @@ eb.onopen = function() {
                     backgroundColor = res[0].backgroundColor;
                     axisColor       = res[0].axisColor;
                     lineColor       = res[0].axisColor;
-                    colorParts      = ['body', '#config', '#erm', '#history', '#checkout'];
+                    var colorParts  = ['body', '#config', '#erm', '#history', '#checkout'];
                     $('#config-themes').empty();
                     $('#config').fadeOut('slow');
 
