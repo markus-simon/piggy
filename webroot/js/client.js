@@ -15,7 +15,7 @@ eb.onopen = function() {
     /**
      * Register find handler
      */
-    eb.send('find', {collection: 'config', matcher: {}}, function (reply) {
+    eb.send('find', {collection: 'config', matcher: {}}, function(reply) {
         config = reply[0];
         $('#config-save-id').val(config._id);
         fillColorFields(config.name);
@@ -26,7 +26,7 @@ eb.onopen = function() {
     /**
      * Register saved handler
      */
-    eb.registerHandler('saved', function (document) {
+    eb.registerHandler('saved', function(document) {
         updateData();
 
         switch (document.collection) {
@@ -42,7 +42,7 @@ eb.onopen = function() {
     /**
      * Register delete handler
      */
-    eb.registerHandler('deleted', function (document) {
+    eb.registerHandler('deleted', function(document) {
         switch (document.collection) {
             case 'erm':
                 $('#erm-collection-' + document.matcher._id).remove();
@@ -99,7 +99,7 @@ eb.onopen = function() {
     /**
      * Update data
      */
-    var updateData = function () {
+    var updateData = function() {
         var query = {
             "aggregate": "piggy",
             "pipeline": [
@@ -126,7 +126,7 @@ eb.onopen = function() {
             ]
         };
 
-        eb.send("runCommand", JSON.stringify(query), function (res, res_err) {
+        eb.send("runCommand", JSON.stringify(query), function(res, res_err) {
             if (res.ok === 1) {
                 var result = res.result;
                 updateBars(result);
@@ -140,7 +140,7 @@ eb.onopen = function() {
     };
 
     // orientation change
-    window.addEventListener("resize", function () {
+    window.addEventListener("resize", function() {
         // poor mans resize charts
         location.reload(true);
     }, false);
@@ -148,7 +148,7 @@ eb.onopen = function() {
     /**
      * Open overlay on key press
      */
-    $(window).keyup(function (e) {
+    $(window).keyup(function(e) {
         if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
             $(".overlay").fadeOut('slow');
             if (e.keyCode === 27) {
@@ -168,16 +168,16 @@ eb.onopen = function() {
         }
     });
 
-    $('.field').click(function () {
+    $('.field').click(function() {
         var changeValue = this.textContent;
         $('#display').text($('#display').text() + changeValue);
     });
 
-    $('#withdraw').click(function () {
+    $('#withdraw').click(function() {
         alert('withdrawal not working yet ... sorry');
     });
 
-    $('#place').click(function () {
+    $('#place').click(function() {
         var value       = parseFloat($('#display').text());
         var transaction = {
             'collection': 'piggy',
@@ -185,7 +185,7 @@ eb.onopen = function() {
             'amount': value
         };
 
-        eb.send('save', transaction, function (reply) {
+        eb.send('save', transaction, function(reply) {
             if (reply) {
                 $('#display').empty();
             } else {
@@ -197,14 +197,14 @@ eb.onopen = function() {
     /**
      * Toggle checkboxes in erm form
      */
-    $('#erm-add-form input[type="checkbox"]').click(function(){
+    $('#erm-add-form input[type="checkbox"]').click(function() {
         $('.' + $(this).attr('name')).toggle();
     });
 
     /**
      * Hue connect
      */
-    $('#erm-add-hueconnect').click(function () {
+    $('#erm-add-hueconnect').click(function() {
         var form = $('#erm-add-form').serializeArray();
         var erm = formToJson(form);
         erm.huerequesttype = 'get';
@@ -241,6 +241,31 @@ eb.onopen = function() {
         $('.light-color').colorPicker();
 
     };
+
+    var renderTheme = function(t) {
+        $('.theme-property').remove();
+        eb.send('find', {collection: 'themes', matcher: { name: t }}, function (res) {
+            for (var property in res[0]) {
+                console.log(typeof(property));
+                if (property === 'color' || property === 'wallpaper') {
+                    var li = $('<li class="input theme-property">');
+                    var divLabel = $('<div class="theme-property-label">');
+                    divLabel.text(property);
+                    li.append(divLabel);
+
+                    if ()
+
+                    var divValue = $('<div class="theme-property-value">');
+                    divValue.text(res[0][property]);
+                    li.append(divValue);
+
+                    li.appendTo($('#config-save-form ul'));
+                }
+            }
+        });
+    };
+
+
 
     /**
      * Show checkout overly
@@ -290,6 +315,8 @@ eb.onopen = function() {
     $('#config-themes').change(function() {
         var t = $('option:selected', this).val();
         fillColorFields(t);
+
+        renderTheme(t);
     });
 
     /**

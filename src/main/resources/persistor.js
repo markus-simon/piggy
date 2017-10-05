@@ -144,7 +144,15 @@ var themes = [
         backgroundColor: '#151515',
         lineColor: '#fff',
         axisColor: '#fff',
-        wallpaper: ''
+        wallpaper: '',
+        colors: {
+            header: "#002f2c",
+            headerFont: "#fff",
+            background: "#151515",
+            amount: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
+            line: "#fff",
+            axis: "#fff"
+        }
     },{
         collection: 'themes',
         name: 'pirates',
@@ -169,12 +177,21 @@ var themes = [
         collection: 'themes',
         name: 'green',
         headerColor: "#cb3577",
-        headerFontColor: "#fff",
+        headerFontColor: "#f83",
         amountColors: ['#ffacf6', '#d052d0', '#ff5fb8', '#ff00a5', '#6b486b', '#6b215c', '#3c1231','#ff55d2'],
         backgroundColor: '#2299ee',
         lineColor: "#000",
         axisColor: '#ffa',
-        wallpaper: ''
+        wallpaper: '',
+
+        colors: {
+            header: "#002f2c",
+            headerFont: "#fff",
+            background: "#151515",
+            amount: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
+            line: "#fff",
+            axis: "#fff"
+        }
     }
 ];
 
