@@ -124,42 +124,55 @@ var calculateDate = function() {
     return calculatedDate;
 };
 
-
-
 var themes = [
     {
         collection: 'themes',
         name: 'blossom',
+        headerColor: "#cb3577",
+        headerFontColor: "#fff",
         amountColors: ['#ffacf6', '#d052d0', '#ff5fb8', '#ff00a5', '#6b486b', '#6b215c', '#3c1231','#ff55d2'],
         backgroundColor: '#ffdddc',
+        lineColor: "#000",
         axisColor: '#000',
         wallpaper: ''
     },{
         collection: 'themes',
         name: 'dark',
+        headerColor: "#002f2c",
+        headerFontColor: "#fff",
         amountColors: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
         backgroundColor: '#151515',
+        lineColor: '#fff',
         axisColor: '#fff',
         wallpaper: ''
     },{
         collection: 'themes',
         name: 'pirates',
+        headerColor: "#cb3577",
+        headerFontColor: "#fff",
         amountColors: ['#ffacf6', '#d052d0', '#ff5fb8', '#ff00a5', '#6b486b', '#6b215c', '#3c1231','#ff55d2'],
         backgroundColor: '#1188ff',
+        lineColor: "#000",
         axisColor: '#000',
         wallpaper: ''
     },{
         collection: 'themes',
         name: 'vampire',
+        headerColor: "#cb3577",
+        headerFontColor: "#fff",
         amountColors: ['#ffacf6', '#d052d0', '#ff5fb8', '#ff00a5', '#6b486b', '#6b215c', '#3c1231','#ff55d2'],
         backgroundColor: '#11aaff',
         axisColor: '#ffa',
+        lineColor: "#000",
         wallpaper: ''
     },{
         collection: 'themes',
         name: 'green',
+        headerColor: "#cb3577",
+        headerFontColor: "#fff",
         amountColors: ['#ffacf6', '#d052d0', '#ff5fb8', '#ff00a5', '#6b486b', '#6b215c', '#3c1231','#ff55d2'],
         backgroundColor: '#2299ee',
+        lineColor: "#000",
         axisColor: '#ffa',
         wallpaper: ''
     }

@@ -2,7 +2,7 @@ var n = 40;
 var random = d3.randomUniform(0, 0);
 var deta = d3.range(n).map(random);
 
-var duration = 500;
+var duration = 1000;
 var now = new Date(Date.now() - duration);
 
 var x = d3.scaleLinear()
@@ -11,7 +11,7 @@ var x = d3.scaleLinear()
 
 var xAxis = d3.scaleTime()
     .domain([now - (n - 2) * duration, now - duration])
-    .range([0, width * 2 - 25]);
+    .range([0, width * 2 - 75]);
 
 var y = d3.scaleLinear()
     .domain([0, 0])
@@ -68,9 +68,10 @@ svg3.append("g")
     .style("stroke-width","1px")
     .style("fill","none")
     .transition()
-    .duration(500)
+    .duration(1000)
     .ease(d3.easeLinear)
     .on("start", tick);
+
 
 var sumTotal = 0;
 function tick() {
@@ -78,10 +79,18 @@ function tick() {
     d3.select(this)
         .attr("d", line)
         .attr("transform", null);
+
+    now = new Date(Date.now() - duration);
+    xAxis.domain([now - (n - 2) * duration, now - duration]);
+    axisX.transition()
+        .duration(1000)
+        .ease(d3.easeLinear)
+        .call(d3.axisBottom(xAxis));
+
     d3.active(this)
         .attr("transform", "translate(" + x(-1) + ",0)")
         .transition()
-        .duration(500)
+        .duration(1000)
         .on("start", tick);
     deta.shift();
 }
@@ -100,7 +109,7 @@ function updateLine(result) {
     random = d3.randomUniform(1, sumTotal/100);
 
     axisY.transition()
-        .duration(500)
+        .duration(1000)
         .call(d3.axisLeft(y));
 
     d3.select('#clippath').style("stroke",lineColor);

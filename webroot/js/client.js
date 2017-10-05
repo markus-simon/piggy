@@ -124,7 +124,7 @@ eb.onopen = function() {
                 updateBars(result);
                 updatePie(result);
                 updateLine(result);
-                updateSum(result);  // wirklich 4x übergeben!? ne ...
+                updateHeader(result);  // wirklich 4x übergeben!? ne ...
 
             } else {
                 alert('Something is fishy ... :-(');
@@ -363,6 +363,7 @@ eb.onopen = function() {
 
         $('#delete-history-' + value._id).click(function () {
             eb.send('delete', {collection: 'piggy', matcher: {_id: value._id}}, function (reply) {
+                // TODO delete per publish erfassen, weil anderer tab undso ...
                 if (reply.length > 0) {
                     $('#history-collection-' + value._id).remove();
                 }

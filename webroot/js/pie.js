@@ -5,9 +5,9 @@ var pie1 = d3.pie()
     .sort(null);
 
 var arc1 = d3.arc()
-    .innerRadius(radius - 100)
-    .outerRadius(radius - 10)
-    .cornerRadius(8);
+    .innerRadius(radius - 60)
+    .outerRadius(radius - 20)
+    .cornerRadius(6);
 
 var svg1 = d3.select("#group1")
     .append("svg")
@@ -109,7 +109,8 @@ function updatePie(result) {
 
     path1.data(pie1)
         .transition()
-        .duration(750)
+        .duration(1000)
+        .ease(d3.easeElastic)
         .style("fill", function(d, i) { return color(i); })
         .style('stroke', backgroundColor)
 

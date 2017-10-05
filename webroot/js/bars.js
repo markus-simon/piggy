@@ -86,18 +86,21 @@ function updateBars(result) {
     chart.selectAll("rect")
         .data(newData)
         .transition()
-        .duration(500)
+        .duration(1000)
+        .ease(d3.easeElastic)
         .attr("x", function(d) { return x(d.amount) - barWidth / 2; })
         .attr("y", function(d) { return y(d.sum); })
         .attr("height", function(d) { return height - y(d.sum) - 25; })
         .style("fill", function(d, i) { return color(i); });
 
     chart.transition().select(".x.axis")
-        .duration(500)
+        .duration(1000)
+        .ease(d3.easeElastic)
         .call(xAxis);
 
     chart.transition().select(".y.axis")
-        .duration(500)
+        .duration(1000)
+        .ease(d3.easeElastic)
         .call(yAxis);
 
     chart.selectAll('.domain').transition().duration(500).style('stroke', axisColor);

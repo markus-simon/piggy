@@ -6,7 +6,7 @@ var svgHeader = d3.select('#header')
     .style("background", headerColor);
 
 var piggyLabel = svgHeader.append("text")
-    .attr("transform", "translate(20," + 70 +")")
+    .attr("transform", "translate(20,70)")
     .attr("class","header-text")
     .style("fill", headerColor)
     .style("font-size", headerFontSize)
@@ -15,12 +15,12 @@ var piggyLabel = svgHeader.append("text")
 var sumTotalLabel = svgHeader.append("text")
     .attr("id","total-sum-pie")
     .attr("class","header-text")
-    .attr("transform", "translate(" + (width * 2 - 20) + "," + 70 +")")
+    .attr("transform", "translate(" + (width * 2 - 20) + ",70)")
     .attr("text-anchor", "end")
     .style("fill", headerColor)
     .style("font-size", headerFontSize);
 
-function updateSum(result) {
+function updateHeader(result) {
     var sumTotal = 0;
 
     // TODO sumTotal weiter nach "vorne" verschieben ...
@@ -34,7 +34,9 @@ function updateSum(result) {
         style: 'currency',
         currency: 'EUR'
     });
+    sumTotalLabel.text(sumValue);
     piggyLabel.transition().duration(500).style('fill', headerFontColor);
     sumTotalLabel.transition().duration(500).style('fill', headerFontColor);
-    sumTotalLabel.text(sumValue);
+    console.log(headerColor);
+    svgHeader.transition().duration(500).style("background", headerColor);
 }
