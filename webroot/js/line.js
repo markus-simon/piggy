@@ -9,9 +9,14 @@ var x = d3.scaleLinear()
     .domain([0, n - 1])
     .range([0, width * 2 - 25]);
 
-var xAxis = d3.scaleTime()
+var xTime = d3.scaleTime()
     .domain([now - (n - 2) * duration, now - duration])
     .range([0, width * 2 - 75]);
+
+var xAxis = d3.axisBottom(xTime)
+    .ticks((width + 2) / (height + 2) * 10)
+    .tickSize(height)
+    .tickPadding(8 - height);
 
 var y = d3.scaleLinear()
     .domain([0, 0])
@@ -21,18 +26,29 @@ var line = d3.line().curve(d3.curveBasis)
     .x(function(d, i) { return x(i); })
     .y(function(d) { return y(d); });
 
+var zoom = d3.zoom()
+    .scaleExtent([1, 40])
+    .translateExtent([[-100, -100], [width + 90, height + 100]])
+    .on("zoom", zoomed);
+
+function zoomed() {
+    axisX.call(xAxis.scale(d3.event.transform.rescaleX(x)));
+}
+
 var svg3 = d3.select('#group3')
     .append("svg")
     .attr("id", "svg3")
     .attr("width", width * 2 - 25)
     .attr("height", height)
-    .append("g")
-    .attr("transform", "translate(0,0)");
+/*    .append("g")
+    .attr("transform", "translate(0,0)");*/
+
+svg3.call(zoom);
 
 var axisX = svg3.append("g")
     .attr("class", "axis axis--x")
     .attr("transform", "translate(25," + (height - 25) + ")")
-    .call(d3.axisBottom(xAxis));
+    .call(d3.axisBottom(xTime));
 
 axisX.append("text")
     .attr("x", (width * 2))
@@ -81,11 +97,11 @@ function tick() {
         .attr("transform", null);
 
     now = new Date(Date.now() - duration);
-    xAxis.domain([now - (n - 2) * duration, now - duration]);
+    xTime.domain([now - (n - 2) * duration, now - duration]);
     axisX.transition()
         .duration(1000)
         .ease(d3.easeLinear)
-        .call(d3.axisBottom(xAxis));
+        .call(d3.axisBottom(xTime));
 
     d3.active(this)
         .attr("transform", "translate(" + x(-1) + ",0)")

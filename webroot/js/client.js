@@ -19,6 +19,10 @@ eb.onopen = function() {
 
     eb.send('find', {collection: 'config', matcher: {}}, function (reply) {
         config = reply[0];
+        if (!$.isEmptyObject(config)) {
+            fillColorFields(config.name);
+
+        }
         updateData();
     });
 
@@ -257,19 +261,26 @@ eb.onopen = function() {
     var showConfigOverlay = function () {
         $('#config').fadeTo("slow", 0.97);
         eb.send('find', {collection: 'themes', matcher: {}}, function (reply) {
+            var selected = '';
             $.each(reply, function (key, value) {
-                $('<option value=' + value.name + '>').text(value.name).appendTo($('#config-themes'));
+                if (config && value.name === config.theme) {
+                    selected = 'selected ';
+                } else {
+                    selected = '';
+                }
+                $('<option ' + selected + 'value=' + value.name + '>').text(value.name).appendTo($('#config-themes'));
             });
+            fillColorFields(config.theme);
         });
     };
 
     /**
      * Display main theme colors
      */
-    $('#config-themes').change(function() {
+    var fillColorFields = function(t) {
         var previewFields = $('.theme-preview');
 
-        var t = $('option:selected', this).val();
+
         var i = 0;
 
         eb.send('find', {collection: 'themes', matcher: { name: t }}, function (res) {
@@ -279,6 +290,12 @@ eb.onopen = function() {
             $('.theme-preview-line').css('background', res[0].axisColor);
             $('.theme-preview-bg').css('background', res[0].backgroundColor);
         });
+    };
+
+
+    $('#config-themes').change(function() {
+        var t = $('option:selected', this).val();
+        fillColorFields(t);
     });
 
     $('#nav-icon3').click(function(){
