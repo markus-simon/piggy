@@ -47,7 +47,7 @@ body {
     display: none;
     position: absolute;
     background-color: #ffdddc;
-    z-index: 999;
+    z-index: 9;
     min-height: 100%;
 }
 
@@ -59,7 +59,7 @@ body {
     display: none;
     position: absolute;
     background-color: #ffdddc;
-    z-index: 1003;
+    z-index: 9;
     min-height: 100%;
     width: 100%;
 }
@@ -71,7 +71,7 @@ body {
     display: none;
     position: absolute;
     background-color: #ffdddc;
-    z-index: 1000;
+    z-index: 9;
     min-height: 100%;
     width: 100%;
 }
@@ -175,7 +175,7 @@ body {
     display: none;
     position: absolute;
     background-color: #ffdddc;
-    z-index: 999;
+    z-index: 9;
     min-height: 100%;
 }
 
@@ -601,7 +601,7 @@ body table.table td span.btn {
 
 #header {
     position: relative;
-    z-index: 9;
+    z-index: 11;
 }
 #header > div {
     float: right;
@@ -639,18 +639,31 @@ form label {
     top: 0;
     left: 0;
     bottom: 0;
-    padding-right: 50px;
+    z-index: 10;
     padding-top: 100px; }
 
 #header.open + #menu {
     display: block; }
 
+#menu ul {
+    padding-left: 0; }
+
 #menu li {
     list-style: none; }
 
 #menu li a {
+    display: block;
+    border-top: 1px solid rgba(255,255,255,.3);
+    border-bottom: 1px solid rgba(255,255,255,.3);
+    padding: 15px 30px;
     text-decoration: none;
+    transition: all .2s linear;
     color: #fff; }
+
+#menu li a:hover {
+    background: red;
+    background: rgba(255,255,255,.3);
+}
 
 /* Menu */
 #nav-icon3 {

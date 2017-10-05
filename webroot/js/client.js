@@ -14,14 +14,10 @@ var dataBars = [
 var config = {};
 
 eb.onopen = function() {
-
-
-
     eb.send('find', {collection: 'config', matcher: {}}, function (reply) {
         config = reply[0];
         if (!$.isEmptyObject(config)) {
             fillColorFields(config.name);
-
         }
         updateData();
     });
@@ -230,8 +226,6 @@ eb.onopen = function() {
         });
     });
 
-   // $().click(function)
-
     var renderLights = function (parsed) {
         $('.light').remove();
 
@@ -252,7 +246,6 @@ eb.onopen = function() {
         $('.light-color').colorPicker();
 
     };
-
 
     var showCheckoutOverlay = function () {
         $('#checkout').fadeTo("slow", 0.97);
@@ -279,8 +272,6 @@ eb.onopen = function() {
      */
     var fillColorFields = function(t) {
         var previewFields = $('.theme-preview');
-
-
         var i = 0;
 
         eb.send('find', {collection: 'themes', matcher: { name: t }}, function (res) {
@@ -421,6 +412,26 @@ eb.onopen = function() {
 
     $('#erm-add-send').click(function () {
         saveErm(false);
+    });
+
+    $('#menu a').click(function(){
+        var target = $(this).attr('id').split('-')[1];
+        $('#header, #nav-icon3').toggleClass('open');
+        $(".overlay").fadeOut('slow');
+        switch (target) {
+            case 'history':
+                showHistoryOverlay();
+                break;
+            case 'config':
+                showConfigOverlay();
+                break;
+            case 'alert':
+                showErmOverlay();
+                break;
+            case 'checkout':
+                showCheckoutOverlay();
+                break;
+        }
     });
 
     var saveErm = function(update) {
