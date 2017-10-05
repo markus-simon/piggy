@@ -357,7 +357,7 @@ eb.onopen = function() {
             "<td>" + value.message_created_at + "</td>" +
             "<td>" + value.amount + "</td>" +
             "<td>" + value.type + "</td>" +
-            "<td id='delete-history-" + value._id + "'>X</td>" +
+            "<td id='delete-history-" + value._id + "'><span class='btn'>X</span></td>" +
             "</tr>"
         );
 

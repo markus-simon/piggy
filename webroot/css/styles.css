@@ -538,34 +538,34 @@ body #config form li.input select {
 
 
 
-body table.erm-collection {
+body table.table {
     box-shadow: none;
 }
-body table.erm-collection tbody tr {
+body table.table tbody tr {
     background: #ab3978;
 }
-body table.erm-collection tbody tr:hover td {
+body table.table tbody tr:hover td {
     color: #fff;
     cursor: pointer;
 }
-body table.erm-collection tbody tr:nth-child(2n+2) {
+body table.table tbody tr:nth-child(2n+2) {
     background: #AB4C79;
 }
 
-body table.erm-collection td span.btn {
+body table.table td span.btn {
     display: inline-block;
     background: #aaa;
     padding: 5px;
     width: 50px;
     text-align: center;
 }
-body table.erm-collection td span.btn:hover {
+body table.table td span.btn:hover {
     transition: all .2s linear;
     background: #ff5fb8;
 }
 
-body table.erm-collection td span.on,
-body table.erm-collection td span.off {
+body table.table td span.on,
+body table.table td span.off {
     background: #fff;
     width: 50px;
     color: #aaa;
@@ -575,8 +575,8 @@ body table.erm-collection td span.off {
     position: relative;
     opacity: .5;
 }
-body table.erm-collection td span.on:after,
-body table.erm-collection td span.off:after {
+body table.table td span.on:after,
+body table.table td span.off:after {
     content: " ";
     background: #cc4b37;
     width: 25px;
@@ -584,18 +584,18 @@ body table.erm-collection td span.off:after {
     bottom: 0;
     position: absolute;
 }
-body table.erm-collection td span.on:after {
+body table.table td span.on:after {
     background: #3adb76;
     right: 0;
 }
-body table.erm-collection td span.off {
+body table.table td span.off {
     text-align: right;
 }
-body table.erm-collection td span.off:after {
+body table.table td span.off:after {
     background: #cc4b37;
     left: 0;
 }
-body table.erm-collection td span.btn {
+body table.table td span.btn {
 
 }
 #header > div {
@@ -606,4 +606,12 @@ body table.erm-collection td span.btn {
     color: #fff;
     font-size: 7vh;
     float: left;
+}
+
+#history {
+    padding: 20px;
+}
+
+form label {
+    float: none!important;
 }
