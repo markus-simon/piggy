@@ -615,3 +615,19 @@ body table.table td span.btn {
 form label {
     float: none!important;
 }
+
+.theme-preview-container {
+    margin-left: 70px;
+    margin-top: 10px;
+}
+
+.theme-preview,
+.theme-preview-line,
+.theme-preview-bg {
+    vertical-align: bottom;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    border: 1px solid #000;
+    margin-right: 10px;
+}

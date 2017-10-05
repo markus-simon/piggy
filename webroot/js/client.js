@@ -257,7 +257,24 @@ eb.onopen = function() {
         });
     };
 
+    /**
+     * Display main theme colors
+     */
+    $('#config-themes').change(function() {
+        var previewFields = $('.theme-preview');
 
+        var t = $('option:selected', this).val();
+        var i = 0;
+
+        eb.send('find', {collection: 'themes', matcher: { name: t }}, function (res) {
+            console.log(res);
+            $.each(res[0].amountColors, function(key, value){
+                $(previewFields[i++]).css('background', value);
+            });
+            $('.theme-preview-line').css('background', res[0].axisColor);
+            $('.theme-preview-bg').css('background', res[0].backgroundColor);
+        });
+    });
 
     $('#config-save').click(function () {
         var form = $('#config-save-form').serializeArray();
