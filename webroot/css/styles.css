@@ -616,9 +616,17 @@ form label {
     margin-left: 70px;
     margin-top: 10px; }
 
-.theme-preview,
-.theme-preview-line,
-.theme-preview-bg {
+body .theme-preview-container ul,
+body .theme-preview-container ul li {
+    border: none!important;
+    margin-top: 0!important;
+}
+
+body .theme-preview-container ul ul li {
+    display: inline-block!important;
+}
+
+.theme-property-value {
     vertical-align: bottom;
     display: inline-block;
     height: 20px;

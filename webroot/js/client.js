@@ -13,13 +13,15 @@ var dataBars = [
 
 eb.onopen = function() {
     /**
-     * Register find handler
+     * Find config
      */
     eb.send('find', {collection: 'config', matcher: {}}, function(reply) {
         config = reply[0];
-        $('#config-save-id').val(config._id);
-        fillColorFields(config.name);
-        changeTheme(config.theme);
+        if (!$.isEmptyObject(config)) {
+            $('#config-save-id').val(config._id);
+            renderTheme(config.name);
+            changeTheme(config.theme);
+        }
         updateData();
     });
 
@@ -36,7 +38,6 @@ eb.onopen = function() {
             default:
                 break;
         }
-
     });
 
     /**
@@ -91,9 +92,7 @@ eb.onopen = function() {
                     break;
             }
         }
-        if (document.showtts) {
-            playSound('assets/sound/' + document.showtts);
-        }
+        if (document.showtts) playSound('assets/sound/' + document.showtts);
     });
 
     /**
@@ -156,9 +155,9 @@ eb.onopen = function() {
                 $('#checkout, #erm, #history, #config, #show').fadeOut('slow');
             }
             if (e.keyCode === 67) {
-/*                if (config) {
+                if (config) {
                     $('#config-save-id').val(config._id);
-                }*/
+                }
                 showConfigOverlay();
             }
 
@@ -242,28 +241,75 @@ eb.onopen = function() {
 
     };
 
+    /**
+     * Render theme
+     *
+     * @param t
+     */
     var renderTheme = function(t) {
-        $('.theme-property').remove();
-        eb.send('find', {collection: 'themes', matcher: { name: t }}, function (res) {
-            for (var property in res[0]) {
-                console.log(typeof(property));
-                if (property === 'color' || property === 'wallpaper') {
-                    var li = $('<li class="input theme-property">');
-                    var divLabel = $('<div class="theme-property-label">');
-                    divLabel.text(property);
-                    li.append(divLabel);
+        $('.theme-preview-container ul').html('');
+        eb.send('find', {collection: 'themes', matcher: { name: t }}, function(res) {
+            var themesObject = res[0];
 
-                    var divValue = $('<div class="theme-property-value">');
-                    divValue.text(res[0][property]);
-                    li.append(divValue);
+            /** !! TEST ONLY !! **/
+            var themesObject = Object.assign(
+                {},
+                res[0],
+                {
+                    colors: {
+                        header: "#002f2c",
+                        headerFont: "#fff",
+                        background: "#151515",
+                        amount: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
+                        line: "#fff",
+                        axis: "#fff"
+                    }
+                }
+            );
+            /** !! TEST ONLY !! **/
 
-                    li.appendTo($('#config-save-form ul'));
+            for (var property in themesObject) {
+                if (property === 'colors') {
+                    for (var color in themesObject['colors']) {
+                        if ('object' === typeof(themesObject['colors'][color])) {
+                            var pLi = $('<li class="input theme-property">');
+                            var ul = $('<ul class="sub-list">');
+
+                            for (var subColor in themesObject['colors'][color]) {
+                                var li = $('<li class="input theme-property">');
+                                if (0 == subColor) {
+                                    var divLabel = $('<div class="theme-property-label">' + color + '</div>');
+                                    li.append(divLabel);
+                                }
+                                var divValue = $('<div class="theme-property-value">')
+                                    .colorPicker()
+                                    .css('background-color', themesObject['colors'][color][subColor]);
+
+                                li.append(divValue).appendTo(ul);
+                            }
+                            pLi.append(ul).appendTo($('.theme-preview-container > ul'));
+                        } else {
+                            var li       = $('<li class="input theme-property">');
+                            var divLabel = $('<div class="theme-property-label">' + color + '</div>');
+                            var divValue = $('<div class="theme-property-value">')
+                                .colorPicker()
+                                .css('background-color', themesObject['colors'][color]);
+
+                            li.append(divLabel)
+                                .append(divValue).appendTo($('.theme-preview-container > ul'));
+                        }
+                    }
+                } else if (property === 'wallpaper') {
+                    var li       = $('<li class="input theme-property">');
+                    var divLabel = $('<div class="theme-property-label">' + property + '</div>');
+                    var divValue = $('<div class="theme-property-value">' + themesObject[property] + '</div>');
+
+                    li.append(divLabel)
+                        .append(divValue).appendTo($('.theme-preview-container > ul'));
                 }
             }
         });
     };
-
-
 
     /**
      * Show checkout overly
@@ -279,15 +325,18 @@ eb.onopen = function() {
         $('#config').fadeTo("slow", 0.97);
         eb.send('find', {collection: 'themes', matcher: {}}, function (reply) {
             var selected = '';
+
             $.each(reply, function (key, value) {
-                if (config && value.name === config.theme) {
-                    selected = 'selected ';
-                } else {
-                    selected = '';
+                if (!$.isEmptyObject(config)) {
+                    if (value.name === config.theme) {
+                        selected = 'selected ';
+                    } else {
+                        selected = '';
+                    }
                 }
                 $('<option ' + selected + 'value=' + value.name + '>').text(value.name).appendTo($('#config-themes'));
             });
-            fillColorFields(config.theme);
+            //fillColorFields(config.theme);
         });
     };
 
@@ -311,10 +360,7 @@ eb.onopen = function() {
      * Change preview colors
      */
     $('#config-themes').change(function() {
-        var t = $('option:selected', this).val();
-        fillColorFields(t);
-
-        renderTheme(t);
+        renderTheme($('option:selected', this).val());
     });
 
     /**
