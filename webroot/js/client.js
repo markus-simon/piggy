@@ -151,24 +151,28 @@ eb.onopen = function() {
                 if (config) {
                     $('#config-save-id').val(config._id);
                 }
+                $(".overlay").fadeOut('slow');
                 showConfigOverlay();
             }
         }
 
         if (e.keyCode === 69) {
             if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
+                $(".overlay").fadeOut('slow');
                 showErmOverlay();
             }
         }
 
         if (e.keyCode === 72) {
             if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
+                $(".overlay").fadeOut('slow');
                 showHistoryOverlay();
             }
         }
 
         if (e.keyCode === 75) {
             if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
+                $(".overlay").fadeOut('slow');
                 showCheckoutOverlay();
             }
         }
