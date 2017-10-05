@@ -318,17 +318,20 @@ eb.onopen = function() {
                 eb.send('find', {collection: 'themes', matcher: { name: reply.theme }}, function (res) {
                     color           = d3.scaleOrdinal(res[0].amountColors);
                     backgroundColor = res[0].backgroundColor;
-                    axisColor       = res[0].axisColor
+                    axisColor       = res[0].axisColor;
                     lineColor       = res[0].axisColor;
+                    colorParts      = ['body', '#config', '#erm', '#history', '#checkout'];
                     $('#config-themes').empty();
                     $('#config').fadeOut('slow');
-                    d3.select('body').transition().duration(500).style('background-color', backgroundColor);
-                    d3.select('#config').transition().duration(500).style('background-color', backgroundColor);
-                    d3.select('#erm').transition().duration(500).style('background-color', backgroundColor);
-                    d3.select('#history').transition().duration(500).style('background-color', backgroundColor);
-                    d3.select('#checkout').transition().duration(500).style('background-color', backgroundColor);
+
+                    $.each(colorParts, function(key, value) {
+                        d3.select(value)
+                          .transition()
+                          .duration(500)
+                          .style('background-color', backgroundColor)
+                    });
+
                     d3.select('#erm-add-form').selectAll('label').transition().duration(500).style('color', axisColor);
-                    d3.select('body').transition().duration(500).style('background-color', backgroundColor);
                     updateData();
                 });
             } else {
@@ -433,12 +436,8 @@ eb.onopen = function() {
     /**
      * Save erm
      */
-    $('#erm-add-update').click(function () {
-        saveErm(true);
-    });
-
-    $('#erm-add-send').click(function () {
-        saveErm(false);
+    $('#erm-add-update, #erm-add-send').click(function () {
+        saveErm($(this).data('update'));
     });
 
     /**
