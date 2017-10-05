@@ -1,5 +1,5 @@
-var eb = new vertx.EventBus(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/eventbus');
-
+var eb       = new vertx.EventBus(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/eventbus');
+var config   = {};
 var dataBars = [
     { amount: "1",   sum: 0},
     { amount: "2",   sum: 0},
@@ -11,9 +11,10 @@ var dataBars = [
     { amount: "200", sum: 0}
 ];
 
-var config = {};
-
 eb.onopen = function() {
+    /**
+     * Register find handler
+     */
     eb.send('find', {collection: 'config', matcher: {}}, function (reply) {
         config = reply[0];
         if (!$.isEmptyObject(config)) {
@@ -22,6 +23,9 @@ eb.onopen = function() {
         updateData();
     });
 
+    /**
+     * Register saved handler
+     */
     eb.registerHandler('saved', function (document) {
         updateData();
 
@@ -35,6 +39,9 @@ eb.onopen = function() {
 
     });
 
+    /**
+     * Register delete handler
+     */
     eb.registerHandler('deleted', function (document) {
         switch (document.collection) {
             case 'erm':
@@ -49,6 +56,9 @@ eb.onopen = function() {
         }
     });
 
+    /**
+     * Register show handler
+     */
     eb.registerHandler('show', function(document) {
         if (document.showurl && $('#show-content').is(':empty')) {
             var extension = document.showurl.substr((document.showurl.lastIndexOf('.') + 1)).toLowerCase();
@@ -86,10 +96,9 @@ eb.onopen = function() {
         }
     });
 
-
-
-
-
+    /**
+     * Update data
+     */
     var updateData = function () {
         var query = {
             "aggregate": "piggy",
@@ -117,7 +126,6 @@ eb.onopen = function() {
             ]
         };
 
-
         eb.send("runCommand", JSON.stringify(query), function (res, res_err) {
             if (res.ok === 1) {
                 var result = res.result;
@@ -125,7 +133,6 @@ eb.onopen = function() {
                 updatePie(result);
                 updateLine(result);
                 updateHeader(result);  // wirklich 4x übergeben!? ne ...
-
             } else {
                 alert('Something is fishy ... :-(');
             }
@@ -138,43 +145,26 @@ eb.onopen = function() {
         location.reload(true);
     }, false);
 
-
-
-
-
+    /**
+     * Open overlay on key press
+     */
     $(window).keyup(function (e) {
-        if (e.keyCode === 27) {
-            $('#checkout, #erm, #history, #config, #show').fadeOut('slow');
-        }
-        if (e.keyCode === 67) {
-            if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
+        if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
+            $(".overlay").fadeOut('slow');
+            if (e.keyCode === 27) {
+                $('#header, #nav-icon3').removeClass('open');
+                $('#checkout, #erm, #history, #config, #show').fadeOut('slow');
+            }
+            if (e.keyCode === 67) {
                 if (config) {
                     $('#config-save-id').val(config._id);
                 }
-                $(".overlay").fadeOut('slow');
                 showConfigOverlay();
             }
-        }
 
-        if (e.keyCode === 69) {
-            if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
-                $(".overlay").fadeOut('slow');
-                showErmOverlay();
-            }
-        }
-
-        if (e.keyCode === 72) {
-            if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
-                $(".overlay").fadeOut('slow');
-                showHistoryOverlay();
-            }
-        }
-
-        if (e.keyCode === 75) {
-            if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
-                $(".overlay").fadeOut('slow');
-                showCheckoutOverlay();
-            }
+            if (e.keyCode === 69) showErmOverlay();
+            if (e.keyCode === 72) showHistoryOverlay();
+            if (e.keyCode === 75) showCheckoutOverlay();
         }
     });
 
@@ -188,13 +178,13 @@ eb.onopen = function() {
     });
 
     $('#place').click(function () {
-        var value = parseFloat($('#display').text());
-
+        var value       = parseFloat($('#display').text());
         var transaction = {
             'collection': 'piggy',
             'type': 'virtual',
             'amount': value
         };
+
         eb.send('save', transaction, function (reply) {
             if (reply) {
                 $('#display').empty();
@@ -204,16 +194,16 @@ eb.onopen = function() {
         });
     });
 
-
-    $('#erm-add-show').click(function () {
-        $('.show').toggle();
+    /**
+     * Toggle checkboxes in erm form
+     */
+    $('#erm-add-form input[type="checkbox"]').click(function(){
+        $('.' + $(this).attr('name')).toggle();
     });
 
-    $('#erm-add-hue').click(function () {
-        $('.hue').toggle();
-    });
-
-
+    /**
+     * Hue connect
+     */
     $('#erm-add-hueconnect').click(function () {
         var form = $('#erm-add-form').serializeArray();
         var erm = formToJson(form);
@@ -226,6 +216,11 @@ eb.onopen = function() {
         });
     });
 
+    /**
+     * Render lights
+     *
+     * @param parsed
+     */
     var renderLights = function (parsed) {
         $('.light').remove();
 
@@ -247,10 +242,16 @@ eb.onopen = function() {
 
     };
 
+    /**
+     * Show checkout overly
+     */
     var showCheckoutOverlay = function () {
         $('#checkout').fadeTo("slow", 0.97);
     };
 
+    /**
+     * Show config overlay
+     */
     var showConfigOverlay = function () {
         $('#config').fadeTo("slow", 0.97);
         eb.send('find', {collection: 'themes', matcher: {}}, function (reply) {
@@ -283,17 +284,25 @@ eb.onopen = function() {
         });
     };
 
-
+    /**
+     * Change preview colors
+     */
     $('#config-themes').change(function() {
         var t = $('option:selected', this).val();
         fillColorFields(t);
     });
 
+    /**
+     * Toggle navigation
+     */
     $('#nav-icon3').click(function(){
         $(this).toggleClass('open');
         $('#header').toggleClass('open');
     });
 
+    /**
+     * Save configuration
+     */
     $('#config-save').click(function () {
         var form = $('#config-save-form').serializeArray();
         var document = formToJson(form);
@@ -328,8 +337,9 @@ eb.onopen = function() {
         });
     });
 
-
-
+    /**
+     * Show erm overlay
+     */
     var showErmOverlay = function () {
         $('#erm').fadeTo("slow", 0.97);
         var table = ".erm-collection";
@@ -341,6 +351,12 @@ eb.onopen = function() {
         });
     };
 
+    /**
+     * Render erm table
+     *
+     * @param value
+     * @param table
+     */
     var renderErmTable = function (value, table) {
         $(table + " > tbody").append(
             "<tr id='erm-collection-" + value._id + "'>" +
@@ -374,7 +390,9 @@ eb.onopen = function() {
         });
     };
 
-
+    /**
+     * Show history table
+     */
     var showHistoryOverlay = function () {
         $('#history').fadeTo("slow", 0.97);
         var table = ".history-collection";
@@ -386,6 +404,12 @@ eb.onopen = function() {
         });
     };
 
+    /**
+     * Render history table
+     *
+     * @param value
+     * @param table
+     */
     var renderHistoryTable = function (value, table) {
         $(table + " > tbody").append(
             "<tr id='history-collection-" + value._id + "'>" +
@@ -406,6 +430,9 @@ eb.onopen = function() {
         });
     };
 
+    /**
+     * Save erm
+     */
     $('#erm-add-update').click(function () {
         saveErm(true);
     });
@@ -414,6 +441,9 @@ eb.onopen = function() {
         saveErm(false);
     });
 
+    /**
+     * Menu links
+     */
     $('#menu a').click(function(){
         var target = $(this).attr('id').split('-')[1];
         $('#header, #nav-icon3').toggleClass('open');
@@ -434,6 +464,11 @@ eb.onopen = function() {
         }
     });
 
+    /**
+     * Save erm
+     *
+     * @param update
+     */
     var saveErm = function(update) {
         var form = $('#erm-add-form').serializeArray();
         var erm = formToJson(form);
@@ -472,7 +507,6 @@ eb.onopen = function() {
             erm.huesetting = huesetting;
         }
 
-
         eb.send(action, erm, function (reply) {
             console.log(action);
             if (reply) {
@@ -486,5 +520,4 @@ eb.onopen = function() {
         });
         event.preventDefault();
     };
-
 };
