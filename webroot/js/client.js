@@ -253,8 +253,6 @@ eb.onopen = function() {
                     divLabel.text(property);
                     li.append(divLabel);
 
-                    if ()
-
                     var divValue = $('<div class="theme-property-value">');
                     divValue.text(res[0][property]);
                     li.append(divValue);
