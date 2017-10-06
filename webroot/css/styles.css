@@ -222,7 +222,8 @@ body {
     display: inline;
 }
 
-table.erm-collection tbody tr:hover td {
+table.erm-collection tbody tr:hover td,
+table.history-collection tbody tr:hover td {
     background-color: #444;
 }
 
@@ -586,7 +587,7 @@ body table.table td span.off {
     text-align: right;
 }
 body table.table td span.off:after {
-    background: #cc4b37;
+   /* background: #cc4b37; */
     left: 0;
 }
 body table.table td span.btn {
@@ -669,7 +670,7 @@ body .theme-preview-container ul ul li {
 
 /* Menu */
 #nav-icon3 {
-    width: 60px;
+    width: 8vh;
     height: 45px;
     position: relative;
     margin: 50px auto;
@@ -680,7 +681,7 @@ body .theme-preview-container ul ul li {
 #nav-icon3 {
     position: absolute;
     left: 26px;
-    top: -25px; }
+    top: -40px; }
 
 #nav-icon3 span {
     display: block;

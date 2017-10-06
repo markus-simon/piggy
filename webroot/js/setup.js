@@ -14,13 +14,13 @@ if (window.innerWidth < 600) {
 
 
 var headerHeight    = "10vh";
-var headerColor     = "#CB3577";
+/*var headerColor     = "#CB3577";
 var headerFontColor = "#fff";
 var headerFontSize  = "7vh";
 var backgroundColor = "#ffdddc";
 var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231","#ff55d2"]);
 var lineColor       = "#000";
-var axisColor       = "#000";
+var axisColor       = "#000";*/
 
 
 var barWidth = 50;
@@ -43,3 +43,4 @@ var locale = {
 d3.formatDefaultLocale(locale);
 
 var format = d3.format("($.2f")(-3.5);
+

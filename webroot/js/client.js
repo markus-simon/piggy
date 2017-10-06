@@ -11,6 +11,14 @@ var dataBars = [
     { amount: "200", sum: 0}
 ];
 
+var headerColor     = "#CB3577";
+var headerFontColor = "#fff";
+var headerFontSize  = "7vh";
+var backgroundColor = "#ffdddc";
+var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231","#ff55d2"]);
+var lineColor       = "#000";
+var axisColor       = "#000";
+
 eb.onopen = function() {
     /**
      * Find config
@@ -105,9 +113,9 @@ eb.onopen = function() {
                 {
                     "$group": {
                         "_id": "$amount",
-                        "amount": {"$first": "$amount"},
-                        "type": {"$first": "$type"},
-                        "sum": {"$sum": 1}
+                        "amount": { "$first": "$amount" },
+                        "type": { "$first": "$type" },
+                        "sum": { "$sum": 1 }
                     }
                 },{
                     "$sort": {
@@ -119,7 +127,16 @@ eb.onopen = function() {
                         "type": 1,
                         "amount": 1,
                         "sum": 1,
-                        "sumTotal": { "$multiply": [ "$sum", "$amount" ] }
+                        "sumTotal": { "$multiply": [ "$sum", "$amount" ] }/*,
+                        "weightTotal": {
+                            "$switch": {
+                                "branches": [
+                                    { "case": { "$eq": [ 0, 5   ] }, "then": "equals" },
+                                    { "case": { "$eq": [ 0, 5   ] }, "then": "greater than" },
+                                    { "case": { "$eq": [ 0, 5   ] }, "then": "less than" }
+                                ]
+                            }
+                        }*/
                     }
                 }
             ]
@@ -251,23 +268,6 @@ eb.onopen = function() {
         eb.send('find', {collection: 'themes', matcher: { name: t }}, function(res) {
             var themesObject = res[0];
 
-            /** !! TEST ONLY !! **/
-            var themesObject = Object.assign(
-                {},
-                res[0],
-                {
-                    colors: {
-                        header: "#002f2c",
-                        headerFont: "#fff",
-                        background: "#151515",
-                        amount: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
-                        line: "#fff",
-                        axis: "#fff"
-                    }
-                }
-            );
-            /** !! TEST ONLY !! **/
-
             for (var property in themesObject) {
                 if (property === 'colors') {
                     for (var color in themesObject['colors']) {
@@ -282,7 +282,16 @@ eb.onopen = function() {
                                     li.append(divLabel);
                                 }
                                 var divValue = $('<div class="theme-property-value">')
-                                    .colorPicker()
+                                    .colorPicker(
+                                        {
+                                            renderCallback: function($elm, toggled) {
+                                                if (toggled !== true && toggled !== false) { // hihi ...
+                                                    console.log('true1');
+                                                }
+                                            }
+                                        }
+
+                                    )
                                     .css('background-color', themesObject['colors'][color][subColor]);
 
                                 li.append(divValue).appendTo(ul);
@@ -292,7 +301,16 @@ eb.onopen = function() {
                             var li       = $('<li class="input theme-property">');
                             var divLabel = $('<div class="theme-property-label">' + color + '</div>');
                             var divValue = $('<div class="theme-property-value">')
-                                .colorPicker()
+                                .colorPicker({
+                                    renderCallback: function($elm, toggled) {
+                                        if (toggled !== true && toggled !== false) { // hihi ...
+                                            var prop        = $elm[0].offsetParent.innerText.replace(/(\r\n|\n|\r)/gm,"");
+                                            var pickedColor = $elm.text;
+                                            changeColor(prop, pickedColor);
+                                            updateData();
+                                        }
+                                    }
+                                })
                                 .css('background-color', themesObject['colors'][color]);
 
                             li.append(divLabel)
@@ -596,5 +614,39 @@ eb.onopen = function() {
             }
         });
         event.preventDefault();
+    };
+
+    var changeColor = function(element, color) {
+        switch (element) {
+            case 'header':
+                headerColor = color;
+                var colorParts = ['#menu'];
+                $.each(colorParts, function (key, value) {
+                    d3.select(value)
+                        .transition()
+                        .duration(500)
+                        .style('background-color', headerColor);
+                });
+                break;
+            case 'headerFont':
+                headerFontColor = color;
+                break;
+            case 'background':
+                backgroundColor = color;
+                var colorParts = ['body', '#menu', '#config', '#erm', '#history', '#checkout'];
+                $.each(colorParts, function (key, value) {
+                    d3.select(value)
+                        .transition()
+                        .duration(500)
+                        .style('background-color', backgroundColor);
+                });
+                break;
+            case 'line':
+                lineColor = color;
+                break;
+            case 'axis':
+                axisColor = color;
+                break;
+        }
     };
 };

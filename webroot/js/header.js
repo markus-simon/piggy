@@ -23,6 +23,7 @@ var sumTotalLabel = svgHeader.append("text")
 function updateHeader(result) {
     var sumTotal = 0;
 
+    console.log(result);
     // TODO sumTotal weiter nach "vorne" verschieben ...
     result.forEach(function(row) {
         sumTotal += row.sumTotal;
@@ -37,6 +38,5 @@ function updateHeader(result) {
     sumTotalLabel.text(sumValue);
     piggyLabel.transition().duration(500).style('fill', headerFontColor);
     sumTotalLabel.transition().duration(500).style('fill', headerFontColor);
-    console.log(headerColor);
     svgHeader.transition().duration(500).style("background", headerColor);
 }

@@ -2,7 +2,7 @@ var n = 40;
 var random = d3.randomUniform(0, 0);
 var deta = d3.range(n).map(random);
 
-var duration = 1000;
+var duration = 2000;
 var now = new Date(Date.now() - duration);
 
 var x = d3.scaleLinear()
