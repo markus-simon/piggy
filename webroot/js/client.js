@@ -38,17 +38,7 @@ eb.onopen = function() {
      */
     eb.registerHandler('saved', function(document) {
         updateData();
-
-        switch (document.collection) {
-            case 'erm':
-                renderTable(document, '.erm-collection', true);
-                break;
-            case 'themes':
-                renderTable(document, '.themes-collection', true);
-                break;
-            default:
-                break;
-        }
+        renderTable(document, '.' + document.collection + '-collection', true);
     });
 
     /**
@@ -194,11 +184,11 @@ eb.onopen = function() {
                 showConfigOverlay();
             }
 
-            if (e.keyCode === 69) showErmOverlay();
-            if (e.keyCode === 72) showOverlay('history', 'history', false);
-            if (e.keyCode === 75) showCheckoutOverlay();
-            if (e.keyCode === 84) showOverlay('themes', 'themes', true);
-            if (e.keyCode === 86) showOverlay('version', 'version', false);
+            if (e.keyCode === 69) showOverlay('erm', true);
+            if (e.keyCode === 72) showOverlay('history', false);
+            if (e.keyCode === 75) showOverlay('checkout', false);
+            if (e.keyCode === 84) showOverlay('themes', true);
+            if (e.keyCode === 86) showOverlay('version', false);
         }
     });
 
@@ -344,13 +334,6 @@ eb.onopen = function() {
     };
 
     /**
-     * Show checkout overlay
-     */
-    var showCheckoutOverlay = function () {
-        $('#checkout').fadeTo("slow", 0.97);
-    };
-
-    /**
      * Show config overlay
      */
     var showConfigOverlay = function () {
@@ -418,42 +401,30 @@ eb.onopen = function() {
     };
 
     /**
-     * Show erm overlay
-     */
-    var showErmOverlay = function () {
-        $('#erm').fadeTo("slow", 0.97);
-        var table = ".erm-collection";
-        eb.send('find', {collection: 'erm', matcher: {}}, function (reply) {
-            $(table + " > tbody").empty();
-            $.each(reply, function (key, value) {
-                renderTable(value, table, true);
-            });
-        });
-    };
-
-    /**
      * Show overlay
      *
-     * @param overlay
      * @param collection
      * @param editable
      */
-    var showOverlay = function(overlay, collection, editable) {
-        $('#' + overlay).fadeTo("slow", 0.97);
-        var table = "." + collection + "-collection";
+    var showOverlay = function(collection, editable) {
+        $('#' + collection).fadeTo("slow", 0.97);
 
-        if ('version' === collection) {
-            collection = 'upgrades';
-        } else if ('history' === collection) {
-            collection = 'piggy';
-        }
+        if ('checkout' !== collection) {
+            var table = "." + collection + "-collection";
 
-        eb.send('find', {collection: collection, matcher: {}}, function (reply) {
-            $(table + " > tbody").empty();
-            $.each(reply, function (key, value) {
-                renderTable(value, table, editable);
+            if ('version' === collection) {
+                collection = 'upgrades';
+            } else if ('history' === collection) {
+                collection = 'piggy';
+            }
+
+            eb.send('find', {collection: collection, matcher: {}}, function (reply) {
+                $(table + " > tbody").empty();
+                $.each(reply, function (key, value) {
+                    renderTable(value, table, editable);
+                });
             });
-        });
+        }
     };
 
     /**
@@ -486,18 +457,18 @@ eb.onopen = function() {
         $(".overlay").fadeOut('slow');
         switch (target) {
             case 'version':
-            case 'themes':
             case 'history':
-                showOverlay(target, target, false);
+            case 'checkout':
+                showOverlay(target, false);
                 break;
             case 'config':
                 showConfigOverlay();
                 break;
-            case 'alert':
-                showErmOverlay();
+            case 'themes':
+                showOverlay(target, true);
                 break;
-            case 'checkout':
-                showCheckoutOverlay();
+            case 'alert':
+                showOverlay('erm', true);
                 break;
         }
     });
