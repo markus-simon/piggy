@@ -25,11 +25,9 @@ eb.onopen = function() {
      */
     eb.send('find', {collection: 'config', matcher: {}}, function(reply) {
         config = reply[0];
-        console.log('config28');
-        console.log(config);
         if (!$.isEmptyObject(config)) {
             $('#config-save-id').val(config._id);
-            renderTheme(config.name);
+            renderTheme(config.theme);
             changeTheme(config.theme);
         }
         updateData();
@@ -54,7 +52,6 @@ eb.onopen = function() {
      * Register delete handler
      */
     eb.registerHandler('deleted', function(document) {
-        console.log(document);
         switch (document.collection) {
             case 'upgrades':
                 $('#version-collection-' + document.matcher._id).remove();
@@ -107,6 +104,14 @@ eb.onopen = function() {
             }
         }
         if (document.showtts) playSound('assets/sound/' + document.showtts);
+    });
+
+
+    /**
+     * Register dropped handler
+     */
+    eb.registerHandler('dropped', function(document) {
+        location.reload(true);
     });
 
     /**
@@ -271,10 +276,15 @@ eb.onopen = function() {
      * @param t
      */
     var renderTheme = function(t) {
+
+        console.log(t);
+
+
+
         $('.theme-preview-container ul').html('');
         eb.send('find', {collection: 'themes', matcher: { name: t }}, function(res) {
             var themesObject = res[0];
-
+            $('#config-theme-name').val(res[0].name);
             for (var property in themesObject) {
                 if (property === 'colors') {
                     for (var color in themesObject['colors']) {
@@ -349,8 +359,8 @@ eb.onopen = function() {
     var showConfigOverlay = function () {
         $('#config').fadeTo("slow", 0.97);
         eb.send('find', {collection: 'themes', matcher: {}}, function (reply) {
+            $('#config-themes').empty();
             var selected = '';
-
             $.each(reply, function (key, value) {
                 if (!$.isEmptyObject(config)) {
                     if (value.name === config.theme) {
@@ -413,21 +423,32 @@ eb.onopen = function() {
     });
 
 
+
+
+    /**
+     * Factory reset
+     */
+    $('#factory-reset').click(function() {
+        console.log('deleteeeeeeeeverything!!!');
+        var document = {};
+        document.collections = ['config','upgrades','themes'];
+        eb.send('drop', document, function(reply) {
+            console.log(reply);
+        });
+    });
+
+
+
     /**
      * Change theme colors undso
      */
     var changeTheme = function(theme) {
-        console.log('theme420');
-        console.log(theme);
         eb.send('find', {collection: 'themes', matcher: { name: theme }}, function (res) {
-            console.log('res423');
-            console.log(res);
             color = d3.scaleOrdinal(res[0].colors.amount);
             backgroundColor = res[0].colors.background;
             axisColor = res[0].colors.axis;
             lineColor = res[0].colors.line;
             var colorParts = ['body', '#config', '#erm', '#history', '#checkout', '#version'];
-            $('#config-themes').empty();
             $('#config').fadeOut('slow');
 
             $.each(colorParts, function (key, value) {
@@ -573,8 +594,8 @@ eb.onopen = function() {
     /**
      * Save config
      */
-    $('#config-update, #config-send').click(function () {
-        saveConfig($(this).data('update'));
+    $('#config-save').click(function () {
+        saveConfig();
     });
 
 
@@ -583,8 +604,6 @@ eb.onopen = function() {
      */
     $('#menu a').click(function(){
         var target = $(this).attr('id').split('-')[1];
-        console.log($(this).attr('id'));
-        console.log(target);
         $('#header, #nav-icon3').toggleClass('open');
         $(".overlay").fadeOut('slow');
         switch (target) {
@@ -618,17 +637,15 @@ eb.onopen = function() {
     /**
      * Save configuration
      */
-    var saveConfig = function(update) {
+    var saveConfig = function() {
         var form = $('#config-save-form').serializeArray();
-        var config = formToJson(form);
+        config = formToJson(form);
+        config.theme = config.name;
+        delete config.name;
 
         var action = 'edit';
 
-        console.log(config);
-        console.log(action);
-
         eb.send(action, config, function (reply) {
-            console.log(reply);
             if (reply) {
                 $('#config-save-id').val(reply);
                 changeTheme(reply.theme);
@@ -682,7 +699,6 @@ eb.onopen = function() {
         }
 
         eb.send(action, erm, function (reply) {
-            console.log(action);
             if (reply) {
                 $('#erm-add-form')[0].reset();
                 $('.show, .hue').hide();

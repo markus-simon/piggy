@@ -86,7 +86,22 @@ consumerEdit.handler(function (message) {
     });
 });
 
-// TODO not working yet ... wrong mongo shell version!?
+// another handler to drop collections
+var consumerDrop = eb.consumer('drop');
+consumerDrop.handler(function (message) {
+    var document = message.body();
+    document.collections.forEach(function(collection) {
+        client.dropCollection(collection, function (res, res_err) {
+            if (res_err === null) {
+                eb.publish('dropped', document);
+            } else {
+                message.reply(res_err);
+                res_err.printStackTrace();
+            }
+        });
+    });
+});
+
 var consumerCollections = eb.consumer('getCollections');
 consumerCollections.handler(function (message) {
     client.getCollections(function (res, res_err) {

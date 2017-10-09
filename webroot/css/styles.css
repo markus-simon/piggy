@@ -243,7 +243,7 @@ table.history-collection tbody tr:hover td {
     padding: 5px 8px;
 }
 
-#config-themes {
+#config-themes, #config-theme-name {
     width: 45vw;
     padding: 5px 8px;
 }

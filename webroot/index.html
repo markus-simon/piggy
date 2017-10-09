@@ -200,8 +200,17 @@
                                 <li id="theme-li" class="input">
                                     <label for="config-themes">Theme</label>
                                     <select id="config-themes" name="theme"></select>
-                                    <div class="theme-preview-container"><ul></ul></div>
                                 </li>
+                                <!-- name -->
+                                <li class="input">
+                                    <label for="config-theme-name">Name</label>
+                                    <input id="config-theme-name" name="name" placeholder="Name" required/>
+
+                                    <div class="theme-preview-container"><ul></ul></div>
+
+                                </li>
+
+
                             </ul>
                         </li>
                         <li>
@@ -219,8 +228,7 @@
                         <input id="config-save-collection" type="hidden" name="collection" value="config">
                         <input id="config-save-id" type="hidden" name="_id">
                         <label for="config-save">Ready?</label>
-                        <button id="config-update" data-update="true" type="button">Update</button>
-                        <button id="config-save" data-update="false" type="button">Save</button>
+                        <button id="config-save" type="button">Save</button>
                     </li>
                 </ul>
             </form>
@@ -255,7 +263,7 @@
                     </div>
                 </li>
 
-
+            </ul>
 
         </div>
 
