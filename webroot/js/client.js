@@ -42,6 +42,9 @@ eb.onopen = function() {
             case 'erm':
                 renderErmTable(document, '.erm-collection');
                 break;
+            case 'themes':
+                renderThemesTable(document, '.themes-collection');
+                break;
             default:
                 break;
         }
@@ -276,75 +279,68 @@ eb.onopen = function() {
     /**
      * Render theme
      *
-     * @param t
+     * @param theme
      */
     var renderTheme = function(theme) {
         $('.theme-preview-container ul').html('');
-/*
-        eb.send('find', {collection: 'themes', matcher: { name: t }}, function(res) {
-*/
-            var themesObject = theme;
-            for (var property in themesObject) {
-                if (property === 'colors') {
-                    for (var color in themesObject['colors']) {
-                        if ('object' === typeof(themesObject['colors'][color])) {
-                            var pLi = $('<li class="input theme-property">');
-                            var ul = $('<ul class="sub-list">');
+        var themesObject = theme;
+        for (var property in themesObject) {
+            if (property === 'colors') {
+                for (var color in themesObject['colors']) {
+                    if ('object' === typeof(themesObject['colors'][color])) {
+                        var pLi = $('<li class="input theme-property">');
+                        var ul = $('<ul class="sub-list">');
 
-                            for (var subColor in themesObject['colors'][color]) {
-                                var li = $('<li class="input theme-property">');
-                                if (0 == subColor) {
-                                    var divLabel = $('<div class="theme-property-label">' + color + '</div>');
-                                    li.append(divLabel);
-                                }
-                                var divValue = $('<div class="theme-property-value">')
-                                    .colorPicker(
-                                        {
-                                            renderCallback: function($elm, toggled) {
-                                                if (toggled !== true && toggled !== false) { // hihi ...
-                                                    console.log('true1');
-                                                }
+                        for (var subColor in themesObject['colors'][color]) {
+                            var li = $('<li class="input theme-property">');
+                            if (0 == subColor) {
+                                var divLabel = $('<div class="theme-property-label">' + color + '</div>');
+                                li.append(divLabel);
+                            }
+                            var divValue = $('<div class="theme-property-value">')
+                                .colorPicker(
+                                    {
+                                        renderCallback: function($elm, toggled) {
+                                            if (toggled !== true && toggled !== false) { // hihi ...
+                                                console.log('true1');
                                             }
                                         }
-
-                                    )
-                                    .css('background-color', themesObject['colors'][color][subColor]);
-
-                                li.append(divValue).appendTo(ul);
-                            }
-                            pLi.append(ul).appendTo($('.theme-preview-container > ul'));
-                        } else {
-                            var li       = $('<li class="input theme-property">');
-                            var divLabel = $('<div class="theme-property-label">' + color + '</div>');
-                            var divValue = $('<div class="theme-property-value">')
-                                .colorPicker({
-                                    renderCallback: function($elm, toggled) {
-                                        if (toggled !== true && toggled !== false) { // hihi ...
-                                            var prop        = $elm[0].offsetParent.innerText.replace(/(\r\n|\n|\r)/gm,"");
-                                            var pickedColor = $elm.text;
-                                            changeColor(prop, pickedColor);
-                                            updateData();
-                                        }
                                     }
-                                })
-                                .css('background-color', themesObject['colors'][color]);
+                                )
+                                .css('background-color', themesObject['colors'][color][subColor]);
 
-                            li.append(divLabel)
-                                .append(divValue).appendTo($('.theme-preview-container > ul'));
+                            li.append(divValue).appendTo(ul);
                         }
-                    }
-                } else if (property === 'wallpaper') {
-                    var li       = $('<li class="input theme-property">');
-                    var divLabel = $('<div class="theme-property-label">' + property + '</div>');
-                    var divValue = $('<div class="theme-property-value">' + themesObject[property] + '</div>');
+                        pLi.append(ul).appendTo($('.theme-preview-container > ul'));
+                    } else {
+                        var li       = $('<li class="input theme-property">');
+                        var divLabel = $('<div class="theme-property-label">' + color + '</div>');
+                        var divValue = $('<div class="theme-property-value">')
+                            .colorPicker({
+                                renderCallback: function($elm, toggled) {
+                                    if (toggled !== true && toggled !== false) { // hihi ...
+                                        var prop        = $elm[0].offsetParent.innerText.replace(/(\r\n|\n|\r)/gm,"");
+                                        var pickedColor = $elm.text;
+                                        changeColor(prop, pickedColor);
+                                        updateData();
+                                    }
+                                }
+                            })
+                            .css('background-color', themesObject['colors'][color]);
 
-                    li.append(divLabel)
-                        .append(divValue).appendTo($('.theme-preview-container > ul'));
+                        li.append(divLabel)
+                            .append(divValue).appendTo($('.theme-preview-container > ul'));
+                    }
                 }
+            } else if (property === 'wallpaper') {
+                var li       = $('<li class="input theme-property">');
+                var divLabel = $('<div class="theme-property-label">' + property + '</div>');
+                var divValue = $('<div class="theme-property-value">' + themesObject[property] + '</div>');
+
+                li.append(divLabel)
+                    .append(divValue).appendTo($('.theme-preview-container > ul'));
             }
-/*
-        });
-*/
+        }
     };
 
     /**
@@ -404,32 +400,6 @@ eb.onopen = function() {
         });
     };
 
-
-    /**
-     * Display main theme colors
-     */
-    var fillColorFields = function(t) {
-        var previewFields = $('.theme-preview');
-        var i = 0;
-
-        eb.send('find', {collection: 'themes', matcher: { name: t }}, function (res) {
-            $.each(res[0].amountColors, function(key, value){
-                $(previewFields[i++]).css('background', value);
-            });
-            $('.theme-preview-line').css('background', res[0].axisColor);
-            $('.theme-preview-bg').css('background', res[0].backgroundColor);
-        });
-    };
-
-/*
-    /!**
-     * Change preview colors
-     *!/
-    $('#config-themes').change(function() {
-        renderTheme($('option:selected', this).val());
-    });
-*/
-
     /**
      * Toggle navigation
      */
@@ -437,9 +407,6 @@ eb.onopen = function() {
         $(this).toggleClass('open');
         $('#header').toggleClass('open');
     });
-
-
-
 
     /**
      * Factory reset
@@ -627,10 +594,10 @@ eb.onopen = function() {
         $('#themes-collection-' + value._id).click(function () {
             eb.send('find', {collection: 'themes', matcher: {_id: value._id}}, function (reply) {
                 if (reply.length > 0) {
+                    $('#theme-update').show();
+                    $('#theme-id').val(value._id);
                     renderTheme(reply[0]);
-                    jsonToForm('theme-edit-', reply[0]);
-
-
+                    jsonToForm('theme-', reply[0]);
                 }
             });
         });
@@ -650,6 +617,13 @@ eb.onopen = function() {
      */
     $('#config-save').click(function () {
         saveConfig();
+    });
+
+    /**
+     * Save theme
+     */
+    $('#theme-update, #theme-save').click(function () {
+        saveTheme($(this).data('update'));
     });
 
 
@@ -767,6 +741,39 @@ eb.onopen = function() {
         });
         event.preventDefault();
     };
+
+
+
+
+    /**
+     * Save theme
+     */
+    var saveTheme = function(update) {
+        var form = $('#theme-form').serializeArray();
+        var theme = formToJson(form);
+
+        var action = 'save';
+        if (update) {
+            action = 'edit';
+        } else {
+            delete theme._id;
+        }
+
+        eb.send(action, theme, function (reply) {
+            if (reply) {
+                $('#theme-id').val(reply);
+                changeTheme(reply.theme);
+            } else {
+                alert('Hoppala, irgendwas ging halt nicht!');
+            }
+        });
+    };
+
+
+
+
+
+
 
     var changeColor = function(element, color) {
         switch (element) {

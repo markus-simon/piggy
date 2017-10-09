@@ -17,8 +17,19 @@ var getHuePath = function () {
 var formToJson = function(form) {
     var json = {};
     $.each(form, function(key, value) {
+
+        console.log(key);
+        console.log('--');
+        console.log(value);
+
+
         $.each(value, function(key2, value2) {
+
+
             if(key2 === 'name' && value.value !== "") {
+
+
+
                 if (isJson(value.value)) {
                     json[value2] = JSON.parse(value.value);
                 } else {

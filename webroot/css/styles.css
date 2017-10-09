@@ -206,7 +206,7 @@ body {
     clear: both;
 }
 
-#erm-add-form ul, #theme-edit-form ul {
+#erm-add-form ul, #theme-form ul {
     /*
     width: 50vw;
     */
@@ -218,7 +218,7 @@ body {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
-#erm-add-form li, #theme-edit-form li {
+#erm-add-form li, #theme-form li {
     padding:12px;
     border-bottom: 1px solid #777;
     position:relative;
@@ -271,7 +271,7 @@ table.table tbody tr:hover td {
     padding: 12px !important;
 }
 
-#erm-add-update {
+#erm-add-update, #theme-update {
     display: none;
 }
 

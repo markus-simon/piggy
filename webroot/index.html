@@ -174,6 +174,10 @@
 
 
 
+
+
+
+
         <!-- History -->
         <div id="history" class="overlay">
             <div class="tbl-header">
@@ -190,6 +194,12 @@
                 </table>
             </div>
         </div>
+
+
+
+
+
+
 
         <!-- Themes -->
         <div id="themes" class="overlay">
@@ -211,13 +221,13 @@
                 </li>
                 <!-- Edit theme -->
                 <li id="theme-edit">
-                    <form id="theme-edit-form">
+                    <form id="theme-form">
                         <ul>
 
                             <!-- name -->
                             <li class="input">
-                                <label for="theme-edit-name">Name</label>
-                                <input id="theme-edit-name" name="name" placeholder="Name" required/>
+                                <label for="theme-name">Name</label>
+                                <input id="theme-name" name="name" placeholder="Name" required/>
                             </li>
                             <li>
                                 <div class="theme-preview-container"><ul></ul></div>
@@ -225,9 +235,11 @@
 
                             <!-- save Theme -->
                             <li class="input">
+                                <input id="theme-collection" type="hidden" name="collection" value="themes">
+                                <input id="theme-id" type="hidden" name="_id">
                                 <label for="erm-add-send">Ready?</label>
-                                <button id="theme-edit-update" data-update="true" type="button">Update</button>
-                                <button id="erm-edit-send" data-update="false" type="button">Save</button>
+                                <button id="theme-update" data-update="true" type="button">Update</button>
+                                <button id="theme-save" data-update="false" type="button">Save</button>
                             </li>
                         </ul>
                     </form>
@@ -241,12 +253,12 @@
                 <div class="accordion">
                     <ul>
                         <li>
-                            <span class="accordion-title open">Version</span>
+                            <span class="accordion-title">Theme</span>
                             <div class="accordion-content">
                                 <ul>
-                                    <li id="rest-config-li" class="input">
-                                        <label for="config-themes">Rest config</label>
-                                        <input id="config-themes">Rest config</input>
+                                    <li id="rest-config-li2" class="input">
+                                        <label for="config-themes">Theme</label>
+                                        <select id="config-themes" name="theme"></select>
                                     </li>
                                 </ul>
                             </div>
