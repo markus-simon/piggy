@@ -52,7 +52,11 @@ eb.onopen = function() {
      * Register delete handler
      */
     eb.registerHandler('deleted', function(document) {
+        console.log(document);
         switch (document.collection) {
+            case 'upgrades':
+                $('#version-collection-' + document.matcher._id).remove();
+                break;
             case 'erm':
                 $('#erm-collection-' + document.matcher._id).remove();
                 break;
@@ -169,7 +173,7 @@ eb.onopen = function() {
             $(".overlay").fadeOut('slow');
             if (e.keyCode === 27) {
                 $('#header, #nav-icon3').removeClass('open');
-                $('#checkout, #erm, #history, #config, #show').fadeOut('slow');
+                $('#checkout, #erm, #history, #config, #version, #show').fadeOut('slow');
             }
             if (e.keyCode === 67) {
                 if (config) {
@@ -181,6 +185,7 @@ eb.onopen = function() {
             if (e.keyCode === 69) showErmOverlay();
             if (e.keyCode === 72) showHistoryOverlay();
             if (e.keyCode === 75) showCheckoutOverlay();
+            if (e.keyCode === 86) showVersionOverlay();
         }
     });
 
@@ -330,7 +335,7 @@ eb.onopen = function() {
     };
 
     /**
-     * Show checkout overly
+     * Show checkout overlay
      */
     var showCheckoutOverlay = function () {
         $('#checkout').fadeTo("slow", 0.97);
@@ -354,9 +359,25 @@ eb.onopen = function() {
                 }
                 $('<option ' + selected + 'value=' + value.name + '>').text(value.name).appendTo($('#config-themes'));
             });
-            //fillColorFields(config.theme);
         });
     };
+
+
+    /**
+     * Show version overlay
+     */
+    var showVersionOverlay = function () {
+        $('#version').fadeTo("slow", 0.97);
+        var table = ".version-collection";
+        eb.send('find', {collection: 'upgrades', matcher: {}}, function (reply) {
+            $(table + " > tbody").empty();
+            $.each(reply, function (key, value) {
+                renderVersionTable(value, table);
+            });
+        });
+    };
+
+
 
     /**
      * Display main theme colors
@@ -389,26 +410,6 @@ eb.onopen = function() {
         $('#header').toggleClass('open');
     });
 
-    /**
-     * Save configuration
-     */
-    $('#config-save').click(function () {
-        var form = $('#config-save-form').serializeArray();
-        var document = formToJson(form);
-
-        var action = 'save';
-        if (document._id) {
-            action = 'edit';
-        }
-        eb.send(action, document, function (reply) {
-            if (reply) {
-                $('#config-save-id').val(reply);
-                changeTheme(reply.theme);
-            } else {
-                alert('Hoppala, irgendwas ging halt nicht!');
-            }
-        });
-    });
 
     /**
      * Change theme colors undso
@@ -529,6 +530,33 @@ eb.onopen = function() {
         });
     };
 
+
+
+    /**
+     * Render version table
+     *
+     * @param value
+     * @param table
+     */
+    var renderVersionTable = function (value, table) {
+        $(table + " > tbody").append(
+            "<tr id='version-collection-" + value._id + "'>" +
+            "<td>" + value.message_created_at + "</td>" +
+            "<td>" + value.verticle + "</td>" +
+            "<td id='delete-upgrade-" + value._id + "'><span class='btn'>X</span></td>" +
+            "</tr>"
+        );
+
+        $('#delete-upgrade-' + value._id).click(function () {
+            eb.send('delete', {collection: 'upgrades', matcher: {_id: value._id}}, function (reply) {
+                // TODO delete per publish erfassen, weil anderer tab undso ...
+                if (reply.length > 0) {
+                    $('#version-collection-' + value._id).remove();
+                }
+            })
+        });
+    };
+
     /**
      * Save erm
      */
@@ -537,10 +565,20 @@ eb.onopen = function() {
     });
 
     /**
+     * Save config
+     */
+    $('#config-update, #config-send').click(function () {
+        saveConfig($(this).data('update'));
+    });
+
+
+    /**
      * Menu links
      */
     $('#menu a').click(function(){
         var target = $(this).attr('id').split('-')[1];
+        console.log($(this).attr('id'));
+        console.log(target);
         $('#header, #nav-icon3').toggleClass('open');
         $(".overlay").fadeOut('slow');
         switch (target) {
@@ -556,8 +594,43 @@ eb.onopen = function() {
             case 'checkout':
                 showCheckoutOverlay();
                 break;
+            case 'version':
+                showVersionOverlay();
+                break;
         }
     });
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Save configuration
+     */
+    var saveConfig = function(update) {
+        var form = $('#config-save-form').serializeArray();
+        var config = formToJson(form);
+
+        var action = 'edit';
+
+        console.log(config);
+        console.log(action);
+
+        eb.send(action, config, function (reply) {
+            console.log(reply);
+            if (reply) {
+                $('#config-save-id').val(reply);
+                changeTheme(reply.theme);
+            } else {
+                alert('Hoppala, irgendwas ging halt nicht!');
+            }
+        });
+    };
 
     /**
      * Save erm
@@ -633,7 +706,7 @@ eb.onopen = function() {
                 break;
             case 'background':
                 backgroundColor = color;
-                var colorParts = ['body', '#menu', '#config', '#erm', '#history', '#checkout'];
+                var colorParts = ['body', '#menu', '#config', '#erm', '#history', '#checkout', '#version'];
                 $.each(colorParts, function (key, value) {
                     d3.select(value)
                         .transition()

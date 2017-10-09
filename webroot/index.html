@@ -28,6 +28,9 @@
                 <li>
                     <a id="overlay-config" title="Configuration" href="#">Configuration</a>
                 </li>
+                <li>
+                    <a id="overlay-version" title="Version" href="#">Version</a>
+                </li>
             </ul>
         </div>
         <div>
@@ -177,6 +180,7 @@
                         <th>Created at</th>
                         <th>Amount</th>
                         <th>Type</th>
+                        <th>Delete</th>
                     </tr>
                     </thead>
                     <tbody></tbody>
@@ -198,10 +202,27 @@
                         <input id="config-save-collection" type="hidden" name="collection" value="config">
                         <input id="config-save-id" type="hidden" name="_id">
                         <label for="config-save">Ready?</label>
-                        <button id="config-save" type="button">Save</button>
+                        <button id="config-update" data-update="true" type="button">Update</button>
+                        <button id="config-save" data-update="false" type="button">Save</button>
                     </li>
                 </ul>
             </form>
+        </div>
+
+        <!-- Version -->
+        <div id="version" class="overlay">
+            <div class="tbl-header">
+                <table class="version-collection table" cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                    <tr>
+                        <th>Created at</th>
+                        <th>Verticle</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
 
         <div id="show"><div id="show-content"></div></div>

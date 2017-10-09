@@ -29,8 +29,14 @@ bar.append("rect")
     .attr("x", function(d) { return x(d.amount) - barWidth / 2; })
     .attr("width", barWidth)
     .attr("y", function(d) { return y(d.sum); })
+    .attr("class","bar")
     .attr("height", function(d) { return height - 25 - y(d.amount); })
-    .style("fill", function(d, i) { return color(i); });
+    .style("fill", function(d, i) { return color(i); })
+
+    .on("mouseover", function() {
+        d3.selectAll(".bar").style("opacity", "0.3");
+        d3.select(this).style("opacity", "1");
+    });
 
 svg2.append("g")
     .attr("class", "x axis")

@@ -32,7 +32,6 @@ function updateHeader(result) {
     var sumTotal    = 0;
     var weightTotal = 0;
 
-    console.log(result);
     // TODO sumTotal weiter nach "vorne" verschieben ...
     result.forEach(function(row) {
         sumTotal += row.sumTotal;
