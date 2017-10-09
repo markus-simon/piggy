@@ -38,17 +38,7 @@ eb.onopen = function() {
      */
     eb.registerHandler('saved', function(document) {
         updateData();
-
-        switch (document.collection) {
-            case 'erm':
-                renderErmTable(document, '.erm-collection');
-                break;
-            case 'themes':
-                renderThemesTable(document, '.themes-collection');
-                break;
-            default:
-                break;
-        }
+        renderTable(document, '.' + document.collection + '-collection', true);
     });
 
     /**
@@ -111,7 +101,6 @@ eb.onopen = function() {
         }
         if (document.showtts) playSound('assets/sound/' + document.showtts);
     });
-
 
     /**
      * Register dropped handler
@@ -195,11 +184,11 @@ eb.onopen = function() {
                 showConfigOverlay();
             }
 
-            if (e.keyCode === 69) showErmOverlay();
-            if (e.keyCode === 72) showHistoryOverlay();
-            if (e.keyCode === 75) showCheckoutOverlay();
-            if (e.keyCode === 84) showThemesOverlay();
-            if (e.keyCode === 86) showVersionOverlay();
+            if (e.keyCode === 69) showOverlay('erm', true);
+            if (e.keyCode === 72) showOverlay('history', false);
+            if (e.keyCode === 75) showOverlay('checkout', false);
+            if (e.keyCode === 84) showOverlay('themes', true);
+            if (e.keyCode === 86) showOverlay('version', false);
         }
     });
 
@@ -351,13 +340,6 @@ eb.onopen = function() {
     };
 
     /**
-     * Show checkout overlay
-     */
-    var showCheckoutOverlay = function () {
-        $('#checkout').fadeTo("slow", 0.97);
-    };
-
-    /**
      * Show config overlay
      */
     var showConfigOverlay = function () {
@@ -374,35 +356,6 @@ eb.onopen = function() {
                     }
                 }
                 $('<option ' + selected + 'value=' + value.name + '>').text(value.name).appendTo($('#config-themes'));
-            });
-        });
-    };
-
-
-    /**
-     * Show version overlay
-     */
-    var showVersionOverlay = function () {
-        $('#version').fadeTo("slow", 0.97);
-        var table = ".version-collection";
-        eb.send('find', {collection: 'upgrades', matcher: {}}, function (reply) {
-            $(table + " > tbody").empty();
-            $.each(reply, function (key, value) {
-                renderVersionTable(value, table);
-            });
-        });
-    };
-
-    /**
-     * Show version overlay
-     */
-    var showThemesOverlay = function () {
-        $('#themes').fadeTo("slow", 0.97);
-        var table = ".themes-collection";
-        eb.send('find', {collection: 'themes', matcher: {}}, function (reply) {
-            $(table + " > tbody").empty();
-            $.each(reply, function (key, value) {
-                renderThemesTable(value, table);
             });
         });
     };
@@ -425,8 +378,6 @@ eb.onopen = function() {
             console.log(reply);
         });
     });
-
-
 
     /**
      * Change theme colors undso
@@ -457,165 +408,32 @@ eb.onopen = function() {
         });
     };
 
-
     /**
-     * Show erm overlay
-     */
-    var showErmOverlay = function () {
-        $('#erm').fadeTo("slow", 0.97);
-        var table = ".erm-collection";
-        eb.send('find', {collection: 'erm', matcher: {}}, function (reply) {
-            $(table + " > tbody").empty();
-            $.each(reply, function (key, value) {
-                renderErmTable(value, table);
-            });
-        });
-    };
-
-    /**
-     * Render erm table
+     * Show overlay
      *
-     * @param value
-     * @param table
+     * @param collection
+     * @param editable
      */
-    var renderErmTable = function (value, table) {
-        $(table + " > tbody").append(
-            "<tr id='erm-collection-" + value._id + "'>" +
-            "<td>" + value.message_created_at + "</td>" +
-            "<td>" + value.name + "</td>" +
-            "<td>" + value.matcher + "</td>" +
-            "<td><span class='" + value.show + "'>" + value.show + "</span></td>" +
-            "<td><span class='" + value.hue + "'>" + value.hue + "</span></td>" +
-            "<td id='disable-erm-" + value._id + "'><span class='btn'>&empty;</span></td>" +
-            "<td id='delete-erm-" + value._id + "'><span class='btn'>X</span></td>" +
-            "</tr>"
-        );
-        $('#disable-erm-' + value._id).click(function () {
-            alert('disable not working yet ... sorry');
-        });
-        $('#delete-erm-' + value._id).click(function () {
-            eb.send('delete', {collection: 'erm', matcher: {_id: value._id}}, function (reply) {
-                if (reply.length > 0) {
-                    $('#erm-collection-' + value._id).remove();
-                }
-            })
-        });
-        $('#erm-collection-' + value._id).click(function () {
-            eb.send('find', {collection: 'erm', matcher: {_id: value._id}}, function (reply) {
-                if (reply.length > 0) {
-                    $('#erm-add-update').show();
-                    $('#erm-add-id').val(value._id);
-                    jsonToForm('erm-add-', reply[0]);
-                }
+    var showOverlay = function(collection, editable) {
+        $('#' + collection).fadeTo("slow", 0.97);
+
+        if ('checkout' !== collection) {
+            var table = "." + collection + "-collection";
+
+            if ('version' === collection) {
+                collection = 'upgrades';
+            } else if ('history' === collection) {
+                collection = 'piggy';
+            }
+
+            eb.send('find', {collection: collection, matcher: {}}, function (reply) {
+                $(table + " > tbody").empty();
+                $.each(reply, function (key, value) {
+                    renderTable(value, table, editable);
+                });
             });
-        });
+        }
     };
-
-    /**
-     * Show history table
-     */
-    var showHistoryOverlay = function () {
-        $('#history').fadeTo("slow", 0.97);
-        var table = ".history-collection";
-        eb.send('find', {collection: 'piggy', matcher: {}}, function (reply) {
-            $(table + " > tbody").empty();
-            $.each(reply, function (key, value) {
-                renderHistoryTable(value, table);
-            });
-        });
-    };
-
-    /**
-     * Render history table
-     *
-     * @param value
-     * @param table
-     */
-    var renderHistoryTable = function (value, table) {
-        $(table + " > tbody").append(
-            "<tr id='history-collection-" + value._id + "'>" +
-            "<td>" + value.message_created_at + "</td>" +
-            "<td>" + value.amount + "</td>" +
-            "<td>" + value.type + "</td>" +
-            "<td id='delete-history-" + value._id + "'><span class='btn'>X</span></td>" +
-            "</tr>"
-        );
-
-        $('#delete-history-' + value._id).click(function () {
-            eb.send('delete', {collection: 'piggy', matcher: {_id: value._id}}, function (reply) {
-                // TODO delete per publish erfassen, weil anderer tab undso ...
-                if (reply.length > 0) {
-                    $('#history-collection-' + value._id).remove();
-                }
-            })
-        });
-    };
-
-
-
-    /**
-     * Render version table
-     *
-     * @param value
-     * @param table
-     */
-    var renderVersionTable = function (value, table) {
-        $(table + " > tbody").append(
-            "<tr id='version-collection-" + value._id + "'>" +
-            "<td>" + value.message_created_at + "</td>" +
-            "<td>" + value.verticle + "</td>" +
-            "<td id='delete-upgrade-" + value._id + "'><span class='btn'>X</span></td>" +
-            "</tr>"
-        );
-
-        $('#delete-upgrade-' + value._id).click(function () {
-            eb.send('delete', {collection: 'upgrades', matcher: {_id: value._id}}, function (reply) {
-                // TODO delete per publish erfassen, weil anderer tab undso ...
-                if (reply.length > 0) {
-                    $('#version-collection-' + value._id).remove();
-                }
-            })
-        });
-    };
-
-
-    /**
-     * Render themes table
-     *
-     * @param value
-     * @param table
-     */
-    var renderThemesTable = function (value, table) {
-
-        $(table + " > tbody").append(
-            "<tr id='themes-collection-" + value._id + "'>" +
-            "<td>" + value.message_created_at + "</td>" +
-            "<td>" + value.name + "</td>" +
-            "<td id='delete-theme-" + value._id + "'><span class='btn'>X</span></td>" +
-            "</tr>"
-        );
-
-        $('#delete-theme-' + value._id).click(function () {
-            eb.send('delete', {collection: 'themes', matcher: {_id: value._id}}, function (reply) {
-                // TODO delete per publish erfassen, weil anderer tab undso ...
-                if (reply.length > 0) {
-                    $('#themes-collection-' + value._id).remove();
-                }
-            })
-        });
-        $('#themes-collection-' + value._id).click(function () {
-            eb.send('find', {collection: 'themes', matcher: {_id: value._id}}, function (reply) {
-                if (reply.length > 0) {
-                    $('#theme-update').show();
-                    $('#theme-id').val(value._id);
-                    renderTheme(reply[0]);
-                    jsonToForm('theme-', reply[0]);
-                }
-            });
-        });
-    };
-
-
 
     /**
      * Save erm
@@ -638,7 +456,6 @@ eb.onopen = function() {
         saveTheme($(this).data('update'));
     });
 
-
     /**
      * Menu links
      */
@@ -647,27 +464,22 @@ eb.onopen = function() {
         $('#header, #nav-icon3').toggleClass('open');
         $(".overlay").fadeOut('slow');
         switch (target) {
+            case 'version':
             case 'history':
-                showHistoryOverlay();
+            case 'checkout':
+                showOverlay(target, false);
                 break;
             case 'config':
                 showConfigOverlay();
                 break;
+            case 'themes':
+                showOverlay(target, true);
+                break;
             case 'alert':
-                showErmOverlay();
-                break;
-            case 'checkout':
-                showCheckoutOverlay();
-                break;
-            case 'version':
-                showVersionOverlay();
-                break;
-            case 'theme':
-                showThemesOverlay();
+                showOverlay('erm', true);
                 break;
         }
     });
-
 
     /**
      * Save configuration
@@ -742,9 +554,6 @@ eb.onopen = function() {
         event.preventDefault();
     };
 
-
-
-
     /**
      * Save theme
      */
@@ -816,12 +625,12 @@ eb.onopen = function() {
         });
     };
 
-
-
-
-
-
-
+    /**
+     * Change color
+     *
+     * @param element
+     * @param color
+     */
     var changeColor = function(element, color) {
         switch (element) {
             case 'header':
@@ -878,4 +687,82 @@ eb.onopen = function() {
            $(this).addClass('open');
        }
     });
+
+    /**
+     * Render table
+     *
+     * @param value
+     * @param table
+     * @param editable
+     */
+    var renderTable = function(value, table, editable) {
+        var columns    = $(table + ' thead th');
+        var collection = table.split('-')[0].replace('.','');
+        var deletable  = false;
+        var html       = '';
+        var mapping    = {
+            'created_at': 'message_created_at'
+        };
+
+        html += '<tr id="' + table.replace('.','') + '-' + value._id + '">';
+        $.each(columns, function(cKey, column) {
+            var key = column.textContent.toLocaleLowerCase();
+            if (true === mapping.hasOwnProperty(key.replace(' ', '_'))) {
+                key = mapping[key.replace(' ', '_')];
+            }
+            if ('disable' === key) {
+                html += '<td id="disable-' + collection + '-' + value._id + '"><span class="btn">&empty;</span></td>';
+            } else if ('delete' === key) {
+                deletable = true;
+                html += '<td id="delete-' + collection + '-' + value._id + '"><span class="btn">X</span></td>';
+            } else {
+                html += '<td>' + value[key] + '</td>';
+            }
+        });
+        html += '</tr>';
+
+        $(table + " > tbody").append(html);
+
+        if ('history' === collection) {
+            collection = 'piggy';
+        }
+
+        if ('version' === collection) {
+            collection = 'upgrades';
+        }
+
+        // Delete
+        if (true === deletable) {
+            $('#delete-' + collection + '-' + value._id).click(function() {
+                eb.send('delete', {collection: collection, matcher: {_id: value._id}}, function(reply) {
+                     // TODO delete per publish erfassen, weil anderer tab undso ...
+                     if (reply.length > 0) {
+                         $(table + '-' + value._id).remove();
+                     }
+                 });
+            });
+        }
+
+        // Edit
+        if (true === editable) {
+            if ('themes' === collection) {
+                var form = 'theme';
+            } else if ('erm' === collection) {
+                var form = 'erm-add';
+            }
+
+            $('#' + table.replace('.', '') + '-' + value._id).click(function() {
+                eb.send('find', {collection: collection, matcher: {_id: value._id}}, function(reply) {
+                    if (reply.length > 0) {
+                        $('#' + form + '-update').show();
+                        $('#' + form + '-id').val(value._id);
+                        if ('themes' === collection) {
+                            renderTheme(reply[0]);
+                        }
+                        jsonToForm(form + '-', reply[0]);
+                    }
+                });
+            });
+        }
+    };
 };
