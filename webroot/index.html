@@ -196,48 +196,68 @@
                     <ul>
                         <li>
                             <span class="accordion-title open">Themes</span>
-                            <ul class="accordion-content">
-                                <li id="theme-li" class="input">
-                                    <label for="config-themes">Theme</label>
-                                    <select id="config-themes" name="theme"></select>
-                                </li>
-                                <!-- name -->
-                                <li class="input">
-                                    <label for="config-theme-name">Name</label>
-                                    <input id="config-theme-name" name="name" placeholder="Name" required/>
-
-                                    <div class="theme-preview-container"><ul></ul></div>
-
-                                </li>
-
-
-                            </ul>
+                            <div class="accordion-content">
+                                <div class="theme-column">
+                                    <div id="theme-li" class="input">
+                                        <label for="config-themes">Theme</label>
+                                        <select id="config-themes" name="theme"></select>
+                                    </div>
+                                </div>
+                                    <div class="theme-column">
+                                        <div class="input">
+                                            <label for="config-theme-name">Name</label>
+                                            <input id="config-theme-name" name="name" placeholder="Name" required/>
+                                            <div class="theme-preview-container"><ul></ul></div>
+                                        </div>
+                                    </div>
+                                    <label for="theme-save">Ready?</label>
+                                    <button id="theme-save" type="button">Save</button>
+                            </div>
                         </li>
                         <li>
                             <span class="accordion-title">Version</span>
-                            <ul class="accordion-content">
-                                <li id="version-li" class="input">
-                                    <label for="config-themes">Version</label>
-                                </li>
-                            </ul>
+                            <div class="accordion-content">
+                                <ul>
+                                    <li id="rest-config-li" class="input">
+                                        <label for="config-themes">Rest config</label>
+                                    </li>
+                                    <li id="rest-config-li2" class="input">
+                                        <label for="config-themes">Rest config2</label>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
+
+                        <li>
+                            <span class="accordion-title">Rest Config</span>
+                            <div class="accordion-content">
+                                <ul>
+                                    <li id="rest-config-li3" class="input">
+                                        <label for="config-themes">Rest config3</label>
+                                    </li>
+                                    <li id="rest-config-li24" class="input">
+                                        <label for="config-themes">Rest config24</label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li id="config-save-li" class="input">
+                            <input id="config-save-collection" type="hidden" name="collection" value="config">
+                            <input id="config-save-id" type="hidden" name="_id">
+                            <label for="config-save">Ready?</label>
+                            <button id="config-save" type="button">Save</button>
+                        </li>
+
+
                     </ul>
                 </div>
-                <ul>
-                    <li id="config-save-li" class="input">
-                        <input id="config-save-collection" type="hidden" name="collection" value="config">
-                        <input id="config-save-id" type="hidden" name="_id">
-                        <label for="config-save">Ready?</label>
-                        <button id="config-save" type="button">Save</button>
-                    </li>
-                </ul>
+
             </form>
         </div>
 
         <!-- Version -->
         <div id="version" class="overlay">
-
-
             <ul class="version-ul">
 
                 <!-- Version Collection-->

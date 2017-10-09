@@ -200,7 +200,9 @@ body {
 }
 
 #erm-add-form ul {
+    /*
     width: 50vw;
+    */
     padding: 0;
     border: 1px solid #fff;
     border-right: 1px solid #c3c3c3;
@@ -239,13 +241,22 @@ table.history-collection tbody tr:hover td {
     padding:3px;
 }
 #erm-add-name, #erm-add-matcher, #erm-add-hueurl, #erm-add-huekey, #erm-add-huesetting, #erm-add-showurl, #erm-add-showtts {
-    width: 45vw;
     padding: 5px 8px;
 }
 
 #config-themes, #config-theme-name {
-    width: 45vw;
     padding: 5px 8px;
+}
+
+.theme-column {
+    float: left;
+    width: 50%;
+}
+
+.accordion-content::before , .accordion-content::after {
+    clear: both;
+    content: '';
+    display: table;
 }
 
 .hue, .show {
@@ -313,7 +324,9 @@ table.history-collection tbody tr:hover td {
 }
 
 #config-save-form ul {
+    /*
     width: 50vw;
+    */
     padding: 0;
     border: 1px solid #fff;
     border-right: 1px solid #c3c3c3;
@@ -718,7 +731,15 @@ body .theme-preview-container ul ul li {
 
 /* Accordion */
 .accordion {
-    width: 50vw; }
+    margin: 20px;
+    }
+
+.accordion-content > ul {
+    /*
+    float: left;
+    */
+    width: 50%;
+}
 
 .accordion ul li {
     margin-top: 0 !important; }
@@ -758,10 +779,12 @@ body .theme-preview-container ul ul li {
     right: 10px;
     top: 20px;
 }
-.accordion ul.accordion-content {
+.accordion div.accordion-content {
     border: none!important;
     color: #000;
-    display: none; }
+    display: none;
+    padding: 20px;
+}
 
 .accordion li  {
     border-bottom: none!important; }
