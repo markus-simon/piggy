@@ -677,7 +677,7 @@ body .theme-preview-container ul ul li {
 #nav-icon3 {
     position: absolute;
     left: 26px;
-    top: -40px; }
+    top: -25px; }
 
 #nav-icon3 span {
     display: block;
@@ -715,3 +715,53 @@ body .theme-preview-container ul ul li {
     top: 18px;
     width: 0;
     left: 50%; }
+
+/* Accordion */
+.accordion {
+    width: 50vw; }
+
+.accordion ul li {
+    margin-top: 0 !important; }
+
+.accordion > ul > li {
+    color: #fff;
+    padding: 0!important; }
+
+.accordion .accordion-title {
+    cursor: pointer;
+    background: rgb(203, 53, 119); }
+
+.accordion li span.accordion-title  {
+    display: block;
+    padding: 12px; }
+
+.accordion li span.accordion-title:hover {
+    background: rgba(203, 53, 119, .7); }
+
+.accordion li span.accordion-title:after {
+    content: " ";
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #fff;
+    position: absolute;
+    right: 10px;
+    top: 20px;
+}
+.accordion li span.accordion-title.open:after {
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #fff;
+    border-top: none;
+    position: absolute;
+    right: 10px;
+    top: 20px;
+}
+.accordion ul.accordion-content {
+    border: none!important;
+    color: #000;
+    display: none; }
+
+.accordion li  {
+    border-bottom: none!important; }

@@ -728,4 +728,23 @@ eb.onopen = function() {
                 break;
         }
     };
+
+    /**
+     * Accordion
+     */
+    $('.accordion .accordion-title.open')
+        .next('.accordion-content')
+        .show();
+
+    $('.accordion .accordion-title').click(function() {
+       $('.accordion-title').removeClass('open');
+
+       if ($(this).next('.accordion-content').is(':visible')) {
+           $(this).next('.accordion-content').hide();
+       } else {
+           $('.accordion-content').hide();
+           $(this).next('.accordion-content').show();
+           $(this).addClass('open');
+       }
+    });
 };
