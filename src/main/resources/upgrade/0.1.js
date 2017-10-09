@@ -19,10 +19,10 @@ var themes = [
         colors: {
             header: "#cb3577",
             headerFont: "#fff",
-            background: "#151515",
+            background: "#ffdddc",
             amount: ['#ffacf6', '#d052d0', '#ff5fb8', '#ff00a5', '#6b486b', '#6b215c', '#3c1231','#ff55d2'],
-            line: "#fff",
-            axis: "#fff"
+            line: "#000",
+            axis: "#000"
         }
     },{
         collection: 'themes',

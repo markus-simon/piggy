@@ -32,10 +32,12 @@ bar.append("rect")
     .attr("class","bar")
     .attr("height", function(d) { return height - 25 - y(d.amount); })
     .style("fill", function(d, i) { return color(i); })
-
     .on("mouseover", function() {
         d3.selectAll(".bar").style("opacity", "0.3");
         d3.select(this).style("opacity", "1");
+    })
+    .on("mouseout", function() {
+        d3.selectAll(".bar").style("opacity", "1");
     });
 
 svg2.append("g")

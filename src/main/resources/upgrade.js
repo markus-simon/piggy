@@ -19,7 +19,6 @@ var getUpgradeFiles = function() {
  */
 var checkIfInstalled = function(verticle) {
     var fileName = verticle.substring(verticle.lastIndexOf("/") + 1);
-    console.log(fileName);
     eb.send('find', {collection: 'upgrades', matcher: { verticle: fileName }}, function(reply) {
         if (reply.body().length < 1) {
             deployUpgrade(verticle);

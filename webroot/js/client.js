@@ -25,6 +25,8 @@ eb.onopen = function() {
      */
     eb.send('find', {collection: 'config', matcher: {}}, function(reply) {
         config = reply[0];
+        console.log('config28');
+        console.log(config);
         if (!$.isEmptyObject(config)) {
             $('#config-save-id').val(config._id);
             renderTheme(config.name);
@@ -415,12 +417,16 @@ eb.onopen = function() {
      * Change theme colors undso
      */
     var changeTheme = function(theme) {
+        console.log('theme420');
+        console.log(theme);
         eb.send('find', {collection: 'themes', matcher: { name: theme }}, function (res) {
-            color = d3.scaleOrdinal(res[0].amountColors);
-            backgroundColor = res[0].backgroundColor;
-            axisColor = res[0].axisColor;
-            lineColor = res[0].axisColor;
-            var colorParts = ['body', '#config', '#erm', '#history', '#checkout'];
+            console.log('res423');
+            console.log(res);
+            color = d3.scaleOrdinal(res[0].colors.amount);
+            backgroundColor = res[0].colors.background;
+            axisColor = res[0].colors.axis;
+            lineColor = res[0].colors.line;
+            var colorParts = ['body', '#config', '#erm', '#history', '#checkout', '#version'];
             $('#config-themes').empty();
             $('#config').fadeOut('slow');
 
@@ -431,7 +437,7 @@ eb.onopen = function() {
                     .style('background-color', backgroundColor)
             });
 
-            d3.select('#erm-add-form').selectAll('label').transition().duration(500).style('color', axisColor);
+            d3.select('#erm-add-form').selectAll('label').transition().duration(500).style('color', axisColor); // hä?
             updateData();
         });
     };

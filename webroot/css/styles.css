@@ -37,8 +37,10 @@ body {
     width: 0;
 }
 
-
-
+.overlay ul {
+    list-style: none;
+    padding: 0 20px;
+}
 
 
 
@@ -189,17 +191,8 @@ body {
     min-height: 100%;
 }
 
-#erm ul {
-    padding: 0 20px;
-}
-
 #erm-add {
-    list-style: none;
     margin-top: 50px;
-}
-
-#erm-list {
-    list-style: none;
 }
 
 #erm-list::after {
@@ -208,7 +201,6 @@ body {
 
 #erm-add-form ul {
     width: 50vw;
-    list-style-type: none;
     padding: 0;
     border: 1px solid #fff;
     border-right: 1px solid #c3c3c3;
@@ -276,7 +268,7 @@ table.history-collection tbody tr:hover td {
     color:    #fff;
 }
 
-#erm-add-form input, #erm-add-form textarea, #erm-add-form select, #erm-add-form button {
+#erm-add-form input, #erm-add-form textarea, #erm-add-form select, #erm-add-form button, #factory-reset {
     padding: 20px;
     background: #ff5fb8;
     border: 1px solid #fff;
@@ -316,18 +308,12 @@ table.history-collection tbody tr:hover td {
 
 /* config ####################################### */
 
-#config ul {
-    padding: 0 20px;
-}
-
 #config li {
-    list-style: none;
     margin-top: 50px;
 }
 
 #config-save-form ul {
     width: 50vw;
-    list-style-type: none;
     padding: 0;
     border: 1px solid #fff;
     border-right: 1px solid #c3c3c3;
@@ -662,7 +648,7 @@ body .theme-preview-container ul ul li {
     padding-left: 0; }
 
 #menu li {
-    list-style: none; }
+    list-style: none;  }
 
 #menu li a {
     display: block;
