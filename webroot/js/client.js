@@ -41,10 +41,10 @@ eb.onopen = function() {
 
         switch (document.collection) {
             case 'erm':
-                renderErmTable(document, '.erm-collection');
+                renderTable(document, '.erm-collection', true);
                 break;
             case 'themes':
-                renderThemesTable(document, '.themes-collection');
+                renderTable(document, '.themes-collection', true);
                 break;
             default:
                 break;
@@ -382,7 +382,7 @@ eb.onopen = function() {
         eb.send('find', {collection: 'upgrades', matcher: {}}, function (reply) {
             $(table + " > tbody").empty();
             $.each(reply, function (key, value) {
-                renderVersionTable(value, table);
+                renderTable(value, table);
             });
         });
     };
@@ -396,7 +396,7 @@ eb.onopen = function() {
         eb.send('find', {collection: 'themes', matcher: {}}, function (reply) {
             $(table + " > tbody").empty();
             $.each(reply, function (key, value) {
-                renderThemesTable(value, table);
+                renderTable(value, table, true);
             });
         });
     };
@@ -459,46 +459,7 @@ eb.onopen = function() {
         eb.send('find', {collection: 'erm', matcher: {}}, function (reply) {
             $(table + " > tbody").empty();
             $.each(reply, function (key, value) {
-                renderErmTable(value, table);
-            });
-        });
-    };
-
-    /**
-     * Render erm table
-     *
-     * @param value
-     * @param table
-     */
-    var renderErmTable = function (value, table) {
-        $(table + " > tbody").append(
-            "<tr id='erm-collection-" + value._id + "'>" +
-            "<td>" + value.message_created_at + "</td>" +
-            "<td>" + value.name + "</td>" +
-            "<td>" + value.matcher + "</td>" +
-            "<td><span class='" + value.show + "'>" + value.show + "</span></td>" +
-            "<td><span class='" + value.hue + "'>" + value.hue + "</span></td>" +
-            "<td id='disable-erm-" + value._id + "'><span class='btn'>&empty;</span></td>" +
-            "<td id='delete-erm-" + value._id + "'><span class='btn'>X</span></td>" +
-            "</tr>"
-        );
-        $('#disable-erm-' + value._id).click(function () {
-            alert('disable not working yet ... sorry');
-        });
-        $('#delete-erm-' + value._id).click(function () {
-            eb.send('delete', {collection: 'erm', matcher: {_id: value._id}}, function (reply) {
-                if (reply.length > 0) {
-                    $('#erm-collection-' + value._id).remove();
-                }
-            })
-        });
-        $('#erm-collection-' + value._id).click(function () {
-            eb.send('find', {collection: 'erm', matcher: {_id: value._id}}, function (reply) {
-                if (reply.length > 0) {
-                    $('#erm-add-update').show();
-                    $('#erm-add-id').val(value._id);
-                    jsonToForm('erm-add-', reply[0]);
-                }
+                renderTable(value, table, true);
             });
         });
     };
@@ -512,102 +473,10 @@ eb.onopen = function() {
         eb.send('find', {collection: 'piggy', matcher: {}}, function (reply) {
             $(table + " > tbody").empty();
             $.each(reply, function (key, value) {
-                renderHistoryTable(value, table);
+                renderTable(value, table);
             });
         });
     };
-
-    /**
-     * Render history table
-     *
-     * @param value
-     * @param table
-     */
-    var renderHistoryTable = function (value, table) {
-        $(table + " > tbody").append(
-            "<tr id='history-collection-" + value._id + "'>" +
-            "<td>" + value.message_created_at + "</td>" +
-            "<td>" + value.amount + "</td>" +
-            "<td>" + value.type + "</td>" +
-            "<td id='delete-history-" + value._id + "'><span class='btn'>X</span></td>" +
-            "</tr>"
-        );
-
-        $('#delete-history-' + value._id).click(function () {
-            eb.send('delete', {collection: 'piggy', matcher: {_id: value._id}}, function (reply) {
-                // TODO delete per publish erfassen, weil anderer tab undso ...
-                if (reply.length > 0) {
-                    $('#history-collection-' + value._id).remove();
-                }
-            })
-        });
-    };
-
-
-
-    /**
-     * Render version table
-     *
-     * @param value
-     * @param table
-     */
-    var renderVersionTable = function (value, table) {
-        $(table + " > tbody").append(
-            "<tr id='version-collection-" + value._id + "'>" +
-            "<td>" + value.message_created_at + "</td>" +
-            "<td>" + value.verticle + "</td>" +
-            "<td id='delete-upgrade-" + value._id + "'><span class='btn'>X</span></td>" +
-            "</tr>"
-        );
-
-        $('#delete-upgrade-' + value._id).click(function () {
-            eb.send('delete', {collection: 'upgrades', matcher: {_id: value._id}}, function (reply) {
-                // TODO delete per publish erfassen, weil anderer tab undso ...
-                if (reply.length > 0) {
-                    $('#version-collection-' + value._id).remove();
-                }
-            })
-        });
-    };
-
-
-    /**
-     * Render themes table
-     *
-     * @param value
-     * @param table
-     */
-    var renderThemesTable = function (value, table) {
-
-        $(table + " > tbody").append(
-            "<tr id='themes-collection-" + value._id + "'>" +
-            "<td>" + value.message_created_at + "</td>" +
-            "<td>" + value.name + "</td>" +
-            "<td id='delete-theme-" + value._id + "'><span class='btn'>X</span></td>" +
-            "</tr>"
-        );
-
-        $('#delete-theme-' + value._id).click(function () {
-            eb.send('delete', {collection: 'themes', matcher: {_id: value._id}}, function (reply) {
-                // TODO delete per publish erfassen, weil anderer tab undso ...
-                if (reply.length > 0) {
-                    $('#themes-collection-' + value._id).remove();
-                }
-            })
-        });
-        $('#themes-collection-' + value._id).click(function () {
-            eb.send('find', {collection: 'themes', matcher: {_id: value._id}}, function (reply) {
-                if (reply.length > 0) {
-                    $('#theme-update').show();
-                    $('#theme-id').val(value._id);
-                    renderTheme(reply[0]);
-                    jsonToForm('theme-', reply[0]);
-                }
-            });
-        });
-    };
-
-
 
     /**
      * Save erm
@@ -629,7 +498,6 @@ eb.onopen = function() {
     $('#theme-update, #theme-save').click(function () {
         saveTheme($(this).data('update'));
     });
-
 
     /**
      * Menu links
@@ -659,7 +527,6 @@ eb.onopen = function() {
                 break;
         }
     });
-
 
     /**
      * Save configuration
@@ -734,9 +601,6 @@ eb.onopen = function() {
         event.preventDefault();
     };
 
-
-
-
     /**
      * Save theme
      */
@@ -789,12 +653,12 @@ eb.onopen = function() {
         });
     };
 
-
-
-
-
-
-
+    /**
+     * Change color
+     *
+     * @param element
+     * @param color
+     */
     var changeColor = function(element, color) {
         switch (element) {
             case 'header':
@@ -850,4 +714,82 @@ eb.onopen = function() {
            $(this).addClass('open');
        }
     });
+
+    /**
+     * Render table
+     *
+     * @param value
+     * @param table
+     * @param editable
+     */
+    var renderTable = function(value, table, editable) {
+        var columns    = $(table + ' thead th');
+        var collection = table.split('-')[0].replace('.','');
+        var deletable  = false;
+        var html       = '';
+        var mapping    = {
+            'created_at': 'message_created_at'
+        };
+
+        html += '<tr id="' + table.replace('.','') + '-' + value._id + '">';
+        $.each(columns, function(cKey, column) {
+            var key = column.textContent.toLocaleLowerCase();
+            if (true === mapping.hasOwnProperty(key.replace(' ', '_'))) {
+                key = mapping[key.replace(' ', '_')];
+            }
+            if ('disable' === key) {
+                html += '<td id="disable-' + collection + '-' + value._id + '"><span class="btn">&empty;</span></td>';
+            } else if ('delete' === key) {
+                deletable = true;
+                html += '<td id="delete-' + collection + '-' + value._id + '"><span class="btn">X</span></td>';
+            } else {
+                html += '<td>' + value[key] + '</td>';
+            }
+        });
+        html += '</tr>';
+
+        $(table + " > tbody").append(html);
+
+        if ('history' === collection) {
+            collection = 'piggy';
+        }
+
+        if ('version' === collection) {
+            collection = 'upgrades';
+        }
+
+        // Delete
+        if (true === deletable) {
+            $('#delete-' + collection + '-' + value._id).click(function() {
+                eb.send('delete', {collection: collection, matcher: {_id: value._id}}, function(reply) {
+                     // TODO delete per publish erfassen, weil anderer tab undso ...
+                     if (reply.length > 0) {
+                         $(table + '-' + value._id).remove();
+                     }
+                 });
+            });
+        }
+
+        // Edit
+        if (true === editable) {
+            if ('themes' === collection) {
+                var form = 'theme';
+            } else if ('erm' === collection) {
+                var form = 'erm-add';
+            }
+
+            $('#' + table.replace('.', '') + '-' + value._id).click(function() {
+                eb.send('find', {collection: collection, matcher: {_id: value._id}}, function(reply) {
+                    if (reply.length > 0) {
+                        $('#' + form + '-update').show();
+                        $('#' + form + '-id').val(value._id);
+                        if ('themes' === collection) {
+                            renderTheme(reply[0]);
+                        }
+                        jsonToForm(form + '-', reply[0]);
+                    }
+                });
+            });
+        }
+    };
 };
