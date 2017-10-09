@@ -297,7 +297,7 @@ eb.onopen = function() {
                                 var divLabel = $('<div class="theme-property-label">' + color + '</div>');
                                 li.append(divLabel);
                             }
-                            var divValue = $('<div class="theme-property-value">')
+                            var divValue = $('<input name="' + color + '_' + subColor + '" class="theme-property-value" value="' + themesObject['colors'][color][subColor] + '">')
                                 .colorPicker(
                                     {
                                         renderCallback: function($elm, toggled) {
@@ -315,7 +315,7 @@ eb.onopen = function() {
                     } else {
                         var li       = $('<li class="input theme-property">');
                         var divLabel = $('<div class="theme-property-label">' + color + '</div>');
-                        var divValue = $('<div class="theme-property-value">')
+                        var divValue = $('<input name="' + color + '" class="theme-property-value" value="' + themesObject['colors'][color] + '">')
                             .colorPicker({
                                 renderCallback: function($elm, toggled) {
                                     if (toggled !== true && toggled !== false) { // hihi ...
@@ -335,7 +335,7 @@ eb.onopen = function() {
             } else if (property === 'wallpaper') {
                 var li       = $('<li class="input theme-property">');
                 var divLabel = $('<div class="theme-property-label">' + property + '</div>');
-                var divValue = $('<div class="theme-property-value">' + themesObject[property] + '</div>');
+                var divValue = $('<input name="' + property + '" class="theme-property-value" value="' + themesObject[property] + '">');
 
                 li.append(divLabel)
                     .append(divValue).appendTo($('.theme-preview-container > ul'));

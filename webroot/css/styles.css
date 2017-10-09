@@ -640,6 +640,10 @@ body .theme-preview-container ul ul li {
     display: inline-block!important;
 }
 
+body .theme-preview-container input {
+    text-indent: -999px;
+}
+
 .theme-property-value {
     vertical-align: bottom;
     display: inline-block;
