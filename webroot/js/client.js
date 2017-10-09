@@ -112,7 +112,6 @@ eb.onopen = function() {
         if (document.showtts) playSound('assets/sound/' + document.showtts);
     });
 
-
     /**
      * Register dropped handler
      */
@@ -196,10 +195,10 @@ eb.onopen = function() {
             }
 
             if (e.keyCode === 69) showErmOverlay();
-            if (e.keyCode === 72) showHistoryOverlay();
+            if (e.keyCode === 72) showOverlay('history', 'history', false);
             if (e.keyCode === 75) showCheckoutOverlay();
-            if (e.keyCode === 84) showThemesOverlay();
-            if (e.keyCode === 86) showVersionOverlay();
+            if (e.keyCode === 84) showOverlay('themes', 'themes', true);
+            if (e.keyCode === 86) showOverlay('version', 'version', false);
         }
     });
 
@@ -372,35 +371,6 @@ eb.onopen = function() {
         });
     };
 
-
-    /**
-     * Show version overlay
-     */
-    var showVersionOverlay = function () {
-        $('#version').fadeTo("slow", 0.97);
-        var table = ".version-collection";
-        eb.send('find', {collection: 'upgrades', matcher: {}}, function (reply) {
-            $(table + " > tbody").empty();
-            $.each(reply, function (key, value) {
-                renderTable(value, table);
-            });
-        });
-    };
-
-    /**
-     * Show version overlay
-     */
-    var showThemesOverlay = function () {
-        $('#themes').fadeTo("slow", 0.97);
-        var table = ".themes-collection";
-        eb.send('find', {collection: 'themes', matcher: {}}, function (reply) {
-            $(table + " > tbody").empty();
-            $.each(reply, function (key, value) {
-                renderTable(value, table, true);
-            });
-        });
-    };
-
     /**
      * Toggle navigation
      */
@@ -419,8 +389,6 @@ eb.onopen = function() {
             console.log(reply);
         });
     });
-
-
 
     /**
      * Change theme colors undso
@@ -449,7 +417,6 @@ eb.onopen = function() {
         });
     };
 
-
     /**
      * Show erm overlay
      */
@@ -465,15 +432,26 @@ eb.onopen = function() {
     };
 
     /**
-     * Show history table
+     * Show overlay
+     *
+     * @param overlay
+     * @param collection
+     * @param editable
      */
-    var showHistoryOverlay = function () {
-        $('#history').fadeTo("slow", 0.97);
-        var table = ".history-collection";
-        eb.send('find', {collection: 'piggy', matcher: {}}, function (reply) {
+    var showOverlay = function(overlay, collection, editable) {
+        $('#' + overlay).fadeTo("slow", 0.97);
+        var table = "." + collection + "-collection";
+
+        if ('version' === collection) {
+            collection = 'upgrades';
+        } else if ('history' === collection) {
+            collection = 'piggy';
+        }
+
+        eb.send('find', {collection: collection, matcher: {}}, function (reply) {
             $(table + " > tbody").empty();
             $.each(reply, function (key, value) {
-                renderTable(value, table);
+                renderTable(value, table, editable);
             });
         });
     };
@@ -507,8 +485,10 @@ eb.onopen = function() {
         $('#header, #nav-icon3').toggleClass('open');
         $(".overlay").fadeOut('slow');
         switch (target) {
+            case 'version':
+            case 'themes':
             case 'history':
-                showHistoryOverlay();
+                showOverlay(target, target, false);
                 break;
             case 'config':
                 showConfigOverlay();
@@ -518,12 +498,6 @@ eb.onopen = function() {
                 break;
             case 'checkout':
                 showCheckoutOverlay();
-                break;
-            case 'version':
-                showVersionOverlay();
-                break;
-            case 'theme':
-                showThemesOverlay();
                 break;
         }
     });
