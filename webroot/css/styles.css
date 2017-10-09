@@ -63,7 +63,14 @@ body {
     min-height: 100%;
 }
 
-
+/* Themes ############################################# */
+#themes {
+    display: none;
+    position: absolute;
+    background-color: #ffdddc;
+    z-index: 9;
+    min-height: 100%;
+}
 
 
 /* Config ############################################# */
@@ -199,7 +206,7 @@ body {
     clear: both;
 }
 
-#erm-add-form ul {
+#erm-add-form ul, #theme-edit-form ul {
     /*
     width: 50vw;
     */
@@ -211,7 +218,7 @@ body {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
-#erm-add-form li {
+#erm-add-form li, #theme-edit-form li {
     padding:12px;
     border-bottom: 1px solid #777;
     position:relative;
@@ -226,12 +233,9 @@ body {
     display: inline;
 }
 
-table.erm-collection tbody tr:hover td,
-table.history-collection tbody tr:hover td {
+table.table tbody tr:hover td {
     background-color: #444;
 }
-
-
 
 #erm-add-form label {
     width:150px;

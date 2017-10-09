@@ -27,7 +27,6 @@ eb.onopen = function() {
         config = reply[0];
         if (!$.isEmptyObject(config)) {
             $('#config-save-id').val(config._id);
-            renderTheme(config.theme);
             changeTheme(config.theme);
         }
         updateData();
@@ -58,6 +57,9 @@ eb.onopen = function() {
                 break;
             case 'erm':
                 $('#erm-collection-' + document.matcher._id).remove();
+                break;
+            case 'themes':
+                $('#themes-collection-' + document.matcher._id).remove();
                 break;
             case 'piggy':
                 $('#history-collection-' + document.matcher._id).remove();
@@ -192,6 +194,7 @@ eb.onopen = function() {
             if (e.keyCode === 69) showErmOverlay();
             if (e.keyCode === 72) showHistoryOverlay();
             if (e.keyCode === 75) showCheckoutOverlay();
+            if (e.keyCode === 84) showThemesOverlay();
             if (e.keyCode === 86) showVersionOverlay();
         }
     });
@@ -275,16 +278,12 @@ eb.onopen = function() {
      *
      * @param t
      */
-    var renderTheme = function(t) {
-
-        console.log(t);
-
-
-
+    var renderTheme = function(theme) {
         $('.theme-preview-container ul').html('');
+/*
         eb.send('find', {collection: 'themes', matcher: { name: t }}, function(res) {
-            var themesObject = res[0];
-            $('#config-theme-name').val(res[0].name);
+*/
+            var themesObject = theme;
             for (var property in themesObject) {
                 if (property === 'colors') {
                     for (var color in themesObject['colors']) {
@@ -343,7 +342,9 @@ eb.onopen = function() {
                         .append(divValue).appendTo($('.theme-preview-container > ul'));
                 }
             }
+/*
         });
+*/
     };
 
     /**
@@ -389,6 +390,19 @@ eb.onopen = function() {
         });
     };
 
+    /**
+     * Show version overlay
+     */
+    var showThemesOverlay = function () {
+        $('#themes').fadeTo("slow", 0.97);
+        var table = ".themes-collection";
+        eb.send('find', {collection: 'themes', matcher: {}}, function (reply) {
+            $(table + " > tbody").empty();
+            $.each(reply, function (key, value) {
+                renderThemesTable(value, table);
+            });
+        });
+    };
 
 
     /**
@@ -407,12 +421,14 @@ eb.onopen = function() {
         });
     };
 
-    /**
+/*
+    /!**
      * Change preview colors
-     */
+     *!/
     $('#config-themes').change(function() {
         renderTheme($('option:selected', this).val());
     });
+*/
 
     /**
      * Toggle navigation
@@ -429,7 +445,6 @@ eb.onopen = function() {
      * Factory reset
      */
     $('#factory-reset').click(function() {
-        console.log('deleteeeeeeeeverything!!!');
         var document = {};
         document.collections = ['config','upgrades','themes'];
         eb.send('drop', document, function(reply) {
@@ -511,7 +526,7 @@ eb.onopen = function() {
                 if (reply.length > 0) {
                     $('#erm-add-update').show();
                     $('#erm-add-id').val(value._id);
-                    jsonToForm('erm-add-form', reply[0]);
+                    jsonToForm('erm-add-', reply[0]);
                 }
             });
         });
@@ -584,6 +599,45 @@ eb.onopen = function() {
         });
     };
 
+
+    /**
+     * Render themes table
+     *
+     * @param value
+     * @param table
+     */
+    var renderThemesTable = function (value, table) {
+
+        $(table + " > tbody").append(
+            "<tr id='themes-collection-" + value._id + "'>" +
+            "<td>" + value.message_created_at + "</td>" +
+            "<td>" + value.name + "</td>" +
+            "<td id='delete-theme-" + value._id + "'><span class='btn'>X</span></td>" +
+            "</tr>"
+        );
+
+        $('#delete-theme-' + value._id).click(function () {
+            eb.send('delete', {collection: 'themes', matcher: {_id: value._id}}, function (reply) {
+                // TODO delete per publish erfassen, weil anderer tab undso ...
+                if (reply.length > 0) {
+                    $('#themes-collection-' + value._id).remove();
+                }
+            })
+        });
+        $('#themes-collection-' + value._id).click(function () {
+            eb.send('find', {collection: 'themes', matcher: {_id: value._id}}, function (reply) {
+                if (reply.length > 0) {
+                    renderTheme(reply[0]);
+                    jsonToForm('theme-edit-', reply[0]);
+
+
+                }
+            });
+        });
+    };
+
+
+
     /**
      * Save erm
      */
@@ -621,6 +675,9 @@ eb.onopen = function() {
                 break;
             case 'version':
                 showVersionOverlay();
+                break;
+            case 'theme':
+                showThemesOverlay();
                 break;
         }
     });

@@ -41,10 +41,10 @@ function isJson(str) {
     }
 }
 
-var jsonToForm = function(form, data) {
+var jsonToForm = function(prefix, data) {
     $.each(data, function(key, value) {
         key = key.replace(/_/g, '-');
-        var ctrl = $('#erm-add-' + key);
+        var ctrl = $('#' + prefix + key);
         if (ctrl.is('select')) {
             $("option", ctrl).each(function() {
                 if (this.value === value) {
@@ -56,10 +56,10 @@ var jsonToForm = function(form, data) {
                 case "radio":
                 case "checkbox":
                     if (value !== 'off') {
-                        $('#erm-add-' + key).prop("checked", true);
+                        $('#' + prefix + key).prop("checked", true);
                         $('.' + key).show();
                     } else {
-                        $('#erm-add-' + key).prop("checked", false);
+                        $('#' + prefix + key).prop("checked", false);
                         $('.' + key).hide();
                     }
                     break;
