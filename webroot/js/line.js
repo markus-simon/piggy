@@ -96,17 +96,18 @@ function tick() {
         .attr("d", line)
         .attr("transform", null);
 
+    duration = 5000;
     now = new Date(Date.now() - duration);
     xTime.domain([now - (n - 2) * duration, now - duration]);
     axisX.transition()
-        .duration(1000)
+        .duration(5000)
         .ease(d3.easeLinear)
         .call(d3.axisBottom(xTime));
 
     d3.active(this)
         .attr("transform", "translate(" + x(-1) + ",0)")
         .transition()
-        .duration(1000)
+        .duration(5000)
         .on("start", tick);
     deta.shift();
 }

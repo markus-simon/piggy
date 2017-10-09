@@ -277,6 +277,12 @@ eb.onopen = function() {
 
     };
 
+    function injectStyles(rule) {
+        $("<div />", {
+            html: '&shy;<style id="theme-style">' + rule + '</style>'
+        }).appendTo("body");
+    }
+
     /**
      * Render theme
      *
@@ -284,21 +290,21 @@ eb.onopen = function() {
      */
     var renderTheme = function(theme) {
         $('.theme-preview-container ul').html('');
-        var themesObject = theme;
-        for (var property in themesObject) {
+        console.log(theme);
+        for (var property in theme) {
             if (property === 'colors') {
-                for (var color in themesObject['colors']) {
-                    if ('object' === typeof(themesObject['colors'][color])) {
+                for (var color in theme['colors']) {
+                    if ('object' === typeof(theme['colors'][color])) {
                         var pLi = $('<li class="input theme-property">');
                         var ul = $('<ul class="sub-list">');
 
-                        for (var subColor in themesObject['colors'][color]) {
+                        for (var subColor in theme['colors'][color]) {
                             var li = $('<li class="input theme-property">');
                             if (0 == subColor) {
                                 var inputLabel = $('<label class="theme-property-label">' + color + '</label>');
                                 li.append(inputLabel);
                             }
-                            var inputValue = $('<input name="' + color + '_' + subColor + '" class="theme-property-value" value="' + themesObject['colors'][color][subColor] + '">')
+                            var inputValue = $('<input name="' + color + '_' + subColor + '" class="theme-property-value" value="' + theme['colors'][color][subColor] + '">')
                                 .colorPicker(
                                     {
                                         renderCallback: function($elm, toggled) {
@@ -308,7 +314,7 @@ eb.onopen = function() {
                                         }
                                     }
                                 )
-                                .css('background-color', themesObject['colors'][color][subColor]);
+                                .css('background-color', theme['colors'][color][subColor]);
 
                             li.append(inputValue).appendTo(ul);
                         }
@@ -316,7 +322,7 @@ eb.onopen = function() {
                     } else {
                         var li       = $('<li class="input theme-property">');
                         var inputLabel = $('<label class="theme-property-label">' + color + '</label>');
-                        var inputValue = $('<input name="' + color + '" class="theme-property-value" value="' + themesObject['colors'][color] + '">')
+                        var inputValue = $('<input name="' + color + '" class="theme-property-value" value="' + theme['colors'][color] + '">')
                             .colorPicker({
                                 renderCallback: function($elm, toggled) {
                                     if (toggled !== true && toggled !== false) { // hihi ...
@@ -327,7 +333,7 @@ eb.onopen = function() {
                                     }
                                 }
                             })
-                            .css('background-color', themesObject['colors'][color]);
+                            .css('background-color', theme['colors'][color]);
 
                         li.append(inputLabel)
                             .append(inputValue).appendTo($('.theme-preview-container > ul'));
@@ -336,7 +342,7 @@ eb.onopen = function() {
             } else if (property === 'wallpaper') {
                 var li       = $('<li class="input theme-property">');
                 var inputLabel = $('<label class="theme-property-label">' + property + '</label>');
-                var inputValue = $('<input name="' + property + '" class="theme-property-value" value="' + themesObject[property] + '">');
+                var inputValue = $('<input name="' + property + '" class="theme-property-value" value="' + theme[property] + '">');
 
                 li.append(inputLabel)
                     .append(inputValue).appendTo($('.theme-preview-container > ul'));
@@ -427,6 +433,8 @@ eb.onopen = function() {
      */
     var changeTheme = function(theme) {
         eb.send('find', {collection: 'themes', matcher: { name: theme }}, function (res) {
+            $('#theme-style').remove();
+            injectStyles(res[0].css);
             color = d3.scaleOrdinal(res[0].colors.amount);
             headerColor = res[0].colors.header;
             headerFontColor = res[0].colors.headerFont;
@@ -744,23 +752,42 @@ eb.onopen = function() {
         var form = $('#theme-form').serializeArray();
 
         var amount = [];
+        var table  = [];
+        var input  = [];
         $.each(form , function(key, value) {
             if(value.name.match(/amount_/)) {
                 amount.push(value.value);
+            }
+            if(value.name.match(/table_/)) {
+                table.push(value.value);
+            }
+            if(value.name.match(/input_/)) {
+                input.push(value.value);
             }
         });
 
         var theme = formToJson(form);
 
+        console.log('theme');
+        console.log(theme);
+
         theme.amount = amount;
-        var colors = {};
+        theme.table  = table;
+        theme.input  = input;
+        var colors   = {};
 
         $.each(theme , function(key, value) {
-            if (key != '_id' && key != 'collection' && key != 'wallpaper' && key != 'name' && key != 'message_created_at') {
+            if (key !== '_id' && key !== 'collection' && key !== 'wallpaper' && key !== 'name' && key !== 'message_created_at') {
                 colors[key] = value;
                 delete theme[key]
             }
             if (key.match(/amount_/)) {
+                delete colors[key]
+            }
+            if (key.match(/table_/)) {
+                delete colors[key]
+            }
+            if (key.match(/input_/)) {
                 delete colors[key]
             }
         });
@@ -815,6 +842,7 @@ eb.onopen = function() {
                 break;
             case 'background':
                 backgroundColor = color;
+                console.log('A');
                 var colorParts = ['body', '#menu', '#config', '#erm', '#history', '#themes', '#checkout', '#version'];
                 $.each(colorParts, function (key, value) {
                     d3.select(value)

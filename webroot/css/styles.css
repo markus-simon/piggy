@@ -198,7 +198,7 @@ body {
     min-height: 100%;
 }
 
-#erm-add {
+#erm-add, #theme-edit {
     margin-top: 50px;
 }
 
@@ -207,9 +207,6 @@ body {
 }
 
 #erm-add-form ul, #theme-form ul {
-    /*
-    width: 50vw;
-    */
     padding: 0;
     border: 1px solid #fff;
     border-right: 1px solid #c3c3c3;
@@ -283,7 +280,7 @@ table.table tbody tr:hover td {
     color:    #fff;
 }
 
-#erm-add-form input, #erm-add-form textarea, #erm-add-form select, #erm-add-form button, #factory-reset {
+#erm-add-form input, #erm-add-form textarea, #erm-add-form select, #erm-add-form button, #factory-reset, #theme-form input, #theme-form textarea {
     padding: 20px;
     background: #ff5fb8;
     border: 1px solid #fff;
@@ -441,7 +438,9 @@ table.table tbody tr:hover td {
 
 
 
-
+.input input:not([type="checkbox"]), .input textarea {
+    width: 100%;
+}
 
 
 
@@ -485,9 +484,6 @@ th {
     text-align: left;
     color: #fff;
     text-transform: uppercase;
-}
-tr {
-    background: rgba(0, 0, 0, 0);
 }
 td {
     padding: 15px;
@@ -537,6 +533,11 @@ td {
 
 body #erm form li.input input:not([type="checkbox"]),
 body #erm form li.input textarea {
+    box-shadow: inset 0 0 5px 2px #ab3978;
+}
+
+body #themes form li.input input:not([type="checkbox"]),
+body #themes form li.input textarea {
     box-shadow: inset 0 0 5px 2px #ab3978;
 }
 
@@ -610,6 +611,9 @@ body table.table td span.btn {
 #header {
     position: relative;
     z-index: 11;
+    /*
+    box-shadow: 1px 0 90px 59px #000000;
+    */
 }
 #header > div {
     float: right;
@@ -649,9 +653,11 @@ body .theme-preview-container input {
     vertical-align: bottom;
     display: inline-block;
     height: 20px;
-    width: 20px;
+    width: 20px!important;
+    box-shadow: none!important;
     border: 1px solid #000;
-    margin-right: 10px; }
+    margin-right: 10px;
+    }
 
 #menu {
     background: #CB3577;
