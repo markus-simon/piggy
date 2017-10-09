@@ -14,6 +14,7 @@ var dataBars = [
 var headerColor     = "#CB3577";
 var headerFontColor = "#fff";
 var headerFontSize  = "7vh";
+var fontColor       = '#fff';
 var backgroundColor = "#ffdddc";
 var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231","#ff55d2"]);
 var lineColor       = "#000";
@@ -294,10 +295,10 @@ eb.onopen = function() {
                         for (var subColor in themesObject['colors'][color]) {
                             var li = $('<li class="input theme-property">');
                             if (0 == subColor) {
-                                var divLabel = $('<div class="theme-property-label">' + color + '</div>');
-                                li.append(divLabel);
+                                var inputLabel = $('<label class="theme-property-label">' + color + '</label>');
+                                li.append(inputLabel);
                             }
-                            var divValue = $('<input name="' + color + '_' + subColor + '" class="theme-property-value" value="' + themesObject['colors'][color][subColor] + '">')
+                            var inputValue = $('<input name="' + color + '_' + subColor + '" class="theme-property-value" value="' + themesObject['colors'][color][subColor] + '">')
                                 .colorPicker(
                                     {
                                         renderCallback: function($elm, toggled) {
@@ -309,13 +310,13 @@ eb.onopen = function() {
                                 )
                                 .css('background-color', themesObject['colors'][color][subColor]);
 
-                            li.append(divValue).appendTo(ul);
+                            li.append(inputValue).appendTo(ul);
                         }
                         pLi.append(ul).appendTo($('.theme-preview-container > ul'));
                     } else {
                         var li       = $('<li class="input theme-property">');
-                        var divLabel = $('<div class="theme-property-label">' + color + '</div>');
-                        var divValue = $('<input name="' + color + '" class="theme-property-value" value="' + themesObject['colors'][color] + '">')
+                        var inputLabel = $('<label class="theme-property-label">' + color + '</label>');
+                        var inputValue = $('<input name="' + color + '" class="theme-property-value" value="' + themesObject['colors'][color] + '">')
                             .colorPicker({
                                 renderCallback: function($elm, toggled) {
                                     if (toggled !== true && toggled !== false) { // hihi ...
@@ -328,17 +329,17 @@ eb.onopen = function() {
                             })
                             .css('background-color', themesObject['colors'][color]);
 
-                        li.append(divLabel)
-                            .append(divValue).appendTo($('.theme-preview-container > ul'));
+                        li.append(inputLabel)
+                            .append(inputValue).appendTo($('.theme-preview-container > ul'));
                     }
                 }
             } else if (property === 'wallpaper') {
                 var li       = $('<li class="input theme-property">');
-                var divLabel = $('<div class="theme-property-label">' + property + '</div>');
-                var divValue = $('<input name="' + property + '" class="theme-property-value" value="' + themesObject[property] + '">');
+                var inputLabel = $('<label class="theme-property-label">' + property + '</label>');
+                var inputValue = $('<input name="' + property + '" class="theme-property-value" value="' + themesObject[property] + '">');
 
-                li.append(divLabel)
-                    .append(divValue).appendTo($('.theme-preview-container > ul'));
+                li.append(inputLabel)
+                    .append(inputValue).appendTo($('.theme-preview-container > ul'));
             }
         }
     };
@@ -427,10 +428,13 @@ eb.onopen = function() {
     var changeTheme = function(theme) {
         eb.send('find', {collection: 'themes', matcher: { name: theme }}, function (res) {
             color = d3.scaleOrdinal(res[0].colors.amount);
+            headerColor = res[0].colors.header;
+            headerFontColor = res[0].colors.headerFont;
+            fontColor = res[0].colors.font;
             backgroundColor = res[0].colors.background;
             axisColor = res[0].colors.axis;
             lineColor = res[0].colors.line;
-            var colorParts = ['body', '#config', '#erm', '#history', '#checkout', '#version'];
+            var colorParts = ['body', '#menu', '#config', '#erm', '#history', '#checkout', '#themes', '#version'];
             $('#config').fadeOut('slow');
 
             $.each(colorParts, function (key, value) {
@@ -440,7 +444,7 @@ eb.onopen = function() {
                     .style('background-color', backgroundColor)
             });
 
-            d3.select('#erm-add-form').selectAll('label').transition().duration(500).style('color', axisColor); // hä?
+            d3.selectAll('form').selectAll('label').transition().duration(500).style('color', fontColor); // hä?
             updateData();
         });
     };
@@ -657,25 +661,13 @@ eb.onopen = function() {
     });
 
 
-
-
-
-
-
-
-
-
     /**
      * Save configuration
      */
     var saveConfig = function() {
-        var form = $('#config-save-form').serializeArray();
-        config = formToJson(form);
-        config.theme = config.name;
-        delete config.name;
-
+        var form   = $('#config-save-form').serializeArray();
+        config     = formToJson(form);
         var action = 'edit';
-
         eb.send(action, config, function (reply) {
             if (reply) {
                 $('#config-save-id').val(reply);
@@ -750,7 +742,35 @@ eb.onopen = function() {
      */
     var saveTheme = function(update) {
         var form = $('#theme-form').serializeArray();
+
+        var amount = [];
+        $.each(form , function(key, value) {
+            if(value.name.match(/amount_/)) {
+                amount.push(value.value);
+            }
+        });
+
         var theme = formToJson(form);
+
+        theme.amount = amount;
+        var colors = {};
+
+        $.each(theme , function(key, value) {
+            if (key != '_id' && key != 'collection' && key != 'wallpaper' && key != 'name' && key != 'message_created_at') {
+                colors[key] = value;
+                delete theme[key]
+            }
+            if (key.match(/amount_/)) {
+                delete colors[key]
+            }
+        });
+
+
+
+        theme.colors = colors;
+        theme.wallpaper = '';
+        console.log('theme');
+        console.log(theme);
 
         var action = 'save';
         if (update) {
@@ -790,9 +810,12 @@ eb.onopen = function() {
             case 'headerFont':
                 headerFontColor = color;
                 break;
+            case 'font':
+                fontColor = color;
+                break;
             case 'background':
                 backgroundColor = color;
-                var colorParts = ['body', '#menu', '#config', '#erm', '#history', '#checkout', '#version'];
+                var colorParts = ['body', '#menu', '#config', '#erm', '#history', '#themes', '#checkout', '#version'];
                 $.each(colorParts, function (key, value) {
                     d3.select(value)
                         .transition()

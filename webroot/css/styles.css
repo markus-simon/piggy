@@ -624,7 +624,8 @@ body table.table td span.btn {
     padding: 20px; }
 
 form label {
-    float: none!important; }
+    float: none!important;
+    }
 
 .theme-preview-container {
     margin-left: 70px;

@@ -19,6 +19,7 @@ var themes = [
         colors: {
             header: "#cb3577",
             headerFont: "#fff",
+            font: "#fff",
             background: "#ffdddc",
             amount: ['#ffacf6', '#d052d0', '#ff5fb8', '#ff00a5', '#6b486b', '#6b215c', '#3c1231','#ff55d2'],
             line: "#000",
@@ -31,6 +32,7 @@ var themes = [
         colors: {
             header: "#002f2c",
             headerFont: "#fff",
+            font: "#fff",
             background: "#151515",
             amount: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
             line: "#fff",
@@ -43,6 +45,7 @@ var themes = [
         colors: {
             header: "#002f2c",
             headerFont: "#fff",
+            font: "#fff",
             background: "#151515",
             amount: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
             line: "#fff",
@@ -55,6 +58,7 @@ var themes = [
         colors: {
             header: "#002f2c",
             headerFont: "#fff",
+            font: "#fff",
             background: "#151515",
             amount: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
             line: "#fff",
@@ -67,6 +71,7 @@ var themes = [
         colors: {
             header: "#002f2c",
             headerFont: "#fff",
+            font: "#fff",
             background: "#151515",
             amount: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
             line: "#fff",
