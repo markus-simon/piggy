@@ -419,6 +419,12 @@ eb.onopen = function()
             backgroundColor = res[0].colors.background;
             axisColor = res[0].colors.axis;
             lineColor = res[0].colors.line;
+
+            d3.selectAll('.accordion-title')
+                .transition()
+                .duration(500)
+                .style('background-color', headerColor);
+
             var colorParts = ['body', '#menu', '#config', '#erm', '#history', '#checkout', '#themes', '#version'];
             $('#config').fadeOut('slow');
 
@@ -663,6 +669,12 @@ eb.onopen = function()
                         .duration(500)
                         .style('background-color', headerColor);
                 });
+
+                d3.selectAll('.accordion-title')
+                    .transition()
+                    .duration(500)
+                    .style('background-color', headerColor);
+
                 break;
             case 'headerFont':
                 headerFontColor = color;
