@@ -156,7 +156,12 @@ eb.onopen = function() {
                 updateLine(result);
                 updateHeader(result);  // wirklich 4x übergeben!? ne ...
             } else {
-                alert('Something is fishy ... :-(');
+                var error = {};
+                error.showtts = 'Something is fishy'
+                eb.send('tts', error, function(reply) {
+                    console.log(reply);
+                    playSound(reply);
+                });
             }
         });
     };
@@ -172,10 +177,10 @@ eb.onopen = function() {
      */
     $(window).keyup(function(e) {
         if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
-            $(".overlay").fadeOut('slow');
             if (e.keyCode === 27) {
                 $('#header, #nav-icon3').removeClass('open');
                 $('#checkout, #erm, #history, #config, #version, #show').fadeOut('slow');
+                $(".overlay").fadeOut('slow');
             }
             if (e.keyCode === 67) {
                 if (config) {
@@ -198,7 +203,7 @@ eb.onopen = function() {
     });
 
     $('#withdraw').click(function() {
-        alert('withdrawal not working yet ... sorry');
+        piggyError('keine Entnahme moeglich', true);
     });
 
     $('#place').click(function() {
@@ -213,7 +218,7 @@ eb.onopen = function() {
             if (reply) {
                 $('#display').empty();
             } else {
-                alert('Hoppala, irgendwas ging halt nicht!');
+                piggyError('Hoppala irgendwas ging halt nicht', false);
             }
         });
     });
@@ -279,7 +284,6 @@ eb.onopen = function() {
      */
     var renderTheme = function(theme) {
         $('.theme-preview-container ul').html('');
-        console.log(theme);
         for (var property in theme) {
             if (property === 'colors') {
                 for (var color in theme['colors']) {
@@ -291,6 +295,7 @@ eb.onopen = function() {
                             var li = $('<li class="input theme-property">');
                             if (0 == subColor) {
                                 var inputLabel = $('<label class="theme-property-label">' + color + '</label>');
+                                inputLabel.css('color', fontColor);
                                 li.append(inputLabel);
                             }
                             var inputValue = $('<input name="' + color + '_' + subColor + '" class="theme-property-value" value="' + theme['colors'][color][subColor] + '">')
@@ -311,6 +316,7 @@ eb.onopen = function() {
                     } else {
                         var li       = $('<li class="input theme-property">');
                         var inputLabel = $('<label class="theme-property-label">' + color + '</label>');
+                        inputLabel.css('color', fontColor);
                         var inputValue = $('<input name="' + color + '" class="theme-property-value" value="' + theme['colors'][color] + '">')
                             .colorPicker({
                                 renderCallback: function($elm, toggled) {
@@ -331,18 +337,22 @@ eb.onopen = function() {
             } else if (property === 'wallpaper') {
                 var li       = $('<li class="input theme-property">');
                 var inputLabel = $('<label class="theme-property-label">' + property + '</label>');
+                inputLabel.css('color', fontColor);
                 var inputValue = $('<input name="' + property + '" class="theme-property-value" value="' + theme[property] + '">');
 
                 li.append(inputLabel)
                     .append(inputValue).appendTo($('.theme-preview-container > ul'));
             }
         }
+        d3.selectAll('form').selectAll('label').transition().duration(500).style('color', fontColor); // doppelt hält besser
     };
 
     /**
      * Show config overlay
      */
     var showConfigOverlay = function () {
+        $(".overlay").fadeOut('slow');
+
         $('#config').fadeTo("slow", 0.97);
         eb.send('find', {collection: 'themes', matcher: {}}, function (reply) {
             $('#config-themes').empty();
@@ -415,6 +425,8 @@ eb.onopen = function() {
      * @param editable
      */
     var showOverlay = function(collection, editable) {
+        $(".overlay").fadeOut('slow');
+
         $('#' + collection).fadeTo("slow", 0.97);
 
         if ('checkout' !== collection) {
@@ -493,7 +505,7 @@ eb.onopen = function() {
                 $('#config-save-id').val(reply);
                 changeTheme(reply.theme);
             } else {
-                alert('Hoppala, irgendwas ging halt nicht!');
+                piggyError('Hoppala irgendwas ging halt nicht', false);
             }
         });
     };
@@ -548,7 +560,7 @@ eb.onopen = function() {
                 $('.invalid-input').removeClass('invalid-input');
                 $('#erm').fadeOut("slow");
             } else {
-                alert('could not save erm!');
+                piggyError('Speichern ging nicht', false);
             }
         });
         event.preventDefault();
@@ -613,7 +625,7 @@ eb.onopen = function() {
                 $('#theme-id').val(reply);
                 changeTheme(reply.theme);
             } else {
-                alert('Hoppala, irgendwas ging halt nicht!');
+                piggyError('Hoppala irgendwas ging halt nicht', false);
             }
         });
     };
@@ -758,4 +770,16 @@ eb.onopen = function() {
             });
         }
     };
+
+    var piggyError = function(message, show) {
+        var error = {};
+        error.showtts = message;
+        eb.send('tts', error, function(reply) {
+            console.log(reply);
+            playSound(reply);
+        });
+        if (show) {
+            showNotice('error', message);
+        }
+    }
 };

@@ -35,35 +35,7 @@ consumerErm.handler(function (message) {
                                 document.showurl = result.showurl;
                             }
                             if (result.showtts) {
-                                var showtts  = result.showtts;
-                                var file     = showtts.replace(/\s+/g, '-').toLowerCase() + '.mp3';
-                                var folder   = 'webroot/assets/sound/';
-                                vertx.fileSystem().exists(folder + file, function (result, result_err) {
-                                    if (result_err == null && result) {
-                                        document.showtts = file;
-                                        eb.publish('show', document);
-                                    } else {
-                                        var query  = encodeURI(showtts);
-                                        var client = vertx.createHttpClient({
-                                            ssl : true
-                                        });
-                                        var request = client.get(443, 'translate.google.com', '/translate_tts?ie=ISO-8859-1&q=' + query + '&tl=de-DE&client=tw-ob', function (response) {
-                                            response.bodyHandler(function (totalBuffer) {
-                                                var buffer = Buffer.buffer(totalBuffer.toString("ISO-8859-1"), "ISO-8859-1");
-                                                vertx.fileSystem().writeFile(folder + file, buffer, function (result, result_err) {
-                                                    if (result_err == null) {
-                                                        document.showtts = file;
-                                                        eb.publish('show', document);
-                                                    } else {
-                                                        console.error("Oh oh ..." + result_err);
-                                                    }
-                                                });
-                                            });
-                                        });
-                                        request.end();
-                                        client.close();
-                                    }
-                                });
+                                eb.publish('tts', result);
                             } else {
                                 eb.publish('show', document);
                             }

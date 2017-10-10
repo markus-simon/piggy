@@ -5,7 +5,8 @@ var verticles = [
     'httpserver.js',
     'upgrade.js',
     'erm.js',
-    'hue.js'
+    'hue.js',
+    'tts.js'
 ];
 
 

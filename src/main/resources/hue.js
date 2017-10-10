@@ -45,7 +45,6 @@ consumerHue.handler(function (message) {
         request.end();
         client.close();
     }
-
 });
 
 

@@ -20,7 +20,7 @@ var themes = [
         colors: {
             header: "#cb3577",
             headerFont: "#fff",
-            font: "#fff",
+            font: "#000",
             background: "#ffdddc",
             amount: ['#ffacf6', '#d052d0', '#ff5fb8', '#ff00a5', '#6b486b', '#6b215c', '#3c1231','#ff55d2'],
             //       head    ,  odd tr  ,  even tr , font
