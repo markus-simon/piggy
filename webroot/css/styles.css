@@ -44,8 +44,8 @@ body {
 
 
 
-/* History ############################################# */
-#history {
+/* Piggy ############################################# */
+#piggy {
     display: none;
     position: absolute;
     background-color: #ffdddc;
@@ -627,7 +627,7 @@ body table.table td span.btn {
     font-size: 7vh;
     float: left; }
 
-#history {
+#piggy {
     padding: 20px; }
 
 form label {

@@ -47,7 +47,7 @@ eb.onopen = function()
      */
     eb.registerHandler('deleted', function(document) {
         switch (document.collection) {
-            case 'upgrades':
+            case 'version':
                 $('#version-collection-' + document.matcher._id).remove();
                 break;
             case 'erm':
@@ -57,7 +57,7 @@ eb.onopen = function()
                 $('#themes-collection-' + document.matcher._id).remove();
                 break;
             case 'piggy':
-                $('#history-collection-' + document.matcher._id).remove();
+                $('#piggy-collection-' + document.matcher._id).remove();
                 updateData();
                 break;
             default:
@@ -160,7 +160,6 @@ eb.onopen = function()
                 var error = {};
                 error.showtts = 'Something is fishy'
                 eb.send('tts', error, function(reply) {
-                    console.log(reply);
                     playSound(reply);
                 });
             }
@@ -170,7 +169,7 @@ eb.onopen = function()
     /**
      * Orientation change
      */
-    window.addEventListener("resize", function() {
+    window.addEventListener("orientationchange", function() {
         // poor mans resize charts
         location.reload(true);
     }, false);
@@ -192,7 +191,7 @@ eb.onopen = function()
             }
 
             if (e.keyCode === 69) showOverlay('erm', true);
-            if (e.keyCode === 72) showOverlay('history', false);
+            if (e.keyCode === 72) showOverlay('piggy', false);
             if (e.keyCode === 75) showOverlay('checkout', false);
             if (e.keyCode === 84) showOverlay('themes', true);
             if (e.keyCode === 86) showOverlay('version', false);
@@ -399,7 +398,7 @@ eb.onopen = function()
      */
     $('#factory-reset').click(function() {
         var document = {};
-        document.collections = ['config','upgrades','themes'];
+        document.collections = ['config','version','themes'];
         eb.send('drop', document, function(reply) {
             console.log(reply);
         });
@@ -425,7 +424,7 @@ eb.onopen = function()
                 .duration(500)
                 .style('background-color', headerColor);
 
-            var colorParts = ['body', '#menu', '#config', '#erm', '#history', '#checkout', '#themes', '#version'];
+            var colorParts = ['body', '#menu', '#config', '#erm', '#piggy', '#checkout', '#themes', '#version'];
             $('#config').fadeOut('slow');
 
             $.each(colorParts, function (key, value) {
@@ -453,12 +452,6 @@ eb.onopen = function()
 
         if ('checkout' !== collection) {
             var table = "." + collection + "-collection";
-
-            if ('version' === collection) {
-                collection = 'upgrades';
-            } else if ('history' === collection) {
-                collection = 'piggy';
-            }
 
             eb.send('find', {collection: collection, matcher: {}}, function (reply) {
                 $(table + " > tbody").empty();
@@ -499,7 +492,7 @@ eb.onopen = function()
         $(".overlay").fadeOut('slow');
         switch (target) {
             case 'version':
-            case 'history':
+            case 'piggy':
             case 'checkout':
                 showOverlay(target, false);
                 break;
@@ -669,12 +662,10 @@ eb.onopen = function()
                         .duration(500)
                         .style('background-color', headerColor);
                 });
-
                 d3.selectAll('.accordion-title')
                     .transition()
                     .duration(500)
                     .style('background-color', headerColor);
-
                 break;
             case 'headerFont':
                 headerFontColor = color;
@@ -684,8 +675,7 @@ eb.onopen = function()
                 break;
             case 'background':
                 backgroundColor = color;
-                console.log('A');
-                var colorParts = ['body', '#menu', '#config', '#erm', '#history', '#themes', '#checkout', '#version'];
+                var colorParts = ['body', '#menu', '#config', '#erm', '#piggy', '#themes', '#checkout', '#version'];
                 $.each(colorParts, function (key, value) {
                     d3.select(value)
                         .transition()
@@ -756,23 +746,12 @@ eb.onopen = function()
 
         $(table + " > tbody").append(html);
 
-        if ('history' === collection) {
-            collection = 'piggy';
-        }
-
-        if ('version' === collection) {
-            collection = 'upgrades';
-        }
-
         // Delete
         if (true === deletable) {
             $('#delete-' + collection + '-' + value._id).click(function() {
                 eb.send('delete', {collection: collection, matcher: {_id: value._id}}, function(reply) {
-                     // TODO delete per publish erfassen, weil anderer tab undso ...
-                     if (reply.length > 0) {
-                         $(table + '-' + value._id).remove();
-                     }
-                 });
+                    // error handling
+                });
             });
         }
 

@@ -4,7 +4,7 @@ var eb = vertx.eventBus();
  * First read dir for upgrade files
  */
 var getUpgradeFiles = function() {
-    vertx.fileSystem().readDir('upgrade', function(res, err) {
+    vertx.fileSystem().readDir('version', function(res, err) {
         if (!err) {
             res.forEach(function(verticle) {
                 checkIfInstalled(verticle);
@@ -19,7 +19,7 @@ var getUpgradeFiles = function() {
  */
 var checkIfInstalled = function(verticle) {
     var fileName = verticle.substring(verticle.lastIndexOf("/") + 1);
-    eb.send('find', {collection: 'upgrades', matcher: { verticle: fileName }}, function(reply) {
+    eb.send('find', {collection: 'version', matcher: { verticle: fileName }}, function(reply) {
         if (reply.body().length < 1) {
             deployUpgrade(verticle);
         }
@@ -34,10 +34,10 @@ var deployUpgrade = function(verticle) {
     var fileName = verticle.substring(verticle.lastIndexOf("/") + 1);
     vertx.deployVerticle(verticle, function(res, err) {
         if (!err) {
-            var upgrade = {};
-            upgrade.collection = 'upgrades';
-            upgrade.verticle   = fileName;
-            eb.send('save', upgrade);
+            var version = {};
+            version.collection = 'version';
+            version.verticle   = fileName;
+            eb.send('save', version);
         } else {
             err.printStackTrace();
         }

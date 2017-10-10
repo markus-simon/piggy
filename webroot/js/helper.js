@@ -85,14 +85,14 @@ var piggySelection = function(type, i) {
             .transition()
             .duration(1000)
             .ease(d3.easeElastic)
-            .attr("d", arc1.innerRadius(radius - 40).outerRadius(radius - 120).cornerRadius(8));
+            .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 80).cornerRadius(8));
     } else {
         d3.selectAll(".bar").transition().style("opacity", "1");
         d3.select("#path_" + i)
             .transition()
             .duration(1000)
             .ease(d3.easeElastic)
-            .attr("d", arc1.innerRadius(radius - 70).outerRadius(radius - 100).cornerRadius(1));
+            .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(1));
     }
 };
 

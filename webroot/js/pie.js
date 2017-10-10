@@ -3,8 +3,8 @@ var pie1 = d3.pie()
     .sort(null);
 
 var arc1 = d3.arc()
-    .innerRadius(radius - 70)
-    .outerRadius(radius - 100)
+    .innerRadius(radius - 20)
+    .outerRadius(radius - 40)
     .cornerRadius(1);
 
 var svg1 = d3.select("#group1")
@@ -57,8 +57,6 @@ var path2 = svg1.datum(dataBars).append("g").attr("id","glabel").selectAll("path
         return function(t) { return (d3.interpolateString("0," + len, len + ",0"))(t) };
     });
 
-
-
 var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .data(pie1)
     .enter().append("path")
@@ -70,15 +68,11 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .on("mouseout", function(d, i) {
         piggySelection('off', i);
     })
-
     .attr("fill", function(d, i) { return color(i); })
     .attr("stroke-width", 4)
     .attr("stroke", backgroundColor)
     .attr("d", arc1)
     .each(function(d) { this._current = d; });
-
-
-
 
 
 function updatePie(result) {
@@ -101,11 +95,6 @@ function updatePie(result) {
         .ease(d3.easeElastic)
         .style("fill", function(d, i) { return color(i); })
         .style('stroke', backgroundColor)
-
-/*    .on("mouseout", function() {
-        arc1.innerRadius(radius - 100)
-            .outerRadius(radius - 20);
-    })*/
         .attrTween("d", arcTween);
 
     /*    line1.data(pie1)
