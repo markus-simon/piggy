@@ -74,13 +74,11 @@ var jsonToForm = function(prefix, data) {
  * Highlight selected amount
  *
  * @param type
- * @param d
  * @param i
- * @param target
  */
-var piggySelection = function(type, d, i, target) {
+var piggySelection = function(type, i) {
     if ('on' === type) {
-        d3.selectAll('.bar').transition().style('opacity', function () {
+        d3.selectAll('.bar').transition().style('opacity', function() {
             return (this.id === 'bar_' + i) ? 1 : .1;
         });
         d3.select("#path_" + i)

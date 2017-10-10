@@ -34,10 +34,10 @@ bar.append("rect")
     .attr("height", function(d) { return height - 25 - y(d.amount); })
     .style("fill", function(d, i) { return color(i); })
     .on("mouseover", function(d, i) {
-        piggySelection('on', d, i);
+        piggySelection('on', i);
     })
     .on("mouseout", function(d, i) {
-        piggySelection('off', d, i);
+        piggySelection('off', i);
     });
 
 svg2.append("g")

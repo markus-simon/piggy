@@ -65,10 +65,10 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .attr("id", function(d, i) { return "path_" + i })
     .attr("class", "pie-parts")
     .on("mouseover", function(d, i) {
-        piggySelection('on', d, i);
+        piggySelection('on', i);
     })
     .on("mouseout", function(d, i) {
-        piggySelection('off', d, i);
+        piggySelection('off', i);
     })
 
     .attr("fill", function(d, i) { return color(i); })
