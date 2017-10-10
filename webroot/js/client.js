@@ -711,10 +711,10 @@ eb.onopen = function() {
                 key = mapping[key.replace(' ', '_')];
             }
             if ('disable' === key) {
-                html += '<td id="disable-' + collection + '-' + value._id + '"><span class="btn">&empty;</span></td>';
+                html += '<td id="disable-' + collection + '-' + value._id + '"><span class="btn">&empty; Disable</span></td>';
             } else if ('delete' === key) {
                 deletable = true;
-                html += '<td id="delete-' + collection + '-' + value._id + '"><span class="btn">X</span></td>';
+                html += '<td id="delete-' + collection + '-' + value._id + '"><span class="btn">X Remove</span></td>';
             } else {
                 html += '<td>' + value[key] + '</td>';
             }

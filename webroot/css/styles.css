@@ -289,9 +289,6 @@ table.table tbody tr:hover td {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    -moz-box-shadow: inset 0 0 40px #fff;
-    -webkit-box-shadow: inset 0 0 40px #fff;
-    box-shadow: inset 0 0 40px #fff;
     color: #fff;
 }
 
@@ -304,10 +301,15 @@ table.table tbody tr:hover td {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    -moz-box-shadow: inset 0 0 40px #fff;
-    -webkit-box-shadow: inset 0 0 40px #fff;
-    box-shadow: inset 0 0 40px #fff;
     color: #fff;
+}
+
+button {
+    cursor: pointer;
+}
+button:focus{
+    outline: none;
+    box-shadow: inset 0 0 5px 2px #ab3978;
 }
 
 .invalid-input {
@@ -563,10 +565,11 @@ body table.table tbody tr:nth-child(2n+2) {
 
 body table.table td span.btn {
     display: inline-block;
-    background: #aaa;
-    padding: 5px;
-    width: 50px;
+    background: #7D3053;
+    padding: 5px 10px;
     text-align: center;
+    border-radius: 5px;
+    box-shadow: inset 0 0 5px 2px #ab3978;
 }
 body table.table td span.btn:hover {
     transition: all .2s linear;
