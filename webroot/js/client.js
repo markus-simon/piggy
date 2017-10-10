@@ -20,7 +20,8 @@ var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5
 var lineColor       = "#000";
 var axisColor       = "#000";
 
-eb.onopen = function() {
+eb.onopen = function()
+{
     /**
      * Find config
      */
@@ -166,7 +167,9 @@ eb.onopen = function() {
         });
     };
 
-    // orientation change
+    /**
+     * Orientation change
+     */
     window.addEventListener("resize", function() {
         // poor mans resize charts
         location.reload(true);
@@ -179,8 +182,7 @@ eb.onopen = function() {
         if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
             if (e.keyCode === 27) {
                 $('#header, #nav-icon3').removeClass('open');
-                $('#checkout, #erm, #history, #config, #version, #show').fadeOut('slow');
-                $(".overlay").fadeOut('slow');
+                $('.overlay').fadeOut('slow');
             }
             if (e.keyCode === 67) {
                 if (config) {
@@ -197,15 +199,24 @@ eb.onopen = function() {
         }
     });
 
+    /**
+     *
+     */
     $('.field').click(function() {
         var changeValue = this.textContent;
         $('#display').text($('#display').text() + changeValue);
     });
 
+    /**
+     *
+     */
     $('#withdraw').click(function() {
         piggyError('keine Entnahme moeglich', true);
     });
 
+    /**
+     *
+     */
     $('#place').click(function() {
         var value       = parseFloat($('#display').text());
         var transaction = {
@@ -271,6 +282,11 @@ eb.onopen = function() {
 
     };
 
+    /**
+     * Inject styles
+     *
+     * @param rule
+     */
     function injectStyles(rule) {
         $("<div />", {
             html: '&shy;<style id="theme-style">' + rule + '</style>'
@@ -293,7 +309,7 @@ eb.onopen = function() {
 
                         for (var subColor in theme['colors'][color]) {
                             var li = $('<li class="input theme-property">');
-                            if (0 == subColor) {
+                            if ('0' === subColor) {
                                 var inputLabel = $('<label class="theme-property-label">' + color + '</label>');
                                 inputLabel.css('color', fontColor);
                                 li.append(inputLabel);
@@ -771,11 +787,16 @@ eb.onopen = function() {
         }
     };
 
+    /**
+     * Throw error
+     *
+     * @param message
+     * @param show
+     */
     var piggyError = function(message, show) {
         var error = {};
         error.showtts = message;
         eb.send('tts', error, function(reply) {
-            console.log(reply);
             playSound(reply);
         });
         if (show) {
