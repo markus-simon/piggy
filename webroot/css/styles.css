@@ -638,6 +638,15 @@ form label {
     margin-left: 70px;
     margin-top: 10px; }
 
+.theme-preview-container label {
+    display: inline-block;
+    vertical-align: top;
+    width: 150px; }
+
+.theme-preview-container ul li ul li {
+    padding-left: 0!important;
+}
+
 body .theme-preview-container ul,
 body .theme-preview-container ul li {
     border: none!important;
