@@ -33,11 +33,13 @@ bar.append("rect")
     .attr("height", function(d) { return height - 25 - y(d.amount); })
     .style("fill", function(d, i) { return color(i); })
     .on("mouseover", function() {
-        d3.selectAll(".bar").style("opacity", "0.3");
-        d3.select(this).style("opacity", "1");
+        var current = this;
+        d3.selectAll('.bar').transition().style('opacity', function() {
+           return (this === current) ? 1 : .1;
+        });
     })
     .on("mouseout", function() {
-        d3.selectAll(".bar").style("opacity", "1");
+        d3.selectAll(".bar").transition().duration(1000).style("opacity", "1");
     });
 
 svg2.append("g")
@@ -50,7 +52,6 @@ svg2.append("g")
     .attr("fill", "#000")
     .text("Type");
 
-
 svg2.append("g")
     .attr("class", "y axis")
     .attr("transform", "translate(40, 0)")
@@ -62,9 +63,6 @@ svg2.append("g")
     .attr("dy", "0.71em")
     .attr("fill", "#000")
     .text("Menge");
-
-
-
 
 function updateBars(result) {
     var newData = [];
@@ -85,7 +83,6 @@ function updateBars(result) {
     var y = d3.scaleLinear()
         .domain([0, d3.max(newData, function(d) { return d.sum })])
         .range([height - 25, 25]);
-
 
     var yAxis = d3.axisLeft(y);
 
