@@ -70,7 +70,33 @@ var jsonToForm = function(prefix, data) {
     });
 };
 
-
+/**
+ * Highlight selected amount
+ *
+ * @param type
+ * @param d
+ * @param i
+ * @param target
+ */
+var piggySelection = function(type, d, i, target) {
+    if ('on' === type) {
+        d3.selectAll('.bar').transition().style('opacity', function () {
+            return (this.id === 'bar_' + i) ? 1 : .1;
+        });
+        d3.select("#path_" + i)
+            .transition()
+            .duration(1000)
+            .ease(d3.easeElastic)
+            .attr("d", arc1.innerRadius(radius - 40).outerRadius(radius - 120).cornerRadius(8));
+    } else {
+        d3.selectAll(".bar").transition().style("opacity", "1");
+        d3.select("#path_" + i)
+            .transition()
+            .duration(1000)
+            .ease(d3.easeElastic)
+            .attr("d", arc1.innerRadius(radius - 70).outerRadius(radius - 100).cornerRadius(1));
+    }
+};
 
 var playSound = function(file) {
     var audioElement = document.createElement('audio');

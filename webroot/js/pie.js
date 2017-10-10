@@ -65,22 +65,10 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .attr("id", function(d, i) { return "path_" + i })
     .attr("class", "pie-parts")
     .on("mouseover", function(d, i) {
-        d3.selectAll('.bar').transition().style('opacity', function() {
-            return (this.id === 'bar_' + i) ? 1 : .1;
-        });
-        d3.select("#path_" + i)
-            .transition()
-            .duration(1000)
-            .ease(d3.easeElastic)
-            .attr("d", arc1.innerRadius(radius - 40).outerRadius(radius - 120).cornerRadius(8))
+        piggySelection('on', d, i);
     })
     .on("mouseout", function(d, i) {
-        d3.selectAll(".bar").transition().style("opacity", "1");
-        d3.select("#path_" + i)
-            .transition()
-            .duration(1000)
-            .ease(d3.easeElastic)
-            .attr("d", arc1.innerRadius(radius - 70).outerRadius(radius - 100).cornerRadius(1));
+        piggySelection('off', d, i);
     })
 
     .attr("fill", function(d, i) { return color(i); })
