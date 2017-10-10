@@ -1,13 +1,11 @@
-var radius   = Math.min(width, height) / 2;
-
 var pie1 = d3.pie()
     .value(function(d) { return d; })
     .sort(null);
 
 var arc1 = d3.arc()
-    .innerRadius(radius - 60)
-    .outerRadius(radius - 20)
-    .cornerRadius(6);
+    .innerRadius(radius - 70)
+    .outerRadius(radius - 100)
+    .cornerRadius(1);
 
 var svg1 = d3.select("#group1")
     .append("svg")
@@ -61,27 +59,29 @@ var path2 = svg1.datum(dataBars).append("g").attr("id","glabel").selectAll("path
 
 
 
-
-var arc2 = d3.arc()
-    .innerRadius(radius - 100)
-    .outerRadius(radius - 20)
-    .cornerRadius(0);
-
 var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .data(pie1)
     .enter().append("path")
     .attr("id", function(d, i) { return "path_" + i })
     .attr("class", "pie-parts")
-/*    .on("mouseover", function() {
-        d3.select(this).transition()
-            .duration(750)
-            .attr("d", arc2);
+    .on("mouseover", function(d, i) {
+        d3.selectAll('.bar').transition().style('opacity', function() {
+            return (this.id === 'bar_' + i) ? 1 : .1;
+        });
+        d3.select("#path_" + i)
+            .transition()
+            .duration(1000)
+            .ease(d3.easeElastic)
+            .attr("d", arc1.innerRadius(radius - 40).outerRadius(radius - 120).cornerRadius(8))
     })
-    .on("mouseout", function() {
-        d3.select(this).transition()
-            .duration(750)
-            .attr("d", arc1);
-    })*/
+    .on("mouseout", function(d, i) {
+        d3.selectAll(".bar").transition().style("opacity", "1");
+        d3.select("#path_" + i)
+            .transition()
+            .duration(1000)
+            .ease(d3.easeElastic)
+            .attr("d", arc1.innerRadius(radius - 70).outerRadius(radius - 100).cornerRadius(1));
+    })
 
     .attr("fill", function(d, i) { return color(i); })
     .attr("stroke-width", 4)

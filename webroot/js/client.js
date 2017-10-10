@@ -577,9 +577,6 @@ eb.onopen = function() {
 
         var theme = formToJson(form);
 
-        console.log('theme');
-        console.log(theme);
-
         theme.amount = amount;
         theme.table  = table;
         theme.input  = input;
@@ -601,12 +598,8 @@ eb.onopen = function() {
             }
         });
 
-
-
         theme.colors = colors;
         theme.wallpaper = '';
-        console.log('theme');
-        console.log(theme);
 
         var action = 'save';
         if (update) {

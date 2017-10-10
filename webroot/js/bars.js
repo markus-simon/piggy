@@ -30,16 +30,27 @@ bar.append("rect")
     .attr("width", barWidth)
     .attr("y", function(d) { return y(d.sum); })
     .attr("class","bar")
+    .attr("id", function(d, i) { return "bar_" + i })
     .attr("height", function(d) { return height - 25 - y(d.amount); })
     .style("fill", function(d, i) { return color(i); })
-    .on("mouseover", function() {
+    .on("mouseover", function(d, i) {
         var current = this;
         d3.selectAll('.bar').transition().style('opacity', function() {
            return (this === current) ? 1 : .1;
         });
+        d3.select("#path_" + i)
+            .transition()
+            .duration(1000)
+            .ease(d3.easeElastic)
+            .attr("d", arc1.innerRadius(radius - 40).outerRadius(radius - 120).cornerRadius(8))
     })
-    .on("mouseout", function() {
-        d3.selectAll(".bar").transition().duration(1000).style("opacity", "1");
+    .on("mouseout", function(d, i) {
+        d3.selectAll(".bar").transition().style("opacity", "1");
+        d3.select("#path_" + i)
+            .transition()
+            .duration(1000)
+            .ease(d3.easeElastic)
+            .attr("d", arc1.innerRadius(radius - 70).outerRadius(radius - 100).cornerRadius(1));
     });
 
 svg2.append("g")
