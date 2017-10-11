@@ -54,8 +54,8 @@ body {
 }
 
 
-/* Version ############################################# */
-#version {
+/* upgrade ############################################# */
+#upgrade {
     display: none;
     position: absolute;
     background-color: #ffdddc;
@@ -63,8 +63,8 @@ body {
     min-height: 100%;
 }
 
-/* Themes ############################################# */
-#themes {
+/* Theme ############################################# */
+#theme {
     display: none;
     position: absolute;
     background-color: #ffdddc;
@@ -245,7 +245,7 @@ table.table tbody tr:hover td {
     padding: 5px 8px;
 }
 
-#config-themes, #config-theme-name {
+#config-theme, #config-theme-name {
     padding: 5px 8px;
 }
 
@@ -538,8 +538,8 @@ body #erm form li.input textarea {
     box-shadow: inset 0 0 5px 2px #ab3978;
 }
 
-body #themes form li.input input:not([type="checkbox"]),
-body #themes form li.input textarea {
+body #theme form li.input input:not([type="checkbox"]),
+body #theme form li.input textarea {
     box-shadow: inset 0 0 5px 2px #ab3978;
 }
 

@@ -13,7 +13,7 @@ eb.send('save', config);
 // initial themes
 var themes = [
     {
-        collection: 'themes',
+        collection: 'theme',
         name: 'blossom',
         wallpaper: '',
         css: "",
@@ -31,7 +31,7 @@ var themes = [
             axis: "#000"
         }
     },{
-        collection: 'themes',
+        collection: 'theme',
         name: 'dark',
         wallpaper: '',
         css: "#header { box-shadow: 1px 0 90px 59px #000000; }",
@@ -47,7 +47,7 @@ var themes = [
             axis: "#fff"
         }
     },{
-        collection: 'themes',
+        collection: 'theme',
         name: 'pirates',
         wallpaper: '',
         css: "body { color: black; }",
@@ -55,7 +55,7 @@ var themes = [
             header: "#002f2c",
             headerFont: "#fff",
             font: "#fff",
-            background: "#151515",
+            background: "#ff0014",
             amount: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
             table: ['#ff5fb8', '#ab3978', '#AB4C79', '#fff'],
             input: ['#ff5fb8','#ab3978','#fff'],
@@ -63,7 +63,7 @@ var themes = [
             axis: "#fff"
         }
     },{
-        collection: 'themes',
+        collection: 'theme',
         name: 'vampire',
         wallpaper: '',
         css: "body { color: black; }",
@@ -71,7 +71,7 @@ var themes = [
             header: "#002f2c",
             headerFont: "#fff",
             font: "#fff",
-            background: "#151515",
+            background: "#8900ff",
             amount: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
             table: ['#ff5fb8', '#ab3978', '#AB4C79', '#fff'],
             input: ['#ff5fb8','#ab3978','#fff'],
@@ -79,7 +79,7 @@ var themes = [
             axis: "#fff"
         }
     },{
-        collection: 'themes',
+        collection: 'theme',
         name: 'green',
         wallpaper: '',
         css: "body { color: black; }",
@@ -87,7 +87,7 @@ var themes = [
             header: "#002f2c",
             headerFont: "#fff",
             font: "#fff",
-            background: "#151515",
+            background: "#19ff00",
             amount: ['#00625B', '#347B76', '#00bfb2', '#99abd4', '#564389', '#22076E', '#8dffce', '#3b77ff'],
             table: ['#ff5fb8', '#ab3978', '#AB4C79', '#fff'],
             input: ['#ff5fb8','#ab3978','#fff'],

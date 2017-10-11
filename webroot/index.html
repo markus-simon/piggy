@@ -29,10 +29,10 @@
                     <a id="overlay-config" title="Configuration" href="#">Configuration</a>
                 </li>
                 <li>
-                    <a id="overlay-version" title="Version" href="#">Version</a>
+                    <a id="overlay-upgrade" title="upgrade" href="#">Upgrade</a>
                 </li>
                 <li>
-                    <a id="overlay-themes" title="Themes" href="#">Theme</a>
+                    <a id="overlay-theme" title="Theme" href="#">Theme</a>
                 </li>
             </ul>
         </div>
@@ -201,13 +201,13 @@
 
 
 
-        <!-- Themes -->
-        <div id="themes" class="overlay">
-            <ul id="themes-ul">
+        <!-- Theme -->
+        <div id="theme" class="overlay">
+            <ul id="theme-ul">
 
                 <li>
                     <div class="tbl-header">
-                        <table class="themes-collection table" cellpadding="0" cellspacing="0" border="0">
+                        <table class="theme-collection table" cellpadding="0" cellspacing="0" border="0">
                             <thead>
                             <tr>
                                 <th>Created at</th>
@@ -243,7 +243,7 @@
 
                             <!-- save Theme -->
                             <li class="input">
-                                <input id="theme-collection" type="hidden" name="collection" value="themes">
+                                <input id="theme-collection" type="hidden" name="collection" value="theme">
                                 <input id="theme-id" type="hidden" name="_id">
                                 <label for="erm-add-send">Ready?</label>
                                 <button id="theme-update" data-update="true" type="button">Update</button>
@@ -265,8 +265,8 @@
                             <div class="accordion-content">
                                 <ul>
                                     <li id="rest-config-li2" class="input">
-                                        <label for="config-themes">Theme</label>
-                                        <select id="config-themes" name="theme"></select>
+                                        <label for="config-theme">Theme</label>
+                                        <select id="config-theme" name="theme"></select>
                                     </li>
                                 </ul>
                             </div>
@@ -277,10 +277,10 @@
                             <div class="accordion-content">
                                 <ul>
                                     <li id="rest-config-li3" class="input">
-                                        <label for="config-themes">Rest config3</label>
+                                        <label for="config-theme">Rest config3</label>
                                     </li>
                                     <li id="rest-config-li24" class="input">
-                                        <label for="config-themes">Rest config24</label>
+                                        <label for="config-theme">Rest config24</label>
                                     </li>
                                 </ul>
                             </div>
@@ -300,14 +300,14 @@
             </form>
         </div>
 
-        <!-- Version -->
-        <div id="version" class="overlay">
-            <ul class="version-ul">
+        <!-- upgrade -->
+        <div id="upgrade" class="overlay">
+            <ul class="upgrade-ul">
 
-                <!-- Version Collection-->
-                <li id="version-list">
+                <!-- upgrade Collection-->
+                <li id="upgrade-list">
                     <div class="tbl-header">
-                        <table class="version-collection table" cellpadding="0" cellspacing="0" border="0">
+                        <table class="upgrade-collection table" cellpadding="0" cellspacing="0" border="0">
                             <thead>
                             <tr>
                                 <th>Created at</th>
@@ -320,8 +320,8 @@
                     </div>
                 </li>
 
-                <!-- Version control -->
-                <li id="version-control">
+                <!-- upgrade control -->
+                <li id="upgrade-control">
                     <div>
                         <button id="factory-reset" type="button">Reset</button>
                     </div>

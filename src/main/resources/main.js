@@ -3,7 +3,7 @@ var eb = vertx.eventBus();
 var verticles = [
     'persistor.js',
     'httpserver.js',
-    'version.js',
+    'upgrade.js',
     'erm.js',
     'hue.js',
     'tts.js'

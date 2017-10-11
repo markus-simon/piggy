@@ -4,7 +4,7 @@ var margin = {top: 5, right: 5, bottom: 5, left: 0};
 
 var width, height;
 
-if (window.innerWidth < 600) {
+if (window.innerWidth < 800) {
     width  = window.innerWidth;
     height = (window.innerHeight) - 60;
 } else {

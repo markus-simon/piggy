@@ -29,7 +29,9 @@ eb.onopen = function()
         config = reply[0];
         if (!$.isEmptyObject(config)) {
             $('#config-save-id').val(config._id);
-            changeTheme(config.theme);
+            eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function(reply) {
+                changeTheme(reply[0]);
+            })
         }
         updateData();
     });
@@ -47,14 +49,14 @@ eb.onopen = function()
      */
     eb.registerHandler('deleted', function(document) {
         switch (document.collection) {
-            case 'version':
-                $('#version-collection-' + document.matcher._id).remove();
+            case 'upgrade':
+                $('#upgrade-collection-' + document.matcher._id).remove();
                 break;
             case 'erm':
                 $('#erm-collection-' + document.matcher._id).remove();
                 break;
-            case 'themes':
-                $('#themes-collection-' + document.matcher._id).remove();
+            case 'theme':
+                $('#theme-collection-' + document.matcher._id).remove();
                 break;
             case 'piggy':
                 $('#piggy-collection-' + document.matcher._id).remove();
@@ -107,7 +109,8 @@ eb.onopen = function()
      * Register dropped handler
      */
     eb.registerHandler('dropped', function(document) {
-        location.reload(true);
+        console.log(document);
+        $('.' + document.collection + '-collection tbody').html('');
     });
 
     /**
@@ -134,34 +137,21 @@ eb.onopen = function()
                         "type": 1,
                         "amount": 1,
                         "sum": 1,
-                        "sumTotal": { "$multiply": [ "$sum", "$amount" ] }/*,
-                        "weightTotal": {
-                            "$switch": {
-                                "branches": [
-                                    { "case": { "$eq": [ 0, 5   ] }, "then": "equals" },
-                                    { "case": { "$eq": [ 0, 5   ] }, "then": "greater than" },
-                                    { "case": { "$eq": [ 0, 5   ] }, "then": "less than" }
-                                ]
-                            }
-                        }*/
+                        "sumTotal": { "$multiply": [ "$sum", "$amount" ] }
                     }
                 }
             ]
         };
 
-        eb.send("runCommand", JSON.stringify(query), function(res, res_err) {
-            if (res.ok === 1) {
-                var result = res.result;
+        eb.send("runCommand", JSON.stringify(query), function(reply) {
+            if (!reply.cause) {
+                var result = reply.result;
                 updateBars(result);
                 updatePie(result);
                 updateLine(result);
-                updateHeader(result);  // wirklich 4x übergeben!? ne ...
+                updateHeader(result);
             } else {
-                var error = {};
-                error.showtts = 'Something is fishy'
-                eb.send('tts', error, function(reply) {
-                    playSound(reply);
-                });
+                piggyError('Konnte Kommando nicht ausfuehren', false, reply.cause);
             }
         });
     };
@@ -193,8 +183,8 @@ eb.onopen = function()
             if (e.keyCode === 69) showOverlay('erm', true);
             if (e.keyCode === 72) showOverlay('piggy', false);
             if (e.keyCode === 75) showOverlay('checkout', false);
-            if (e.keyCode === 84) showOverlay('themes', true);
-            if (e.keyCode === 86) showOverlay('version', false);
+            if (e.keyCode === 84) showOverlay('theme', true);
+            if (e.keyCode === 85) showOverlay('upgrade', false);
         }
     });
 
@@ -369,8 +359,8 @@ eb.onopen = function()
         $(".overlay").fadeOut('slow');
 
         $('#config').fadeTo("slow", 0.97);
-        eb.send('find', {collection: 'themes', matcher: {}}, function (reply) {
-            $('#config-themes').empty();
+        eb.send('find', {collection: 'theme', matcher: {}}, function (reply) {
+            $('#config-theme').empty();
             var selected = '';
             $.each(reply, function (key, value) {
                 if (!$.isEmptyObject(config)) {
@@ -380,7 +370,7 @@ eb.onopen = function()
                         selected = '';
                     }
                 }
-                $('<option ' + selected + 'value=' + value.name + '>').text(value.name).appendTo($('#config-themes'));
+                $('<option ' + selected + 'value=' + value.name + '>').text(value.name).appendTo($('#config-theme'));
             });
         });
     };
@@ -398,45 +388,41 @@ eb.onopen = function()
      */
     $('#factory-reset').click(function() {
         var document = {};
-        document.collections = ['config','version','themes'];
-        eb.send('drop', document, function(reply) {
-            console.log(reply);
-        });
+        document.collections = ['upgrade','config','theme','erm'];
+        eb.publish('reset', document);
     });
 
     /**
      * Change theme colors undso
      */
     var changeTheme = function(theme) {
-        eb.send('find', {collection: 'themes', matcher: { name: theme }}, function (res) {
-            $('#theme-style').remove();
-            injectStyles(res[0].css);
-            color = d3.scaleOrdinal(res[0].colors.amount);
-            headerColor = res[0].colors.header;
-            headerFontColor = res[0].colors.headerFont;
-            fontColor = res[0].colors.font;
-            backgroundColor = res[0].colors.background;
-            axisColor = res[0].colors.axis;
-            lineColor = res[0].colors.line;
+        $('#theme-style').remove();
+        injectStyles(theme.css);
+        color           = d3.scaleOrdinal(theme.colors.amount);
+        headerColor     = theme.colors.header;
+        headerFontColor = theme.colors.headerFont;
+        fontColor       = theme.colors.font;
+        backgroundColor = theme.colors.background;
+        axisColor       = theme.colors.axis;
+        lineColor       = theme.colors.line;
 
-            d3.selectAll('.accordion-title')
+        d3.selectAll('.accordion-title')
+            .transition()
+            .duration(500)
+            .style('background-color', headerColor);
+
+        var colorParts = ['body', '#menu', '#config', '#erm', '#piggy', '#checkout', '#theme', '#upgrade'];
+        $('#config').fadeOut('slow');
+
+        $.each(colorParts, function (key, value) {
+            d3.select(value)
                 .transition()
                 .duration(500)
-                .style('background-color', headerColor);
-
-            var colorParts = ['body', '#menu', '#config', '#erm', '#piggy', '#checkout', '#themes', '#version'];
-            $('#config').fadeOut('slow');
-
-            $.each(colorParts, function (key, value) {
-                d3.select(value)
-                    .transition()
-                    .duration(500)
-                    .style('background-color', backgroundColor)
-            });
-
-            d3.selectAll('form').selectAll('label').transition().duration(500).style('color', fontColor); // hä?
-            updateData();
+                .style('background-color', backgroundColor)
         });
+
+        d3.selectAll('form').selectAll('label').transition().duration(500).style('color', fontColor); // hä?
+        updateData();
     };
 
     /**
@@ -491,7 +477,7 @@ eb.onopen = function()
         $('#header, #nav-icon3').toggleClass('open');
         $(".overlay").fadeOut('slow');
         switch (target) {
-            case 'version':
+            case 'upgrade':
             case 'piggy':
             case 'checkout':
                 showOverlay(target, false);
@@ -499,7 +485,7 @@ eb.onopen = function()
             case 'config':
                 showConfigOverlay();
                 break;
-            case 'themes':
+            case 'theme':
                 showOverlay(target, true);
                 break;
             case 'alert':
@@ -518,7 +504,7 @@ eb.onopen = function()
         eb.send(action, config, function (reply) {
             if (reply) {
                 $('#config-save-id').val(reply);
-                changeTheme(reply.theme);
+                changeTheme(reply.theme); // TODO geladenes theme übergeben!
             } else {
                 piggyError('Hoppala irgendwas ging halt nicht', false);
             }
@@ -638,7 +624,7 @@ eb.onopen = function()
         eb.send(action, theme, function (reply) {
             if (reply) {
                 $('#theme-id').val(reply);
-                changeTheme(reply.theme);
+                changeTheme(theme);
             } else {
                 piggyError('Hoppala irgendwas ging halt nicht', false);
             }
@@ -675,7 +661,7 @@ eb.onopen = function()
                 break;
             case 'background':
                 backgroundColor = color;
-                var colorParts = ['body', '#menu', '#config', '#erm', '#piggy', '#themes', '#checkout', '#version'];
+                var colorParts = ['body', '#menu', '#config', '#erm', '#piggy', '#theme', '#checkout', '#upgrade'];
                 $.each(colorParts, function (key, value) {
                     d3.select(value)
                         .transition()
@@ -757,9 +743,7 @@ eb.onopen = function()
 
         // Edit
         if (true === editable) {
-            if ('themes' === collection) {
-                var form = 'theme';
-            } else if ('erm' === collection) {
+            if ('erm' === collection) {
                 var form = 'erm-add';
             }
 
@@ -768,8 +752,9 @@ eb.onopen = function()
                     if (reply.length > 0) {
                         $('#' + form + '-update').show();
                         $('#' + form + '-id').val(value._id);
-                        if ('themes' === collection) {
+                        if ('theme' === collection) {
                             renderTheme(reply[0]);
+                            changeTheme(reply[0])
                         }
                         jsonToForm(form + '-', reply[0]);
                     }
@@ -783,8 +768,9 @@ eb.onopen = function()
      *
      * @param message
      * @param show
+     * @param log
      */
-    var piggyError = function(message, show) {
+    var piggyError = function(message, show, log) {
         var error = {};
         error.showtts = message;
         eb.send('tts', error, function(reply) {
@@ -792,6 +778,9 @@ eb.onopen = function()
         });
         if (show) {
             showNotice('error', message);
+        }
+        if (log) {
+            console.log(log);
         }
     }
 };

@@ -46,10 +46,10 @@ svgHeader.append("text")
 
 
 function updateHeader(result) {
+
     var sumTotal    = 0;
     var weightTotal = 0;
 
-    // TODO sumTotal weiter nach "vorne" verschieben ...
     result.forEach(function(row) {
         sumTotal += row.sumTotal;
         weightTotal += calculateWeight(row);
@@ -61,7 +61,6 @@ function updateHeader(result) {
     piggyLocal.set(sumTotalLabel, calculatedTotalSum);
     piggyLocal.set(weightTotalLabel, calculatedTotalWeight);
 
-    // TODO € symbol
     var sumValue = calculatedTotalSum.toLocaleString('de-DE', {
         minimumFractionDigits: 2,
         style: 'currency',
@@ -69,8 +68,6 @@ function updateHeader(result) {
     });
 
     sumTotalLabel.text(formatCurrency(calculatedTotalSum));
-
-
     weightTotalLabel.text(formatWeight(calculatedTotalWeight));
 
     piggyLabel.transition().duration(500).style('fill', headerFontColor);
