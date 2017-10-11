@@ -91,7 +91,7 @@ function updateBars(result) {
         .transition()
         .duration(1000)
         .ease(d3.easeElastic)
-        .delay(function(d, i) { return 100 * i } )
+        .delay(function(d, i) { return 30 * i } )
         .attr("x", function(d) { return x(d.amount) - barWidth / 2; })
         .attr("y", function(d) { return y(d.sum); })
         .attr("height", function(d) { return height - y(d.sum) - 25; })
