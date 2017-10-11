@@ -48,22 +48,9 @@ eb.onopen = function()
      * Register delete handler
      */
     eb.registerHandler('deleted', function(document) {
-        switch (document.collection) {
-            case 'upgrade':
-                $('#upgrade-collection-' + document.matcher._id).remove();
-                break;
-            case 'erm':
-                $('#erm-collection-' + document.matcher._id).remove();
-                break;
-            case 'theme':
-                $('#theme-collection-' + document.matcher._id).remove();
-                break;
-            case 'piggy':
-                $('#piggy-collection-' + document.matcher._id).remove();
-                updateData();
-                break;
-            default:
-                break;
+        $('#' + document.collection + '-collection-' + document.matcher._id).remove();
+        if (document.collection === 'piggy') {
+            updateData();
         }
     });
 
@@ -109,7 +96,6 @@ eb.onopen = function()
      * Register dropped handler
      */
     eb.registerHandler('dropped', function(document) {
-        console.log(document);
         $('.' + document.collection + '-collection tbody').html('');
     });
 
@@ -226,15 +212,15 @@ eb.onopen = function()
     /**
      * Toggle checkboxes in erm form
      */
-    $('#erm-add-form input[type="checkbox"]').click(function() {
+    $('#erm-form input[type="checkbox"]').click(function() {
         $('.' + $(this).attr('name')).toggle();
     });
 
     /**
      * Hue connect
      */
-    $('#erm-add-hueconnect').click(function() {
-        var form = $('#erm-add-form').serializeArray();
+    $('#erm-hueconnect').click(function() {
+        var form = $('#erm-form').serializeArray();
         var erm = formToJson(form);
         erm.huerequesttype = 'get';
         eb.send('hue', erm, function (res) {
@@ -358,7 +344,7 @@ eb.onopen = function()
     var showConfigOverlay = function () {
         $(".overlay").fadeOut('slow');
 
-        $('#config').fadeTo("slow", 0.97);
+        $('#config-overlay').fadeTo("slow", 0.97);
         eb.send('find', {collection: 'theme', matcher: {}}, function (reply) {
             $('#config-theme').empty();
             var selected = '';
@@ -396,6 +382,9 @@ eb.onopen = function()
      * Change theme colors undso
      */
     var changeTheme = function(theme) {
+
+        renderTheme(theme);
+
         $('#theme-style').remove();
         injectStyles(theme.css);
         color           = d3.scaleOrdinal(theme.colors.amount);
@@ -411,8 +400,8 @@ eb.onopen = function()
             .duration(500)
             .style('background-color', headerColor);
 
-        var colorParts = ['body', '#menu', '#config', '#erm', '#piggy', '#checkout', '#theme', '#upgrade'];
-        $('#config').fadeOut('slow');
+        var colorParts = ['body', '#menu', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
+        $('#config-overlay').fadeOut('slow');
 
         $.each(colorParts, function (key, value) {
             d3.select(value)
@@ -433,12 +422,9 @@ eb.onopen = function()
      */
     var showOverlay = function(collection, editable) {
         $(".overlay").fadeOut('slow');
-
-        $('#' + collection).fadeTo("slow", 0.97);
-
+        $('#' + collection + '-overlay').fadeTo("slow", 0.97);
         if ('checkout' !== collection) {
             var table = "." + collection + "-collection";
-
             eb.send('find', {collection: collection, matcher: {}}, function (reply) {
                 $(table + " > tbody").empty();
                 $.each(reply, function (key, value) {
@@ -451,7 +437,7 @@ eb.onopen = function()
     /**
      * Save erm
      */
-    $('#erm-add-update, #erm-add-send').click(function () {
+    $('#erm-update, #erm-send').click(function () {
         saveErm($(this).data('update'));
     });
 
@@ -517,7 +503,7 @@ eb.onopen = function()
      * @param update
      */
     var saveErm = function(update) {
-        var form = $('#erm-add-form').serializeArray();
+        var form = $('#erm-form').serializeArray();
         var erm = formToJson(form);
 
         var action = 'save';
@@ -528,23 +514,23 @@ eb.onopen = function()
         }
 
         if (!erm.name) {
-            $('#erm-add-name').addClass("invalid-input");
+            $('#erm-name').addClass("invalid-input");
             $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
             return;
         }
-        $('#erm-add-name').removeClass("invalid-input");
+        $('#erm-name').removeClass("invalid-input");
 
         if (erm.matcher) {
             erm.matcher = JSON.stringify(erm.matcher);
             if (!isJson(erm.matcher)) {
-                $('#erm-add-matcher').addClass("invalid-input");
+                $('#erm-matcher').addClass("invalid-input");
                 $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
                 return;
             }
         } else {
             erm.matcher = '';
         }
-        $('#erm-add-matcher').removeClass("invalid-input");
+        $('#erm-matcher').removeClass("invalid-input");
 
         if (erm.hue) {
             erm.huepath = getHuePath();
@@ -556,10 +542,10 @@ eb.onopen = function()
 
         eb.send(action, erm, function (reply) {
             if (reply) {
-                $('#erm-add-form')[0].reset();
+                $('#erm-form')[0].reset();
                 $('.show, .hue').hide();
                 $('.invalid-input').removeClass('invalid-input');
-                $('#erm').fadeOut("slow");
+                $('#erm-overlay').fadeOut("slow");
             } else {
                 piggyError('Speichern ging nicht', false);
             }
@@ -623,10 +609,13 @@ eb.onopen = function()
 
         eb.send(action, theme, function (reply) {
             if (reply) {
-                $('#theme-id').val(reply);
                 changeTheme(theme);
+                $('#theme-form')[0].reset();
+                $('#theme-id').val(reply); // ?? hä
+                $('.invalid-input').removeClass('invalid-input');
+                $('#theme-overlay').fadeOut("slow");
             } else {
-                piggyError('Hoppala irgendwas ging halt nicht', false);
+                piggyError('Theme speichern ging nicht', false);
             }
         });
     };
@@ -661,7 +650,7 @@ eb.onopen = function()
                 break;
             case 'background':
                 backgroundColor = color;
-                var colorParts = ['body', '#menu', '#config', '#erm', '#piggy', '#theme', '#checkout', '#upgrade'];
+                var colorParts = ['body', '#menu', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#theme-overlay', '#checkout-overlay', '#upgrade-overlay'];
                 $.each(colorParts, function (key, value) {
                     d3.select(value)
                         .transition()
@@ -743,20 +732,15 @@ eb.onopen = function()
 
         // Edit
         if (true === editable) {
-            if ('erm' === collection) {
-                var form = 'erm-add';
-            }
-
             $('#' + table.replace('.', '') + '-' + value._id).click(function() {
                 eb.send('find', {collection: collection, matcher: {_id: value._id}}, function(reply) {
                     if (reply.length > 0) {
-                        $('#' + form + '-update').show();
-                        $('#' + form + '-id').val(value._id);
+                        $('#' + collection + '-update').show();
+                        $('#' + collection + '-id').val(value._id);
                         if ('theme' === collection) {
-                            renderTheme(reply[0]);
                             changeTheme(reply[0])
                         }
-                        jsonToForm(form + '-', reply[0]);
+                        jsonToForm(collection + '-', reply[0]);
                     }
                 });
             });

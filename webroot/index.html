@@ -44,7 +44,7 @@
 
 
         <!-- ERM -->
-        <div id="erm" class="overlay">
+        <div id="erm-overlay" class="overlay">
             <ul class="erm-ul">
 
                 <!-- ERM Collection-->
@@ -70,68 +70,68 @@
                 </li>
 
                 <!-- Add ERM -->
-                <li id="erm-add">
-                    <form id="erm-add-form">
+                <li id="erm">
+                    <form id="erm-form">
                         <ul>
 
                             <!-- name -->
                             <li class="input">
-                                <label for="erm-add-name">Name</label>
-                                <input id="erm-add-name" name="name" placeholder="Name" required/>
+                                <label for="erm-name">Name</label>
+                                <input id="erm-name" name="name" placeholder="Name" required/>
                             </li>
 
                             <!-- matcher -->
                             <li class="input textarea">
-                                <label for="erm-add-matcher">Matcher</label>
-                                <textarea id="erm-add-matcher" cols="40" rows="6" name="matcher" placeholder="Mongo Syntax"></textarea>
+                                <label for="erm-matcher">Matcher</label>
+                                <textarea id="erm-matcher" cols="40" rows="6" name="matcher" placeholder="Mongo Syntax"></textarea>
                             </li>
 
                             <!-- show -->
                             <li class="input">
                                 <input name="show" type="hidden" value="off" />
-                                <label for="erm-add-show">Show</label>
-                                <input id="erm-add-show" name="show" type="checkbox" unchecked/>
+                                <label for="erm-show">Show</label>
+                                <input id="erm-show" name="show" type="checkbox" unchecked/>
                             </li>
                             <li class="input show">
-                                <label for="erm-add-showurl">URL</label>
-                                <input id="erm-add-showurl" name="showurl" placeholder="http://localhost/random.mp4" required/>
+                                <label for="erm-showurl">URL</label>
+                                <input id="erm-showurl" name="showurl" placeholder="http://localhost/random.mp4" required/>
                             </li>
                             <li class="input show">
-                                <label for="erm-add-showtts">TTS</label>
-                                <input id="erm-add-showtts" name="showtts" placeholder="Danke!" required/>
+                                <label for="erm-showtts">TTS</label>
+                                <input id="erm-showtts" name="showtts" placeholder="Danke!" required/>
                             </li>
 
                             <!-- hue -->
                             <li class="input">
                                 <input name="hue" type="hidden" value="off" />
-                                <label for="erm-add-hue">Hue</label>
-                                <input id="erm-add-hue" name="hue" type="checkbox" unchecked/>
+                                <label for="erm-hue">Hue</label>
+                                <input id="erm-hue" name="hue" type="checkbox" unchecked/>
                             </li>
                             <li class="input hue">
-                                <label for="erm-add-hueurl">URL</label>
-                                <input id="erm-add-hueurl" name="hueurl" placeholder="http://192.168.1.2" required/>
+                                <label for="erm-hueurl">URL</label>
+                                <input id="erm-hueurl" name="hueurl" placeholder="http://192.168.1.2" required/>
                             </li>
                             <li class="input hue">
-                                <label for="erm-add-huekey">Key</label>
-                                <input id="erm-add-huekey" name="huekey" placeholder="IKQDytcsdi4kunzk4GuTXUu8s34c8y3iKRCKLxVh" required/>
+                                <label for="erm-huekey">Key</label>
+                                <input id="erm-huekey" name="huekey" placeholder="IKQDytcsdi4kunzk4GuTXUu8s34c8y3iKRCKLxVh" required/>
                             </li>
                             <li id="connect-li" class="input hue">
-                                <label for="erm-add-hueconnect">Connect</label>
-                                <button id="erm-add-hueconnect" type="button">Test Connection</button>
+                                <label for="erm-hueconnect">Connect</label>
+                                <button id="erm-hueconnect" type="button">Test Connection</button>
                             </li>
                             <li class="input textarea hue">
-                                <label for="erm-add-huesetting">Setting</label>
-                                <textarea id="erm-add-huesetting" cols="40" rows="6" name="huesetting" placeholder="Json ..."></textarea>
+                                <label for="erm-huesetting">Setting</label>
+                                <textarea id="erm-huesetting" cols="40" rows="6" name="huesetting" placeholder="Json ..."></textarea>
                             </li>
 
                             <!-- save ERM -->
                             <li class="input">
-                                <input id="erm-add-collection" type="hidden" name="collection" value="erm">
-                                <input id="erm-add-target-collection" type="hidden" name="target_collection" value="piggy">
-                                <input id="erm-add-id" type="hidden" name="_id">
-                                <label for="erm-add-send">Ready?</label>
-                                <button id="erm-add-update" data-update="true" type="button">Update</button>
-                                <button id="erm-add-send" data-update="false" type="button">Save</button>
+                                <input id="erm-collection" type="hidden" name="collection" value="erm">
+                                <input id="erm-target-collection" type="hidden" name="target_collection" value="piggy">
+                                <input id="erm-id" type="hidden" name="_id">
+                                <label for="erm-send">Ready?</label>
+                                <button id="erm-update" data-update="true" type="button">Update</button>
+                                <button id="erm-send" data-update="false" type="button">Save</button>
                             </li>
                         </ul>
 
@@ -152,7 +152,7 @@
 
 
         <!-- Checkout -->
-        <div id="checkout" class="overlay">
+        <div id="checkout-overlay" class="overlay">
             <div id="pin">
                 <div class="numbers">
                     <div class="number" id="display"></div>
@@ -179,7 +179,7 @@
 
 
         <!-- Piggy -->
-        <div id="piggy" class="overlay">
+        <div id="piggy-overlay" class="overlay">
             <div class="tbl-header">
                 <table class="piggy-collection table" cellpadding="0" cellspacing="0" border="0">
                     <thead>
@@ -202,7 +202,7 @@
 
 
         <!-- Theme -->
-        <div id="theme" class="overlay">
+        <div id="theme-overlay" class="overlay">
             <ul id="theme-ul">
 
                 <li>
@@ -220,7 +220,7 @@
                     </div>
                 </li>
                 <!-- Edit theme -->
-                <li id="theme-edit">
+                <li id="theme">
                     <form id="theme-form">
                         <ul>
 
@@ -239,13 +239,11 @@
                                 <textarea id="theme-css" cols="40" rows="6" name="css" placeholder="CSS"></textarea>
                             </li>
 
-
-
                             <!-- save Theme -->
                             <li class="input">
                                 <input id="theme-collection" type="hidden" name="collection" value="theme">
                                 <input id="theme-id" type="hidden" name="_id">
-                                <label for="erm-add-send">Ready?</label>
+                                <label for="theme-save">Ready?</label>
                                 <button id="theme-update" data-update="true" type="button">Update</button>
                                 <button id="theme-save" data-update="false" type="button">Save</button>
                             </li>
@@ -256,7 +254,7 @@
         </div>
 
         <!-- Config -->
-        <div id="config" class="overlay">
+        <div id="config-overlay" class="overlay">
             <form id="config-save-form">
                 <div class="accordion">
                     <ul>
@@ -301,7 +299,7 @@
         </div>
 
         <!-- upgrade -->
-        <div id="upgrade" class="overlay">
+        <div id="upgrade-overlay" class="overlay">
             <ul class="upgrade-ul">
 
                 <!-- upgrade Collection-->
