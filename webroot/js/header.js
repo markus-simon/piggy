@@ -15,15 +15,17 @@ var piggyLabel = svgHeader.append("text")
 var weightTotalLabel = svgHeader.append("text")
     .attr("id","total-weight")
     .attr("class","header-text")
-    .attr("transform", "translate(" + (window.innerWidth - 310) + "," + ($('#header').outerHeight() / 1.5) + ")")
+    .attr('x', (window.innerWidth - 310))
+    .attr('y', ($('#header').outerHeight() / 1.5))
     .attr("text-anchor", "end")
     .style("fill", headerColor)
     .style("font-size", headerFontSize);
 
-svgHeader.append("text")
+var kgLabel = svgHeader.append("text")
     .text('kg')
     .attr("id","kg")
-    .attr("transform", "translate(" + (window.innerWidth - 280) + "," + ($('#header').outerHeight() / 1.5) + ")")
+    .attr('x', (window.innerWidth - 280))
+    .attr('y', ($('#header').outerHeight() / 1.5))
     .attr("text-anchor", "end")
     .style("fill", headerFontColor)
     .style("font-size", '24px');
@@ -31,7 +33,8 @@ svgHeader.append("text")
 var sumTotalLabel = svgHeader.append("text")
     .attr("id","total-sum-pie")
     .attr("class","header-text")
-    .attr("transform", "translate(" + (window.innerWidth - 30) + "," + ($('#header').outerHeight() / 1.5) + ")")
+    .attr('x', (window.innerWidth - 30))
+    .attr('y', ($('#header').outerHeight() / 1.5))
     .attr("text-anchor", "end")
     .style("fill", headerColor)
     .style("font-size", headerFontSize);
@@ -69,6 +72,11 @@ function updateHeader(result) {
 
     sumTotalLabel.text(formatCurrency(calculatedTotalSum));
     weightTotalLabel.text(formatWeight(calculatedTotalWeight));
+
+    // Move kilogram if sum label gets longer
+    var newX = parseInt(sumTotalLabel._groups[0][0].getBBox().x);
+    weightTotalLabel.attr('x', (newX - 80)).transition().duration();
+    kgLabel.attr('x', (newX - 50)).transition().duration();
 
     piggyLabel.transition().duration(500).style('fill', headerFontColor);
     sumTotalLabel.transition().duration(500).style('fill', headerFontColor);
