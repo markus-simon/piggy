@@ -474,8 +474,8 @@ eb.onopen = function()
             case 'theme':
                 showOverlay(target, true);
                 break;
-            case 'alert':
-                showOverlay('erm', true);
+            case 'erm':
+                showOverlay(target, true);
                 break;
         }
     });
