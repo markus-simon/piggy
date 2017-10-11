@@ -93,6 +93,9 @@ function updatePie(result) {
         .transition()
         .duration(1000)
         .ease(d3.easeElastic)
+/*
+        .delay(function(d, i) { return 100 * i } )
+*/
         .style("fill", function(d, i) { return color(i); })
         .style('stroke', backgroundColor)
         .attrTween("d", arcTween);
