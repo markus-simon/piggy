@@ -28,6 +28,7 @@ var sumTotalLabel = svgHeader.append("text")
     .style("fill", headerColor)
     .style("font-size", headerFontSize);
 
+
 function updateHeader(result) {
     var sumTotal    = 0;
     var weightTotal = 0;
@@ -35,43 +36,26 @@ function updateHeader(result) {
     // TODO sumTotal weiter nach "vorne" verschieben ...
     result.forEach(function(row) {
         sumTotal += row.sumTotal;
-        switch (row.amount) {
-            case 1:
-                weightTotal += row.sum * 2.3;
-                break;
-            case 2:
-                weightTotal += row.sum * 3.06;
-                break;
-            case 5:
-                weightTotal += row.sum * 3.92;
-                break;
-            case 10:
-                weightTotal += row.sum * 4.1;
-                break;
-            case 20:
-                weightTotal += row.sum * 5.74;
-                break;
-            case 50:
-                weightTotal += row.sum * 7.8;
-                break;
-            case 100:
-                weightTotal += row.sum * 7.5;
-                break;
-            case 200:
-                weightTotal += row.sum * 8.5;
-                break;
-        }
+        weightTotal += calculateWeight(row);
     });
+
     var calculatedTotalSum = sumTotal / 100;
+    var calculatedTotalWeight = weightTotal;
+
+    piggyLocal.set(sumTotalLabel, calculatedTotalSum);
+    piggyLocal.set(weightTotalLabel, calculatedTotalWeight);
+
+    // TODO € symbol
     var sumValue = calculatedTotalSum.toLocaleString('de-DE', {
         minimumFractionDigits: 2,
         style: 'currency',
         currency: 'EUR'
     });
-    sumTotalLabel.text(sumValue);
 
-    var calculatedTotalWeight = weightTotal / 1000;
-    weightTotalLabel.text(calculatedTotalWeight.toFixed(4) + ' kg');
+    sumTotalLabel.text(formatCurrency(calculatedTotalSum));
+
+
+    weightTotalLabel.text(formatWeight(calculatedTotalWeight));
 
     piggyLabel.transition().duration(500).style('fill', headerFontColor);
     sumTotalLabel.transition().duration(500).style('fill', headerFontColor);

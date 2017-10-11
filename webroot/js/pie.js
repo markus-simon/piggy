@@ -1,5 +1,5 @@
 var pie1 = d3.pie()
-    .value(function(d) { return d; })
+    .value(function(d) { return d.sum; })
     .sort(null);
 
 var arc1 = d3.arc()
@@ -63,10 +63,10 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .attr("id", function(d, i) { return "path_" + i })
     .attr("class", "pie-parts")
     .on("mouseover", function(d, i) {
-        piggySelection('on', i);
+        piggySelection('on', d.data, i);
     })
     .on("mouseout", function(d, i) {
-        piggySelection('off', i);
+        piggySelection('off', d.data, i);
     })
     .attr("fill", function(d, i) { return color(i); })
     .attr("stroke-width", 4)
@@ -84,10 +84,10 @@ function updatePie(result) {
         }
     });
 
-    var data = newData.map(function(d) { return d.sum; });
+    var data = newData.map(function(d) { return d; });
 
     svg1.datum(data).select("#gpie").selectAll("path").data(pie1);
-    pie1.value(function(d) { return d; });
+    pie1.value(function(d) { return d.sum; });
 
     path1.data(pie1)
         .transition()

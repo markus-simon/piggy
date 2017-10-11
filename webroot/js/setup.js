@@ -18,6 +18,10 @@ var headerHeight    = "10vh";
 
 var barWidth = 50;
 
+//var format = d3.format(",d");
+var formatCurrency = d3.format(",.2f");
+var formatWeight   = d3.format(",.3f");
+
 var locale = {
     "decimal": ",",
     "thousands": ".",
@@ -35,5 +39,8 @@ var locale = {
 
 d3.formatDefaultLocale(locale);
 
+var piggyLocal = d3.local();
+/*
 var format = d3.format("($.2f")(-3.5);
+*/
 
