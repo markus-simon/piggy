@@ -40,7 +40,7 @@ var sumTotalLabel = svgHeader.append("text")
     .style("font-size", headerFontSize);
 
 svgHeader.append("text")
-    .text('€')
+    .html('&euro;')
     .attr("id","currency")
     .attr("transform", "translate(" + (window.innerWidth - 10) + "," + ($('#header').outerHeight() / 1.5) + ")")
     .attr("text-anchor", "end")
