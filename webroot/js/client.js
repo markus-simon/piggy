@@ -41,7 +41,7 @@ eb.onopen = function()
      */
     eb.registerHandler('saved', function(document) {
         updateData();
-        renderTable(document, '.' + document.collection + '-collection', true);
+        renderTable(document, '.' + document.collection + '-collection');
     });
 
     /**
@@ -66,7 +66,7 @@ eb.onopen = function()
                     var video = "<video autoplay width='1920' height='1080' controls><source src='" + document.showurl + "' type='video/mp4'>Your browser does not support the video tag.</video>";
                     $('#show-content').empty().append(video);
                     $('#show').fadeTo('slow', 1);
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         $('#show video').on('ended', function endHandler(e) {
                             $('#show').fadeOut('slow');
                             $('#show-content').empty();
@@ -166,11 +166,12 @@ eb.onopen = function()
                 showConfigOverlay();
             }
 
-            if (e.keyCode === 69) showOverlay('erm', true);
-            if (e.keyCode === 72) showOverlay('piggy', false);
-            if (e.keyCode === 75) showOverlay('checkout', false);
-            if (e.keyCode === 84) showOverlay('theme', true);
-            if (e.keyCode === 85) showOverlay('upgrade', false);
+            if (e.keyCode === 87) showOverlay('wishes');
+            if (e.keyCode === 69) showOverlay('erm');
+            if (e.keyCode === 72) showOverlay('piggy');
+            if (e.keyCode === 75) showOverlay('checkout');
+            if (e.keyCode === 84) showOverlay('theme');
+            if (e.keyCode === 85) showOverlay('upgrade');
         }
     });
 
@@ -223,7 +224,7 @@ eb.onopen = function()
         var form = $('#erm-form').serializeArray();
         var erm = formToJson(form);
         erm.huerequesttype = 'get';
-        eb.send('hue', erm, function (res) {
+        eb.send('hue', erm, function(res) {
             var parsed = JSON.parse(res);
             if (!$.isEmptyObject(parsed)) {
                 renderLights(parsed);
@@ -236,7 +237,7 @@ eb.onopen = function()
      *
      * @param parsed
      */
-    var renderLights = function (parsed) {
+    var renderLights = function(parsed) {
         $('.light').remove();
 
         var i = 1;
@@ -250,7 +251,7 @@ eb.onopen = function()
             li.appendTo($('#connect-li'));
             i++;
         }
-        $('.light-label').click(function () {
+        $('.light-label').click(function() {
             $('#' + this.id).toggleClass("light-enabled");
         });
         $('.light-color').colorPicker();
@@ -341,14 +342,14 @@ eb.onopen = function()
     /**
      * Show config overlay
      */
-    var showConfigOverlay = function () {
+    var showConfigOverlay = function() {
         $(".overlay").fadeOut('slow');
 
         $('#config-overlay').fadeTo("slow", 0.97);
-        eb.send('find', {collection: 'theme', matcher: {}}, function (reply) {
+        eb.send('find', {collection: 'theme', matcher: {}}, function(reply) {
             $('#config-theme').empty();
             var selected = '';
-            $.each(reply, function (key, value) {
+            $.each(reply, function(key, value) {
                 if (!$.isEmptyObject(config)) {
                     if (value.name === config.theme) {
                         selected = 'selected ';
@@ -403,7 +404,7 @@ eb.onopen = function()
         var colorParts = ['body', '#menu', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
         $('#config-overlay').fadeOut('slow');
 
-        $.each(colorParts, function (key, value) {
+        $.each(colorParts, function(key, value) {
             d3.select(value)
                 .transition()
                 .duration(500)
@@ -418,17 +419,16 @@ eb.onopen = function()
      * Show overlay
      *
      * @param collection
-     * @param editable
      */
-    var showOverlay = function(collection, editable) {
+    var showOverlay = function(collection) {
         $(".overlay").fadeOut('slow');
         $('#' + collection + '-overlay').fadeTo("slow", 0.97);
         if ('checkout' !== collection) {
             var table = "." + collection + "-collection";
-            eb.send('find', {collection: collection, matcher: {}}, function (reply) {
+            eb.send('find', {collection: collection, matcher: {}}, function(reply) {
                 $(table + " > tbody").empty();
-                $.each(reply, function (key, value) {
-                    renderTable(value, table, editable);
+                $.each(reply, function(key, value) {
+                    renderTable(value, table);
                 });
             });
         }
@@ -437,28 +437,35 @@ eb.onopen = function()
     /**
      * Save erm
      */
-    $('#erm-update, #erm-send').click(function () {
+    $('#erm-update, #erm-send').click(function() {
         saveErm($(this).data('update'));
     });
 
     /**
      * Save config
      */
-    $('#config-save').click(function () {
+    $('#config-save').click(function() {
         saveConfig();
+    });
+
+    /**
+     * Save wish
+     */
+    $('#wishes-update, #wishes-save').click(function() {
+       saveWish($(this).data('update'));
     });
 
     /**
      * Save theme
      */
-    $('#theme-update, #theme-save').click(function () {
+    $('#theme-update, #theme-save').click(function() {
         saveTheme($(this).data('update'));
     });
 
     /**
      * Menu links
      */
-    $('#menu a').click(function(){
+    $('#menu a').click(function() {
         var target = $(this).attr('id').split('-')[1];
         $('#header, #nav-icon3').toggleClass('open');
         $(".overlay").fadeOut('slow');
@@ -466,19 +473,45 @@ eb.onopen = function()
             case 'upgrade':
             case 'piggy':
             case 'checkout':
-                showOverlay(target, false);
+                showOverlay(target);
                 break;
             case 'config':
                 showConfigOverlay();
                 break;
             case 'theme':
-                showOverlay(target, true);
-                break;
             case 'erm':
-                showOverlay(target, true);
+            case 'wishes':
+                showOverlay(target);
                 break;
         }
     });
+
+    /**
+     * Save wish
+     *
+     * @param update
+     */
+    var saveWish = function(update) {
+        var form   = $('#wishes-form').serializeArray();
+        wish       = formToJson(form);
+
+        var action = 'save';
+        if (update) {
+            action = 'edit';
+        } else {
+            delete wish._id;
+        }
+
+        eb.send(action, wish, function(reply) {
+            if (reply) {
+                $('#wishes-form')[0].reset();
+                $('#wishes-id').val(reply);
+                $('#wishes-overlay').fadeOut("slow");
+            } else {
+                piggyError('Hoppala irgendwas ging halt nicht', false);
+            }
+        });
+    };
 
     /**
      * Save configuration
@@ -487,7 +520,7 @@ eb.onopen = function()
         var form   = $('#config-save-form').serializeArray();
         config     = formToJson(form);
         var action = 'edit';
-        eb.send(action, config, function (reply) {
+        eb.send(action, config, function(reply) {
             if (reply) {
                 $('#config-save-id').val(reply);
                 changeTheme(reply.theme); // TODO geladenes theme übergeben!
@@ -540,7 +573,7 @@ eb.onopen = function()
             erm.huesetting = huesetting;
         }
 
-        eb.send(action, erm, function (reply) {
+        eb.send(action, erm, function(reply) {
             if (reply) {
                 $('#erm-form')[0].reset();
                 $('.show, .hue').hide();
@@ -607,7 +640,7 @@ eb.onopen = function()
             delete theme._id;
         }
 
-        eb.send(action, theme, function (reply) {
+        eb.send(action, theme, function(reply) {
             if (reply) {
                 changeTheme(theme);
                 $('#theme-form')[0].reset();
@@ -631,7 +664,7 @@ eb.onopen = function()
             case 'header':
                 headerColor = color;
                 var colorParts = ['#menu'];
-                $.each(colorParts, function (key, value) {
+                $.each(colorParts, function(key, value) {
                     d3.select(value)
                         .transition()
                         .duration(500)
@@ -651,7 +684,7 @@ eb.onopen = function()
             case 'background':
                 backgroundColor = color;
                 var colorParts = ['body', '#menu', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#theme-overlay', '#checkout-overlay', '#upgrade-overlay'];
-                $.each(colorParts, function (key, value) {
+                $.each(colorParts, function(key, value) {
                     d3.select(value)
                         .transition()
                         .duration(500)
@@ -691,10 +724,10 @@ eb.onopen = function()
      *
      * @param value
      * @param table
-     * @param editable
      */
-    var renderTable = function(value, table, editable) {
+    var renderTable = function(value, table) {
         var columns    = $(table + ' thead th');
+        var editable   = $(table).data('edit');
         var collection = table.split('-')[0].replace('.','');
         var deletable  = false;
         var html       = '';
@@ -714,7 +747,12 @@ eb.onopen = function()
                 deletable = true;
                 html += '<td id="delete-' + collection + '-' + value._id + '"><span class="btn">X Remove</span></td>';
             } else {
-                html += '<td>' + value[key] + '</td>';
+                if ($(column).data('func')) {
+                    var func = $(column).data('func');
+                    html += '<td>' + window[func](value[$(column).data('column')]) + '</td>';
+                } else {
+                    html += '<td>' + value[key] + '</td>';
+                }
             }
         });
         html += '</tr>';
@@ -766,5 +804,16 @@ eb.onopen = function()
         if (log) {
             console.log(log);
         }
-    }
+    };
+};
+
+/**
+ * Calculate percentage
+ *
+ * @param value
+ */
+var calculatePercentage = function(value) {
+    var ts = sumTotalLabel.text();
+    var p2 = ((ts/value) * 100).toFixed(3);
+    return '<progress value="' + p2 + '" max="100"></progress>';
 };

@@ -43,64 +43,23 @@ body {
 }
 
 
-/* ERM ############################################# */
-#erm-overlay {
+.overlay {
     display: none;
     position: absolute;
     background-color: #ffdddc;
     z-index: 9;
     min-height: 100%;
+    width: 90%;
+    margin-top: 10px;
+    border: 2px solid #CB3577;
+    left: 50%;
+    margin-left: -45%;
 }
-
-/* Piggy ############################################# */
-#piggy-overlay {
-    display: none;
-    position: absolute;
-    background-color: #ffdddc;
-    z-index: 9;
-    min-height: 100%;
-}
-
-
-/* upgrade ############################################# */
-#upgrade-overlay {
-    display: none;
-    position: absolute;
-    background-color: #ffdddc;
-    z-index: 9;
-    min-height: 100%;
-}
-
-/* Theme ############################################# */
-#theme-overlay {
-    display: none;
-    position: absolute;
-    background-color: #ffdddc;
-    z-index: 9;
-    min-height: 100%;
-}
-
-
-/* Config ############################################# */
-#config-overlay {
-    display: none;
-    position: absolute;
-    background-color: #ffdddc;
-    z-index: 9;
-    min-height: 100%;
-    width: 100%;
-}
-
-
-
-/* Checkout ############################################# */
-#checkout-overlay {
-    display: none;
-    position: absolute;
-    background-color: #ffdddc;
-    z-index: 9;
-    min-height: 100%;
-    width: 100%;
+.overlay-title {
+    color: #fff;
+    padding: 10px;
+    font-weight: bold;
+    background: #CB3577;
 }
 
 #display {
@@ -207,7 +166,7 @@ body {
     clear: both;
 }
 
-#erm-form ul, #theme-form ul {
+.edit-form ul {
     padding: 0;
     border: 1px solid #fff;
     border-right: 1px solid #c3c3c3;
@@ -216,7 +175,7 @@ body {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
-#erm-form li, #theme-form li {
+.edit-form li {
     padding:12px;
     border-bottom: 1px solid #777;
     position:relative;
@@ -235,7 +194,7 @@ table.table tbody tr:hover td {
     background-color: #444;
 }
 
-#erm-form label {
+#erm-form label, .edit-form label {
     width:150px;
     margin-top: 3px;
     display:inline-block;
@@ -281,8 +240,12 @@ table.table tbody tr:hover td {
     color:    #fff;
 }
 
-#erm-form input, #erm-form textarea, #erm-form select, #erm-form button, #factory-reset, #theme-form input, #theme-form textarea {
-    padding: 20px;
+.edit-form input,
+.edit-form textarea,
+.edit-form select,
+.edit-form button,
+#factory-reset {
+    padding: 20px!important;
     background: #ff5fb8;
     border: 1px solid #fff;
     border-right: 1px solid #c3c3c3;
@@ -628,7 +591,7 @@ body table.table td span.btn {
     font-size: 7vh;
     float: left; }
 
-#piggy-overlay {
+#piggy-overlay .tbl-header {
     padding: 20px; }
 
 form label {
