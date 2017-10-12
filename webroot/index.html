@@ -45,6 +45,8 @@
             <div class="group" id="group3"></div>
         </div>
 
+        <div id="wishes-p"></div>
+
         <div id="wishes-overlay" class="overlay">
             <div class="overlay-title">Wishes</div>
             <ul class="wishes-ul">
@@ -55,20 +57,13 @@
                             <tr>
                                 <th>Created at</th>
                                 <th>Name</th>
-                                <th>Needed</th>
-                                <th data-func="calculatePercentage" data-column="needed">Percentage</th>
+                                <th>Goal</th>
+                                <th data-func="calculatePercentage" data-column="goal">Percentage</th>
+                                <th>Priority</th>
                                 <th>Delete</th>
                             </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>XXXXXX</td>
-                                    <td>Buch</td>
-                                    <td>14.99</td>
-                                    <td>50%</td>
-                                    <td>X</td>
-                                </tr>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </li>
@@ -81,8 +76,24 @@
                                 <input id="wishes-name" name="name" placeholder="Name" required/>
                             </li>
                             <li class="input">
-                                <label for="wishes-needed">Needed</label>
-                                <input id="wishes-needed" name="needed" placeholder="Needed" required/>
+                                <label for="wishes-goal">Goal</label>
+                                <input id="wishes-goal" name="goal" placeholder="Goal" required/>
+                            </li>
+                            <li class="input">
+                                <label for="wishes-priority">Priority</label>
+                                <select id="wishes-priority" max="100" min="0" name="priority" type="range" required>
+                                    <option value="0">0%</option>
+                                    <option value="10">10%</option>
+                                    <option value="20">20%</option>
+                                    <option value="30">30%</option>
+                                    <option value="40">40%</option>
+                                    <option value="50">50%</option>
+                                    <option value="60">60%</option>
+                                    <option value="70">70%</option>
+                                    <option value="80">80%</option>
+                                    <option value="90">90%</option>
+                                    <option value="100">100%</option>
+                                </select>
                             </li>
                             <!-- save Wish -->
                             <li class="input">
