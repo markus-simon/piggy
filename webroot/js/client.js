@@ -160,6 +160,9 @@ eb.onopen = function()
             if (e.keyCode === 27) {
                 $('#header, #nav-icon3').removeClass('open');
                 $('.overlay').fadeOut('slow');
+                eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function(reply) {
+                    changeTheme(reply[0]);
+                });
             }
             if (e.keyCode === 67) {
                 if (config) {
@@ -209,6 +212,13 @@ eb.onopen = function()
             } else {
                 piggyError('Hoppala irgendwas ging halt nicht', false);
             }
+        });
+    });
+
+    $('#config-theme').change(function() {
+        var theme = $(this).val();
+        eb.send('find', {collection: 'theme', matcher: {name: theme}}, function (reply) {
+            changeTheme(reply[0]);
         });
     });
 
@@ -404,7 +414,6 @@ eb.onopen = function()
             .style('background-color', headerColor);
 
         var colorParts = ['body', '#menu', '#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
-        $('#config-overlay').fadeOut('slow');
 
         $.each(colorParts, function(key, value) {
             d3.select(value)
@@ -423,6 +432,9 @@ eb.onopen = function()
      * @param collection
      */
     var showOverlay = function(collection) {
+        eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function(reply) {
+            changeTheme(reply[0]);
+        });
         $(".overlay").fadeOut('slow');
         $('#' + collection + '-overlay').fadeTo("slow", 0.97);
         if ('checkout' !== collection) {
