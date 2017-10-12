@@ -11,6 +11,20 @@ var dataBars = [
     { amount: "200", sum: 0}
 ];
 
+var colorMapping = {
+    table: {
+        0: "head",
+        1: "odd",
+        2: "even",
+        3: "color"
+    },
+    input: {
+        0: "background",
+        1: "inset",
+        2: "color"
+    }
+};
+
 var headerColor     = "#CB3577";
 var headerFontColor = "#fff";
 var headerFontSize  = "7vh";
@@ -348,13 +362,15 @@ eb.onopen = function()
         } else if (!name.match(/_/)) {
             label = $('<label class="theme-property-label">' + name + '</label>');
         }
+
         var input = $('<input type="text" name="' + name + '" value="' + value + '" class="theme-property-value">');
 
         if (true === colorpicker) {
             input.colorPicker({
                 renderCallback: function($elm, toggled) {
                     if (toggled !== true && toggled !== false) {
-                        var prop        = $elm[0].offsetParent.innerText.replace(/(\r\n|\n|\r)/gm,"");
+                        console.log($elm);
+                        var prop        = $elm[0].name; //offsetParent.innerText.replace(/(\r\n|\n|\r)/gm,"");
                         var pickedColor = $elm.text;
                         changeColor(prop, pickedColor);
                         updateData();
@@ -364,7 +380,7 @@ eb.onopen = function()
             .css('background-color', value);
         }
 
-        li.append(label)
+        li.append($(label).css('color', fontColor))
             .append(input);
 
         if (true === dontAppend) {
@@ -781,11 +797,10 @@ eb.onopen = function()
      * @param color
      */
     var changeColor = function(element, color) {
-        console.log(element);
-        console.log(color);
-
         if (element.match(/_/)) {
-            element = element.split('_')[0];
+            var mappingKey = element.split('_')[1];
+            element        = element.split('_')[0];
+            element        = element + '_' + colorMapping[element][mappingKey];
         }
 
         switch (element) {
@@ -825,11 +840,40 @@ eb.onopen = function()
             case 'axis':
                 axisColor = color;
                 break;
-            case 'input':
+            case 'input_background':
                 d3.selectAll('.input-text')
                     .transition()
                     .duration(500)
                     .style('background-color', color);
+                break;
+            case 'input_inset':
+                d3.selectAll('.input-text')
+                    .transition()
+                    .duration(500)
+                    .style('box-shadow', 'inset 0 0 5px 2px' +  color);
+                break;
+            case 'input_color':
+                d3.selectAll('.input-text')
+                    .transition()
+                    .duration(500)
+                    .style('::-webkit-input-placeholder', color)
+                    .style('color', color);
+                break;
+            case 'table_head':
+                d3.selectAll('table thead')
+                    .transition()
+                    .duration(500)
+                    .style('background-color', color);
+                break;
+            case 'table_color':
+                d3.selectAll('th')
+                    .transition()
+                    .duration(500)
+                    .style('color', color);
+                d3.selectAll('td')
+                    .transition()
+                    .duration(500)
+                    .style('color', color);
                 break;
         }
     };
