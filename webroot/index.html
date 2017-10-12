@@ -73,15 +73,15 @@
                         <ul>
                             <li class="input">
                                 <label for="wishes-name">Name</label>
-                                <input id="wishes-name" name="name" placeholder="Name" required/>
+                                <input id="wishes-name" class="input-text" name="name" placeholder="Name" required/>
                             </li>
                             <li class="input">
                                 <label for="wishes-goal">Goal</label>
-                                <input id="wishes-goal" name="goal" placeholder="Goal" required/>
+                                <input id="wishes-goal" class="input-text" name="goal" placeholder="Goal" required/>
                             </li>
                             <li class="input">
                                 <label for="wishes-priority">Priority</label>
-                                <select id="wishes-priority" max="100" min="0" name="priority" type="range" required>
+                                <select class="input-text" id="wishes-priority" max="100" min="0" name="priority" type="range" required>
                                     <option value="0">0%</option>
                                     <option value="10">10%</option>
                                     <option value="20">20%</option>
@@ -100,8 +100,8 @@
                                 <input id="wishes-collection" type="hidden" name="collection" value="wishes">
                                 <input id="wishes-id" type="hidden" name="_id">
                                 <label for="wishes-save">Ready?</label>
-                                <button id="wishes-update" data-update="true" type="button">Update</button>
-                                <button id="wishes-save" data-update="false" type="button">Save</button>
+                                <button class="input-text" id="wishes-update" data-update="true" type="button">Update</button>
+                                <button class="input-text" id="wishes-save" data-update="false" type="button">Save</button>
                             </li>
                         </ul>
                     </form>
@@ -145,13 +145,13 @@
                             <!-- name -->
                             <li class="input">
                                 <label for="erm-name">Name</label>
-                                <input id="erm-name" name="name" placeholder="Name" required/>
+                                <input class="input-text" id="erm-name" name="name" placeholder="Name" required/>
                             </li>
 
                             <!-- matcher -->
                             <li class="input textarea">
                                 <label for="erm-matcher">Matcher</label>
-                                <textarea id="erm-matcher" cols="40" rows="6" name="matcher" placeholder="Mongo Syntax"></textarea>
+                                <textarea class="input-text" id="erm-matcher" cols="40" rows="6" name="matcher" placeholder="Mongo Syntax"></textarea>
                             </li>
 
                             <!-- show -->
@@ -162,11 +162,11 @@
                             </li>
                             <li class="input show">
                                 <label for="erm-showurl">URL</label>
-                                <input id="erm-showurl" name="showurl" placeholder="http://localhost/random.mp4" required/>
+                                <input class="input-text" id="erm-showurl" name="showurl" placeholder="http://localhost/random.mp4" required/>
                             </li>
                             <li class="input show">
                                 <label for="erm-showtts">TTS</label>
-                                <input id="erm-showtts" name="showtts" placeholder="Danke!" required/>
+                                <input class="input-text" id="erm-showtts" name="showtts" placeholder="Danke!" required/>
                             </li>
 
                             <!-- hue -->
@@ -177,19 +177,19 @@
                             </li>
                             <li class="input hue">
                                 <label for="erm-hueurl">URL</label>
-                                <input id="erm-hueurl" name="hueurl" placeholder="http://192.168.1.2" required/>
+                                <input class="input-text" id="erm-hueurl" name="hueurl" placeholder="http://192.168.1.2" required/>
                             </li>
                             <li class="input hue">
                                 <label for="erm-huekey">Key</label>
-                                <input id="erm-huekey" name="huekey" placeholder="IKQDytcsdi4kunzk4GuTXUu8s34c8y3iKRCKLxVh" required/>
+                                <input class="input-text" id="erm-huekey" name="huekey" placeholder="IKQDytcsdi4kunzk4GuTXUu8s34c8y3iKRCKLxVh" required/>
                             </li>
                             <li id="connect-li" class="input hue">
                                 <label for="erm-hueconnect">Connect</label>
-                                <button id="erm-hueconnect" type="button">Test Connection</button>
+                                <button class="input-text" id="erm-hueconnect" type="button">Test Connection</button>
                             </li>
                             <li class="input textarea hue">
                                 <label for="erm-huesetting">Setting</label>
-                                <textarea id="erm-huesetting" cols="40" rows="6" name="huesetting" placeholder="Json ..."></textarea>
+                                <textarea class="input-text" id="erm-huesetting" cols="40" rows="6" name="huesetting" placeholder="Json ..."></textarea>
                             </li>
 
                             <!-- save ERM -->
@@ -198,8 +198,8 @@
                                 <input id="erm-target-collection" type="hidden" name="target_collection" value="piggy">
                                 <input id="erm-id" type="hidden" name="_id">
                                 <label for="erm-send">Ready?</label>
-                                <button id="erm-update" data-update="true" type="button">Update</button>
-                                <button id="erm-send" data-update="false" type="button">Save</button>
+                                <button class="input-text" id="erm-update" data-update="true" type="button">Update</button>
+                                <button class="input-text" id="erm-send" data-update="false" type="button">Save</button>
                             </li>
                         </ul>
 
@@ -297,7 +297,7 @@
 
                             <li class="input">
                                 <label for="theme-name">Name</label>
-                                <input id="theme-name" name="name" placeholder="Name" required/>
+                                <input class="input-text" id="theme-name" name="name" placeholder="Name" required/>
                             </li>
                             <li>
                                 <div class="theme-preview-container"><ul></ul></div>
@@ -307,7 +307,7 @@
 
                             <li class="input textarea">
                                 <label for="theme-css">CSS</label>
-                                <textarea id="theme-css" cols="40" rows="6" name="css" placeholder="CSS"></textarea>
+                                <textarea class="input-text" id="theme-css" cols="40" rows="6" name="css" placeholder="CSS"></textarea>
                             </li>
 
                             <!-- save Theme -->
@@ -315,8 +315,8 @@
                                 <input id="theme-collection" type="hidden" name="collection" value="theme">
                                 <input id="theme-id" type="hidden" name="_id">
                                 <label for="theme-save">Ready?</label>
-                                <button id="theme-update" data-update="true" type="button">Update</button>
-                                <button id="theme-save" data-update="false" type="button">Save</button>
+                                <button class="input-text" id="theme-update" data-update="true" type="button">Update</button>
+                                <button class="input-text" id="theme-save" data-update="false" type="button">Save</button>
                             </li>
                         </ul>
                     </form>
@@ -336,7 +336,7 @@
                                 <ul>
                                     <li id="rest-config-li2" class="input">
                                         <label for="config-theme">Theme</label>
-                                        <select id="config-theme" name="theme"></select>
+                                        <select class="input-text" id="config-theme" name="theme"></select>
                                     </li>
                                 </ul>
                             </div>
@@ -360,7 +360,7 @@
                             <input id="config-save-collection" type="hidden" name="collection" value="config">
                             <input id="config-save-id" type="hidden" name="_id">
                             <label for="config-save">Ready?</label>
-                            <button id="config-save" type="button">Save</button>
+                            <button class="input-text" id="config-save" type="button">Save</button>
                         </li>
 
 
@@ -394,7 +394,7 @@
                 <!-- upgrade control -->
                 <li id="upgrade-control">
                     <div>
-                        <button id="factory-reset" type="button">Reset</button>
+                        <button class="input-text" id="factory-reset" type="button">Reset</button>
                     </div>
                 </li>
 

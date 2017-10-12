@@ -20,6 +20,10 @@ var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5
 var lineColor       = "#000";
 var axisColor       = "#000";
 
+var inputBackgroundColor = '';
+var inputInsetColor;
+var inputColor;
+
 eb.onopen = function()
 {
     /**
@@ -293,9 +297,7 @@ eb.onopen = function()
      * @param rule
      */
     function injectStyles(rule) {
-        $("<div />", {
-            html: '&shy;<style id="theme-style">' + rule + '</style>'
-        }).appendTo("body");
+        $('body').append('<style id="theme-style">' + rule + '</style>')
     }
 
     /**
@@ -319,16 +321,18 @@ eb.onopen = function()
                                 inputLabel.css('color', fontColor);
                                 li.append(inputLabel);
                             }
+                            console.log('true11111');
                             var inputValue = $('<input name="' + color + '_' + subColor + '" class="theme-property-value" value="' + theme['colors'][color][subColor] + '">')
-                                .colorPicker(
-                                    {
-                                        renderCallback: function($elm, toggled) {
-                                            if (toggled !== true && toggled !== false) { // hihi ...
-                                                console.log('true1');
-                                            }
+                                .colorPicker({
+                                    renderCallback: function($elm, toggled) {
+                                        console.log('lügencallback');
+                                        if (toggled !== true && toggled !== false) { // hihi ...
+                                            var prop        = $elm[0].offsetParent.innerText.replace(/(\r\n|\n|\r)/gm,"");
+                                            var pickedColor = $elm.text;
+                                            changeColor(prop, pickedColor);
                                         }
                                     }
-                                )
+                                })
                                 .css('background-color', theme['colors'][color][subColor]);
 
                             li.append(inputValue).appendTo(ul);
@@ -425,19 +429,40 @@ eb.onopen = function()
         axisColor       = theme.colors.axis;
         lineColor       = theme.colors.line;
 
+        inputBackgroundColor = theme.colors.input[0];
+        inputInsetColor      = theme.colors.input[1];
+        inputColor           = theme.colors.input[2];
+
+        // change header color
         d3.selectAll('.accordion-title')
             .transition()
             .duration(500)
             .style('background-color', headerColor);
 
+        // change body/background color
         var colorParts = ['body', '#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
-
         $.each(colorParts, function(key, value) {
             d3.select(value)
                 .transition()
                 .duration(500)
                 .style('background-color', backgroundColor)
         });
+
+        // change input color
+        d3.selectAll('.input-text')
+            .transition()
+            .duration(500)
+            .style('background', inputBackgroundColor);
+
+        d3.selectAll('.input-text')
+            .transition()
+            .duration(500)
+            .style('box-shadow', inputInsetColor);
+
+        d3.selectAll('.input-text')
+            .transition()
+            .duration(500)
+            .style('color', inputColor);
 
         d3.selectAll('form').selectAll('label').transition().duration(500).style('color', fontColor); // hä?
         updateData();
@@ -754,6 +779,9 @@ eb.onopen = function()
      * @param color
      */
     var changeColor = function(element, color) {
+        console.log('sassa');
+        console.log(element);
+        console.log(color);
         switch (element) {
             case 'header':
                 headerColor = color;
@@ -789,6 +817,10 @@ eb.onopen = function()
                 lineColor = color;
                 break;
             case 'axis':
+                axisColor = color;
+                break;
+
+            case 'input':
                 axisColor = color;
                 break;
         }

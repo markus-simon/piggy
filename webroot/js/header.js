@@ -64,12 +64,6 @@ function updateHeader(result) {
     piggyLocal.set(sumTotalLabel, calculatedTotalSum);
     piggyLocal.set(weightTotalLabel, calculatedTotalWeight);
 
-    var sumValue = calculatedTotalSum.toLocaleString('de-DE', {
-        minimumFractionDigits: 2,
-        style: 'currency',
-        currency: 'EUR'
-    });
-
     sumTotalLabel.text(formatCurrency(calculatedTotalSum));
     weightTotalLabel.text(formatWeight(calculatedTotalWeight));
 
@@ -81,5 +75,7 @@ function updateHeader(result) {
     piggyLabel.transition().duration(500).style('fill', headerFontColor);
     sumTotalLabel.transition().duration(500).style('fill', headerFontColor);
     weightTotalLabel.transition().duration(500).style('fill', headerFontColor);
-    svgHeader.transition().duration(500).style("background", headerColor);
+    svgHeader.transition().duration(500).style("background-color", headerColor);
+
+    d3.selectAll('#menu').transition().duration(500).style('background-color', headerColor);
 }
