@@ -403,7 +403,7 @@ eb.onopen = function()
             .duration(500)
             .style('background-color', headerColor);
 
-        var colorParts = ['body', '#menu', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
+        var colorParts = ['body', '#menu', '#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
         $('#config-overlay').fadeOut('slow');
 
         $.each(colorParts, function(key, value) {
@@ -524,8 +524,9 @@ eb.onopen = function()
         var action = 'edit';
         eb.send(action, config, function(reply) {
             if (reply) {
-                $('#config-save-id').val(reply);
-                changeTheme(reply.theme); // TODO geladenes theme übergeben!
+                eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function(reply) {
+                    changeTheme(reply[0]);
+                });
             } else {
                 piggyError('Hoppala irgendwas ging halt nicht', false);
             }
@@ -551,6 +552,7 @@ eb.onopen = function()
         if (!erm.name) {
             $('#erm-name').addClass("invalid-input");
             $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+            piggyError(false, 'Ein Name wird benötigt', false);
             return;
         }
         $('#erm-name').removeClass("invalid-input");
@@ -560,6 +562,7 @@ eb.onopen = function()
             if (!isJson(erm.matcher)) {
                 $('#erm-matcher').addClass("invalid-input");
                 $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+                piggyError(false, 'Falscher Syntax', false);
                 return;
             }
         } else {
@@ -568,12 +571,47 @@ eb.onopen = function()
         $('#erm-matcher').removeClass("invalid-input");
 
         if (erm.hue) {
-            erm.huepath = getHuePath();
+
+            // url
+            if (!erm.hueurl) {
+                $('#erm-hueurl').addClass("invalid-input");
+                $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+                piggyError(false, 'Du musst eine Adresse angeben', false);
+                return;
+            }
+            $('#erm-hueurl').removeClass("invalid-input");
+
+            // key
+            if (!erm.huekey) {
+                $('#erm-huekey').addClass("invalid-input");
+                $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+                piggyError(false, 'Du musst den Schluessel angeben', false);
+                return;
+            }
+            $('#erm-huekey').removeClass("invalid-input");
+
+            // setting
+            if (erm.huesetting) {
+                erm.huesetting = JSON.stringify(erm.huesetting);
+                if (!isJson(erm.huesetting)) {
+                    $('#erm-huesetting').addClass("invalid-input");
+                    $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+                    piggyError(false, 'Falscher Syntax', false);
+                    return;
+                }
+            } else {
+                $('#erm-huesetting').addClass("invalid-input");
+                $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+                piggyError(false, 'Du musst angeben was die Lampen machen sollen', false);
+                return;
+            }
+            $('#erm-huesetting').removeClass("invalid-input");
         }
-        if (erm.huesetting) {
-            var huesetting = JSON.stringify(erm.huesetting);
-            erm.huesetting = huesetting;
-        }
+
+
+
+
+        erm.huepath = getHuePath();
 
         eb.send(action, erm, function(reply) {
             if (reply) {
@@ -583,6 +621,7 @@ eb.onopen = function()
                 $('#erm-overlay').fadeOut("slow");
             } else {
                 piggyError('Speichern ging nicht', false);
+                return;
             }
         });
         event.preventDefault();
@@ -685,7 +724,7 @@ eb.onopen = function()
                 break;
             case 'background':
                 backgroundColor = color;
-                var colorParts = ['body', '#menu', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#theme-overlay', '#checkout-overlay', '#upgrade-overlay'];
+                var colorParts = ['body', '#menu', '#config-overlay', '#erm-overlay', '#wishes-overlay', '#piggy-overlay', '#theme-overlay', '#checkout-overlay', '#upgrade-overlay'];
                 $.each(colorParts, function(key, value) {
                     d3.select(value)
                         .transition()
@@ -795,13 +834,15 @@ eb.onopen = function()
      * @param log
      */
     var piggyError = function(message, show, log) {
-        var error = {};
-        error.showtts = message;
-        eb.send('tts', error, function(reply) {
-            playSound(reply);
-        });
+        if (message) {
+            var error = {};
+            error.showtts = message;
+            eb.send('tts', error, function(reply) {
+                playSound(reply);
+            });
+        }
         if (show) {
-            showNotice('error', message);
+            showNotice('error', show);
         }
         if (log) {
             console.log(log);

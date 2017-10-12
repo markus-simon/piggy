@@ -14,13 +14,17 @@ consumerHue.handler(function (message) {
     var client = vertx.createHttpClient();
 
     if (huerequesttype === 'get') {
-        var request = client.getAbs(hueurl + '/api/' + huekey + '/lights', function (response) {
-            response.bodyHandler(function (totalBuffer) {
-                console.log('Hue says: ' + totalBuffer.toString());
-                message.reply(totalBuffer.toString());
-            });
+        var requestGet = client.getAbs(hueurl + '/api/' + huekey + '/lights', function (ar, ar_err) {
+            if (ar_err === null) {
+                ar.bodyHandler(function (totalBuffer) {
+                    console.log('Hue says: ' + totalBuffer.toString());
+                    message.reply(totalBuffer.toString());
+                });
+            } else {
+                console.log('error'); // TODO reply error to frontend
+            }
         });
-        request.end();
+        requestGet.end();
         client.close();
     } else if (huerequesttype === 'put') {
         if (config.huesetting) {
@@ -31,20 +35,25 @@ consumerHue.handler(function (message) {
             var payload = JSON.parse(huesetting);
         }
 
-        var request = client.putAbs(hueurl + '/api/' + huekey + huepath, function (response) {
-            response.bodyHandler(function (totalBuffer) {
-                console.log('Hue says: ' + totalBuffer.toString());
-                message.reply(totalBuffer.toString());
-            });
+        var requestPut = client.putAbs(hueurl + '/api/' + huekey + huepath, function (ar, ar_err) {
+            if (ar_err === null) {
+                ar.bodyHandler(function (totalBuffer) {
+                    console.log('Hue says: ' + totalBuffer.toString());
+                    message.reply(totalBuffer.toString());
+                });
+            } else {
+                console.log('error'); // TODO reply error to frontend
+            }
         });
 
-        request.setChunked(true);
+        requestPut.setChunked(true);
         if (payload) {
-            request.write(payload);
+            requestPut.write(payload);
         }
-        request.end();
+        requestPut.end();
         client.close();
     }
+
 });
 
 
