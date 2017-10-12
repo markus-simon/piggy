@@ -34,6 +34,9 @@
                 <li>
                     <a id="overlay-theme" title="Theme" href="#">Theme</a>
                 </li>
+                <li>
+                    <a id="overlay-wishes" title="Wishlist" href="#">Wishlist</a>
+                </li>
             </ul>
         </div>
         <div>
@@ -42,16 +45,70 @@
             <div class="group" id="group3"></div>
         </div>
 
+        <div id="wishes-overlay" class="overlay">
+            <div class="overlay-title">Wishlist</div>
+            <ul class="wishes-ul">
+                <li id="wishes-list">
+                    <div class="tbl-header">
+                        <table class="wishes-collection table" cellpadding="0" cellspacing="0" border="0" data-edit="true">
+                            <thead>
+                            <tr>
+                                <th>Created at</th>
+                                <th>Name</th>
+                                <th>Needed</th>
+                                <th data-func="calculatePercentage" data-column="needed">Percentage</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>XXXXXX</td>
+                                    <td>Buch</td>
+                                    <td>14.99</td>
+                                    <td>50%</td>
+                                    <td>X</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </li>
+                <!-- Edit wish -->
+                <li id="wishes">
+                    <form id="wishes-form" class="edit-form">
+                        <ul>
+                            <li class="input">
+                                <label for="wishes-name">Name</label>
+                                <input id="wishes-name" name="name" placeholder="Name" required/>
+                            </li>
+                            <li class="input">
+                                <label for="wishes-needed">Needed</label>
+                                <input id="wishes-needed" name="needed" placeholder="Needed" required/>
+                            </li>
+                            <!-- save Wish -->
+                            <li class="input">
+                                <input id="wishes-collection" type="hidden" name="collection" value="wishes">
+                                <input id="wishes-id" type="hidden" name="_id">
+                                <label for="wishes-save">Ready?</label>
+                                <button id="wishes-update" data-update="true" type="button">Update</button>
+                                <button id="wishes-save" data-update="false" type="button">Save</button>
+                            </li>
+                        </ul>
+                    </form>
+                </li>
+            </ul>
+        </div>
+
 
         <!-- ERM -->
         <div id="erm-overlay" class="overlay">
+            <div class="overlay-title">Alerts</div>
             <ul class="erm-ul">
 
                 <!-- ERM Collection-->
                 <li id="erm-list">
                     <section>
                         <div class="tbl-header">
-                            <table class="erm-collection table" cellpadding="0" cellspacing="0" border="0">
+                            <table class="erm-collection table" cellpadding="0" cellspacing="0" border="0" data-edit="true">
                                 <thead>
                                 <tr>
                                     <th>Created at</th>
@@ -71,7 +128,7 @@
 
                 <!-- Add ERM -->
                 <li id="erm">
-                    <form id="erm-form">
+                    <form id="erm-form" class="edit-form">
                         <ul>
 
                             <!-- name -->
@@ -153,6 +210,7 @@
 
         <!-- Checkout -->
         <div id="checkout-overlay" class="overlay">
+            <div class="overlay-title">Checkout</div>
             <div id="pin">
                 <div class="numbers">
                     <div class="number" id="display"></div>
@@ -180,8 +238,9 @@
 
         <!-- Piggy -->
         <div id="piggy-overlay" class="overlay">
+            <div class="overlay-title">History</div>
             <div class="tbl-header">
-                <table class="piggy-collection table" cellpadding="0" cellspacing="0" border="0">
+                <table class="piggy-collection table" cellpadding="0" cellspacing="0" border="0" data-edit="false">
                     <thead>
                     <tr>
                         <th>Created at</th>
@@ -203,11 +262,12 @@
 
         <!-- Theme -->
         <div id="theme-overlay" class="overlay">
+            <div class="overlay-title">Themes</div>
             <ul id="theme-ul">
 
                 <li>
                     <div class="tbl-header">
-                        <table class="theme-collection table" cellpadding="0" cellspacing="0" border="0">
+                        <table class="theme-collection table" cellpadding="0" cellspacing="0" border="0" data-edit="true">
                             <thead>
                             <tr>
                                 <th>Created at</th>
@@ -221,7 +281,7 @@
                 </li>
                 <!-- Edit theme -->
                 <li id="theme">
-                    <form id="theme-form">
+                    <form id="theme-form" class="edit-form">
                         <ul>
 
                             <li class="input">
@@ -255,6 +315,7 @@
 
         <!-- Config -->
         <div id="config-overlay" class="overlay">
+            <div class="overlay-title">Config</div>
             <form id="config-save-form">
                 <div class="accordion">
                     <ul>
@@ -300,12 +361,13 @@
 
         <!-- upgrade -->
         <div id="upgrade-overlay" class="overlay">
+            <div class="overlay-title">Version</div>
             <ul class="upgrade-ul">
 
                 <!-- upgrade Collection-->
                 <li id="upgrade-list">
                     <div class="tbl-header">
-                        <table class="upgrade-collection table" cellpadding="0" cellspacing="0" border="0">
+                        <table class="upgrade-collection table" cellpadding="0" cellspacing="0" border="0" data-edit="false">
                             <thead>
                             <tr>
                                 <th>Created at</th>
