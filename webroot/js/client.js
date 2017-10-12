@@ -134,7 +134,9 @@ eb.onopen = function()
                 var result = reply.result;
                 updateBars(result);
                 updatePie(result);
+/*
                 updateLine(result);
+*/
                 updateHeader(result);
             } else {
                 piggyError('Konnte Kommando nicht ausfuehren', false, reply.cause);
