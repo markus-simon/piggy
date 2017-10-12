@@ -312,64 +312,66 @@ eb.onopen = function()
                 for (var color in theme['colors']) {
                     if ('object' === typeof(theme['colors'][color])) {
                         var pLi = $('<li class="input theme-property">');
-                        var ul = $('<ul class="sub-list">');
+                        var ul  = $('<ul class="sub-list">');
 
                         for (var subColor in theme['colors'][color]) {
-                            var li = $('<li class="input theme-property">');
-                            if ('0' === subColor) {
-                                var inputLabel = $('<label class="theme-property-label">' + color + '</label>');
-                                inputLabel.css('color', fontColor);
-                                li.append(inputLabel);
-                            }
-                            console.log('true11111');
-                            var inputValue = $('<input name="' + color + '_' + subColor + '" class="theme-property-value" value="' + theme['colors'][color][subColor] + '">')
-                                .colorPicker({
-                                    renderCallback: function($elm, toggled) {
-                                        console.log('lügencallback');
-                                        if (toggled !== true && toggled !== false) { // hihi ...
-                                            var prop        = $elm[0].offsetParent.innerText.replace(/(\r\n|\n|\r)/gm,"");
-                                            var pickedColor = $elm.text;
-                                            changeColor(prop, pickedColor);
-                                        }
-                                    }
-                                })
-                                .css('background-color', theme['colors'][color][subColor]);
-
-                            li.append(inputValue).appendTo(ul);
+                            var elem = renderThemeProperty(color + '_' + subColor, theme['colors'][color][subColor], true, true);
+                            elem.appendTo(ul);
                         }
                         pLi.append(ul).appendTo($('.theme-preview-container > ul'));
                     } else {
-                        var li       = $('<li class="input theme-property">');
-                        var inputLabel = $('<label class="theme-property-label">' + color + '</label>');
-                        inputLabel.css('color', fontColor);
-                        var inputValue = $('<input name="' + color + '" class="theme-property-value" value="' + theme['colors'][color] + '">')
-                            .colorPicker({
-                                renderCallback: function($elm, toggled) {
-                                    if (toggled !== true && toggled !== false) { // hihi ...
-                                        var prop        = $elm[0].offsetParent.innerText.replace(/(\r\n|\n|\r)/gm,"");
-                                        var pickedColor = $elm.text;
-                                        changeColor(prop, pickedColor);
-                                        updateData();
-                                    }
-                                }
-                            })
-                            .css('background-color', theme['colors'][color]);
-
-                        li.append(inputLabel)
-                            .append(inputValue).appendTo($('.theme-preview-container > ul'));
+                        renderThemeProperty(color, theme['colors'][color], true);
                     }
                 }
             } else if (property === 'wallpaper') {
-                var li       = $('<li class="input theme-property">');
-                var inputLabel = $('<label class="theme-property-label">' + property + '</label>');
-                inputLabel.css('color', fontColor);
-                var inputValue = $('<input name="' + property + '" class="theme-property-value" value="' + theme[property] + '">');
-
-                li.append(inputLabel)
-                    .append(inputValue).appendTo($('.theme-preview-container > ul'));
+                renderThemeProperty(property, theme[property]);
             }
         }
         d3.selectAll('form').selectAll('label').transition().duration(500).style('color', fontColor); // doppelt hält besser
+    };
+
+    /**
+     * Render single theme property
+     *
+     * @param name
+     * @param value
+     * @param colorpicker
+     * @param dontAppend
+     * @returns {string}
+     */
+    var renderThemeProperty = function(name, value, colorpicker, dontAppend) {
+        var li    = $('<li class="theme-property">');
+        var label = '';
+
+        if (name.match(/_/) && '0' === name.split('_')[1]) {
+            label = $('<label class="theme-property-label">' + name.split('_')[0] + '</label>');
+        } else if (!name.match(/_/)) {
+            label = $('<label class="theme-property-label">' + name + '</label>');
+        }
+        var input = $('<input type="text" name="' + name + '" value="' + value + '" class="theme-property-value">');
+
+        if (true === colorpicker) {
+            input.colorPicker({
+                renderCallback: function($elm, toggled) {
+                    if (toggled !== true && toggled !== false) {
+                        var prop        = $elm[0].offsetParent.innerText.replace(/(\r\n|\n|\r)/gm,"");
+                        var pickedColor = $elm.text;
+                        changeColor(prop, pickedColor);
+                        updateData();
+                    }
+                }
+            })
+            .css('background-color', value);
+        }
+
+        li.append(label)
+            .append(input);
+
+        if (true === dontAppend) {
+            return li;
+        } else {
+            li.appendTo($('.theme-preview-container > ul'));
+        }
     };
 
     /**
@@ -779,9 +781,13 @@ eb.onopen = function()
      * @param color
      */
     var changeColor = function(element, color) {
-        console.log('sassa');
         console.log(element);
         console.log(color);
+
+        if (element.match(/_/)) {
+            element = element.split('_')[0];
+        }
+
         switch (element) {
             case 'header':
                 headerColor = color;
@@ -819,9 +825,11 @@ eb.onopen = function()
             case 'axis':
                 axisColor = color;
                 break;
-
             case 'input':
-                axisColor = color;
+                d3.selectAll('.input-text')
+                    .transition()
+                    .duration(500)
+                    .style('background-color', color);
                 break;
         }
     };
