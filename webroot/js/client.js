@@ -29,9 +29,10 @@ eb.onopen = function()
         config = reply[0];
         if (!$.isEmptyObject(config)) {
             $('#config-save-id').val(config._id);
-            eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function(reply) {
+            eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function (reply) {
                 changeTheme(reply[0]);
-            })
+                wishesList(reply[0]);
+            });
         }
         updateData();
     });
@@ -42,6 +43,13 @@ eb.onopen = function()
     eb.registerHandler('saved', function(document) {
         updateData();
         renderTable(document, '.' + document.collection + '-collection');
+    });
+
+    /**
+     * Register theme handler
+     */
+    eb.registerHandler('theme', function(document) {
+        changeTheme(document);
     });
 
     /**
@@ -546,6 +554,9 @@ eb.onopen = function()
         eb.send(action, config, function(reply) {
             if (reply) {
                 $(".overlay").fadeOut('slow');
+                eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function (reply) {
+                    eb.publish('theme', reply[0]);
+                });
             } else {
                 piggyError('Hoppala irgendwas ging halt nicht', false);
             }
@@ -803,6 +814,113 @@ eb.onopen = function()
     });
 
     /**
+     * Wishes front list
+     */
+    var wishesList = function(theme) {
+        var idx  = 1;
+        var wSvg = d3.select('#wishes-p')
+            .append("svg")
+            .attr("id", "wishes-bar")
+            .attr("width", (width * 2))
+            .append("g");
+
+        wSvg.append("text")
+            .transition()
+            .duration(1000)
+            .ease(d3.easeElastic)
+            .attr("y", 0)
+            .attr("x", 10)
+            .attr("dy", "0.71em")
+            .attr("fill", "#000")
+            .text('Wishes');
+
+        eb.send('find', {collection: 'wishes', matcher: {}}, function(reply) {
+            var bar = wSvg.selectAll(".rect")
+                .data(reply)
+                .enter().append("g");
+
+            bar.append("rect")
+                .transition()
+                .duration(1000)
+                .ease(d3.easeElastic)
+                .delay(function(d, i) { return 30 * i } )
+                .attr("x", function(d, i) {
+                    if (0 === i) {
+                        return 10;
+                    } else if (1 === i) {
+                        return (10 + 200);
+                    } else {
+                        return ((reply[i-1].priority * 10) + 200);
+                    }
+                })
+                .attr("width", function(d) { return (d.priority * 10); })
+                .attr("y", 30)
+                .attr("height", 100)
+                .style("fill", function(d, i) { return theme.colors.amount[idx++]; });
+
+            bar.append("text")
+                .transition()
+                .duration(1000)
+                .ease(d3.easeElastic)
+                .delay(function(d, i) { return 30 * i } )
+                .attr("y", 45)
+                .attr("x", function(d, i) {
+                    if (0 === i) {
+                        return 25;
+                    } else if (1 === i) {
+                        return (25 + 200);
+                    } else {
+                        return ((reply[i-1].priority * 10) + 215);
+                    }
+                })
+                .attr("dy", "0.71em")
+                .attr("fill", "#fff")
+                .style("font-size", "16px")
+                .text(function(d) { return d.name + ' (' + d.goal + ' EUR)'; });
+
+            bar.append("text")
+                .transition()
+                .duration(1000)
+                .ease(d3.easeElastic)
+                .delay(function(d, i) { return 30 * i } )
+                .attr("y", 80)
+                .attr("x", function(d, i) {
+                    if (0 === i) {
+                        return 25;
+                    } else if (1 === i) {
+                        return (25 + 200);
+                    } else {
+                        return ((reply[i-1].priority * 10) + 215);
+                    }
+                })
+                .attr("dy", "0.71em")
+                .attr("fill", "#fff")
+                .style("font-size", "14px")
+                .text(function(d) { return 'Percentage: ' + calculatePercentage(d.goal, true) + ' %'; });
+
+            bar.append("text")
+                .transition()
+                .duration(1000)
+                .ease(d3.easeElastic)
+                .delay(function(d, i) { return 30 * i } )
+                .attr("y", 100)
+                .attr("x", function(d, i) {
+                    if (0 === i) {
+                        return 25;
+                    } else if (1 === i) {
+                        return (25 + 200);
+                    } else {
+                        return ((reply[i-1].priority * 10) + 215);
+                    }
+                })
+                .attr("dy", "0.71em")
+                .attr("fill", "#fff")
+                .style("font-size", "14px")
+                .text(function(d) { return 'Priority: ' + d.priority + ' %'; });
+        });
+    };
+
+    /**
      * Render table
      *
      * @param value
@@ -913,15 +1031,28 @@ eb.onopen = function()
  *
  * @param value
  */
-var calculatePercentage = function(value) {
+var calculatePercentage = function(value, valueOnly) {
     // var pSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     // pSvg.setAttribute('class', 'percentage');
     //
-    // var p = d3.selectAll('percentage'); //.attr('class', 'percentage');
+    // //d3.select().append();
+    //
+    // console.log(pSvg);
+    // var p = d3.selectAll('.percentage'); //.attr('class', 'percentage');
     //
     // console.log(p);
 
+
+
     var ts = sumTotalLabel.text();
-    var p2 = ((ts/value) * 100).toFixed(3);
-    return '<progress value="' + p2 + '" max="100"></progress>';
+    var p2 = ((ts/value) * 100).toFixed(2);
+
+    if (p2 >= 100) {
+        p2 = 100;
+    }
+    if (true === valueOnly) {
+        return p2;
+    } else {
+        return '<progress value="' + p2 + '" max="100"></progress>';
+    }
 };
