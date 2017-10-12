@@ -23,7 +23,7 @@ var themes = [
             font: "#000",
             background: "#ffdddc",
             amount: ['#ffacf6', '#d052d0', '#ff5fb8', '#ff00a5', '#6b486b', '#6b215c', '#3c1231','#ff55d2'],
-            //       head    ,  odd tr  ,  even tr , font
+            //       head    ,  odd tr  ,  even tr , color
             table: ['#ff5fb8', '#ab3978', '#AB4C79', '#fff'],
             //     background, inset   , color
             input: ['#ff5fb8','#ab3978','#fff'],
@@ -34,7 +34,7 @@ var themes = [
         collection: 'theme',
         name: 'dark',
         wallpaper: '',
-        css: "#header { box-shadow: 1px 0 90px 59px #000000; }",
+        css: "#header { box-shadow: 1px 0 90px 59px rgba(0, 0, 255, 0.34); }",
         colors: {
             header: "#002f2c",
             headerFont: "#fff",

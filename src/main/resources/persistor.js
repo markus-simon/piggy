@@ -75,7 +75,7 @@ consumerEdit.handler(function (message) {
     client.update(document.collection, {_id: document._id}, update, function (res, res_err) {
         if (res_err === null) {
             message.reply(document);
-            eb.publish('saved', document);
+            eb.publish('edited', document);
         } else {
             message.reply(res_err);
             res_err.printStackTrace();

@@ -100,6 +100,15 @@ eb.onopen = function()
     });
 
     /**
+     * Register edited handler
+     */
+    eb.registerHandler('edited', function(document) {
+        $('#' + document.collection + '-collection-' + document._id).remove();
+        renderTable(document, '.' + document.collection + '-collection');
+    });
+
+
+    /**
      * Update data
      */
     var updateData = function() {
@@ -413,7 +422,7 @@ eb.onopen = function()
             .duration(500)
             .style('background-color', headerColor);
 
-        var colorParts = ['body', '#menu', '#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
+        var colorParts = ['body', '#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
 
         $.each(colorParts, function(key, value) {
             d3.select(value)
@@ -506,8 +515,8 @@ eb.onopen = function()
      * @param update
      */
     var saveWish = function(update) {
-        var form   = $('#wishes-form').serializeArray();
-        wish       = formToJson(form);
+        var form = $('#wishes-form').serializeArray();
+        var wish = formToJson(form);
 
         var action = 'save';
         if (update) {
@@ -689,7 +698,7 @@ eb.onopen = function()
         var colors   = {};
 
         $.each(theme , function(key, value) {
-            if (key !== '_id' && key !== 'collection' && key !== 'wallpaper' && key !== 'name' && key !== 'message_created_at') {
+            if (key !== '_id' && key !== 'collection' && key !== 'wallpaper' && key !== 'name' && key !== 'message_created_at' && key !== 'css') {
                 colors[key] = value;
                 delete theme[key]
             }
@@ -757,7 +766,7 @@ eb.onopen = function()
                 break;
             case 'background':
                 backgroundColor = color;
-                var colorParts = ['body', '#menu', '#config-overlay', '#erm-overlay', '#wishes-overlay', '#piggy-overlay', '#theme-overlay', '#checkout-overlay', '#upgrade-overlay'];
+                var colorParts = ['body', '#config-overlay', '#erm-overlay', '#wishes-overlay', '#piggy-overlay', '#theme-overlay', '#checkout-overlay', '#upgrade-overlay'];
                 $.each(colorParts, function(key, value) {
                     d3.select(value)
                         .transition()

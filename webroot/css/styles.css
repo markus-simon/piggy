@@ -23,6 +23,10 @@ body {
     font-family: 'Quicksand', sans-serif;
 }
 
+.axis text, .header-text, #currency, #kg {
+    pointer-events: none;
+}
+
 .group {
     float: left;
 }
