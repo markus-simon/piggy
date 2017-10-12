@@ -1,116 +1,146 @@
-var n = 40;
-var random = d3.randomUniform(0, 0);
-var deta = d3.range(n).map(random);
-
-var duration = 2000;
-var now = new Date(Date.now() - duration);
-
-var x = d3.scaleLinear()
-    .domain([0, n - 1])
-    .range([0, width * 2 - 25]);
-
-var xTime = d3.scaleTime()
-    .domain([now - (n - 2) * duration, now - duration])
-    .range([0, width * 2 - 75]);
-
-var xAxis = d3.axisBottom(xTime)
-    .ticks((width + 2) / (height + 2) * 10)
-    .tickSize(height)
-    .tickPadding(8 - height);
-
-var y = d3.scaleLinear()
-    .domain([0, 0])
-    .range([height, 25]);
-
-var line = d3.line().curve(d3.curveBasis)
-    .x(function(d, i) { return x(i); })
-    .y(function(d) { return y(d); });
-
-var zoom = d3.zoom()
-    .scaleExtent([1, 40])
-    .translateExtent([[-100, -100], [width + 90, height + 100]])
-    .on("zoom", zoomed);
-
-function zoomed() {
-    axisX.call(xAxis.scale(d3.event.transform.rescaleX(x)));
-}
-
-var svg3 = d3.select('#group3')
+var svg = d3.select('#group3')
     .append("svg")
     .attr("id", "svg3")
     .attr("width", width * 2 - 25)
-    .attr("height", height)
-/*    .append("g")
-    .attr("transform", "translate(0,0)");*/
+    .attr("height", height);
 
-svg3.call(zoom);
+var parseTime = d3.timeParse("%Y%m%d");
 
-var axisX = svg3.append("g")
+var x = d3.scaleTime().range([0, width]),
+    y = d3.scaleLinear().range([height, 0]),
+    z = d3.scaleOrdinal(d3.schemeCategory10);
+
+var line = d3.line()
+    .curve(d3.curveBasis)
+    .x(function(d) { return x(d.date); })
+    .y(function(d) { return y(d.temperature); });
+
+
+var data = [
+    {date: 20111001},
+    {date: 20111002},
+    {date: 20111003},
+    {date: 20111004},
+    {date: 20111005},
+    {date: 20111006},
+    {date: 20111007},
+    {date: 20111008},
+    {date: 20111009},
+    {date: 20111010},
+    {date: 20111011},
+    {date: 20111012},
+    {date: 20111013},
+    {date: 20111014},
+    {date: 20111015},
+    {date: 20111016},
+    {date: 20111017},
+    {date: 20111018},
+    {date: 20111019},
+    {date: 20111020},
+    {date: 20111021},
+    {date: 20111022},
+    {date: 20111023},
+    {date: 20111024},
+    {date: 20111025},
+    {date: 20111026},
+    {date: 20111027},
+    {date: 20111028},
+    {date: 20111029},
+    {date: 20111030},
+    {date: 20111031},
+    {date: 20111101},
+    {date: 20111102},
+    {date: 20111103},
+    {date: 20111104},
+    {date: 20111105},
+    {date: 20111106},
+    {date: 20111107},
+    {date: 20111108},
+    {date: 20111109},
+    {date: 20111110},
+    {date: 20111111},
+    {date: 20111112},
+    {date: 20111113},
+    {date: 20111114},
+    {date: 20111115},
+    {date: 20111116},
+    {date: 20111117},
+    {date: 20111118},
+    {date: 20111119},
+    {date: 20111120}
+];
+
+
+/*var data = [];
+for (var i = 0; i <= 30; i++) {
+    data.push({
+        'date': parseTime(20111001)
+    });
+}*/
+
+console.log(data);
+
+
+
+var cities = data.columns.map(function(id) {
+    return {
+        id: id,
+        values: data.map(function(d) {
+            return {date: d.date, temperature: d[id]};
+        })
+    };
+});
+
+x.domain(d3.extent(data, function(d) { return d.date; }));
+
+y.domain([
+    d3.min(cities, function(c) { return d3.min(c.values, function(d) { return d.temperature; }); }),
+    d3.max(cities, function(c) { return d3.max(c.values, function(d) { return d.temperature; }); })
+]);
+
+z.domain(cities.map(function(c) { return c.id; }));
+
+g.append("g")
     .attr("class", "axis axis--x")
-    .attr("transform", "translate(25," + (height - 25) + ")")
-    .call(d3.axisBottom(xTime));
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
 
-axisX.append("text")
-    .attr("x", (width * 2))
-    .attr("dy", "-25px")
-    .text("Datum");
-
-var axisY = svg3.append("g")
+g.append("g")
     .attr("class", "axis axis--y")
-    .attr("transform", "translate(25, 0)")
-    .call(d3.axisLeft(y));
-
-axisY.append("text")
+    .call(d3.axisLeft(y))
+    .append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 6)
-    .attr("x", -15)
     .attr("dy", "0.71em")
-    .text("Menge");
+    .attr("fill", "#000")
+    .text("Temperature, ºF");
 
-svg3.append("g").append("defs").append("clipPath")
-    .attr("id", "clip")
-    .append("rect")
-    .attr("transform", "translate(25,0)")
-    .attr("width", width * 2 - 25)
-    .attr("height", height - 25);
+var city = g.selectAll(".city")
+    .data(cities)
+    .enter().append("g")
+    .attr("class", "city");
 
-svg3.append("g")
-    .attr("id", "clippath")
-    .attr("clip-path", "url(#clip)")
-    .style("stroke", lineColor)
-    .append("path")
-    .datum(deta)
+city.append("path")
     .attr("class", "line")
-    .style("stroke-width","1px")
-    .style("fill","none")
-    .transition()
-    .duration(1000)
-    .ease(d3.easeLinear)
-    .on("start", tick);
+    .attr("d", function(d) { return line(d.values); })
+    .style("stroke", function(d) { return z(d.id); });
 
+city.append("text")
+    .datum(function(d) { return {id: d.id, value: d.values[d.values.length - 1]}; })
+    .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.temperature) + ")"; })
+    .attr("x", 3)
+    .attr("dy", "0.35em")
+    .style("font", "10px sans-serif")
+    .text(function(d) { return d.id; });
 
-var sumTotal = 0;
-function tick() {
-    deta.push(sumTotal/100);
-    d3.select(this)
-        .attr("d", line)
-        .attr("transform", null);
-
-    duration = 5000;
-    now = new Date(Date.now() - duration);
-    xTime.domain([now - (n - 2) * duration, now - duration]);
-    axisX.transition()
-        .duration(5000)
-        .ease(d3.easeLinear)
-        .call(d3.axisBottom(xTime));
-
-    d3.active(this)
-        .attr("transform", "translate(" + x(-1) + ",0)")
-        .transition()
-        .duration(5000)
-        .on("start", tick);
-    deta.shift();
+function type(d, _, columns) {
+    d.date = parseTime(d.date);
+    for (var i = 1, n = columns.length, c; i < n; ++i) d[c = columns[i]] = +d[c];
+    return d;
 }
+
+
+
 
 function updateLine(result) {
     sumTotal = 0;
