@@ -536,9 +536,7 @@ eb.onopen = function()
         var action = 'edit';
         eb.send(action, config, function(reply) {
             if (reply) {
-                eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function(reply) {
-                    changeTheme(reply[0]);
-                });
+                $(".overlay").fadeOut('slow');
             } else {
                 piggyError('Hoppala irgendwas ging halt nicht', false);
             }
