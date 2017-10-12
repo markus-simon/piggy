@@ -752,9 +752,25 @@ eb.onopen = function()
                 if ($(column).data('func')) {
                     var func = $(column).data('func');
                     html += '<td>' + window[func](value[$(column).data('column')]) + '</td>';
+                } else if ($(column).data('wrap')) {
+                    var elem = $(column).data('wrap').split(/[.#]/);
+                    var sel  = '';
+                    var sel2 = '';
+
+                    if (elem[2]) {
+                        sel2 = value[elem[2].replace('{$','').replace('}','')];
+                    }
+
+                    if (elem[1].match(/./)) {
+                        sel += ' class="' + elem[1].replace('.','') + ' ' + sel2 + '"';
+                    } else if (elem[1].match(/#/)) {
+                        sel += ' id="' + elem[1].replace('#','') + ' ' + sel2 + '"';
+                    }
+
+                    html += '<td><' + elem[0] + sel + '>' + value[key] + '</' + elem[0] + '></td>';
                 } else {
                     html += '<td>' + value[key] + '</td>';
-                }
+            }
             }
         });
         html += '</tr>';
@@ -815,6 +831,13 @@ eb.onopen = function()
  * @param value
  */
 var calculatePercentage = function(value) {
+    // var pSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    // pSvg.setAttribute('class', 'percentage');
+    //
+    // var p = d3.selectAll('percentage'); //.attr('class', 'percentage');
+    //
+    // console.log(p);
+
     var ts = sumTotalLabel.text();
     var p2 = ((ts/value) * 100).toFixed(3);
     return '<progress value="' + p2 + '" max="100"></progress>';
