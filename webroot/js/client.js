@@ -570,7 +570,30 @@ eb.onopen = function()
         }
         $('#erm-matcher').removeClass("invalid-input");
 
-        if (erm.hue) {
+        if (erm.show === 'on') {
+            // showtts || showurl
+            if (!erm.showurl && !erm.showtts) {
+                $('#erm-showurl').addClass("invalid-input");
+                $('#erm-showtts').addClass("invalid-input");
+                $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+                piggyError(false, 'Du musst mindestens eine Adresse oder einen Text angeben', false);
+                return;
+            }
+
+            // showurl
+            if (erm.showurl) {
+                if (checkUrl(erm.showurl) !== true) {
+                    $('#erm-showurl').addClass("invalid-input");
+                    $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+                    piggyError(false, 'Du musst eine gueltige Adresse angeben', false);
+                    return;
+                }
+            }
+            $('#erm-showurl').removeClass("invalid-input");
+            $('#erm-showtts').removeClass("invalid-input");
+        }
+
+        if (erm.hue === 'on') {
 
             // url
             if (!erm.hueurl) {
@@ -809,7 +832,7 @@ eb.onopen = function()
                     html += '<td><' + elem[0] + sel + '>' + value[key] + '</' + elem[0] + '></td>';
                 } else {
                     html += '<td>' + value[key] + '</td>';
-            }
+                }
             }
         });
         html += '</tr>';

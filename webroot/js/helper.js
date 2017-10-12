@@ -161,3 +161,8 @@ var playSound = function(file) {
         audioElement.play();
     }, true);
 };
+
+
+var checkUrl = function(url) {
+    return true;
+};
