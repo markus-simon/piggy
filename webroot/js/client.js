@@ -324,7 +324,7 @@ eb.onopen = function()
         for (var property in theme) {
             if (property === 'colors') {
                 for (var color in theme['colors']) {
-                    if ('object' === typeof(theme['colors'][color])) {
+                    if ('object' === typeof theme['colors'][color]) {
                         var pLi = $('<li class="input theme-property">');
                         var ul  = $('<ul class="sub-list">');
 
