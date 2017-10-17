@@ -9,8 +9,8 @@ g = svg.append("g").attr("transform", "translate(40, 0)");
 // Sat Oct 01 2011 00:00:00 GMT+0200 (CEST)
 var parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
 
-var x = d3.scaleTime().range([0, width]);
-var y = d3.scaleLinear().range([height - 25, 0]);
+var x = d3.scaleTime().domain([0,0]).range([0, width]);
+var y = d3.scaleLinear().domain([0,0]).range([height - 25, 0]);
 var z = color;
 
 var line = d3.line()

@@ -777,6 +777,8 @@ eb.onopen = function()
             delete theme._id;
         }
 
+        console.log('theme');
+        console.log(theme);
         eb.send(action, theme, function(reply) {
             if (reply) {
                 changeTheme(theme);

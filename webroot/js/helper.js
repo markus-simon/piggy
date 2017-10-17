@@ -18,7 +18,7 @@ var formToJson = function(form) {
     var json = {};
     $.each(form, function(key, value) {
         $.each(value, function(key2, value2) {
-            if(key2 === 'name' && value.value !== "") {
+            if(key2 === 'name') {
                 if (isJson(value.value)) {
                     json[value2] = JSON.parse(value.value);
                 } else {
