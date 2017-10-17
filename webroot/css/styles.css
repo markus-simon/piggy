@@ -283,20 +283,40 @@ body input[type="checkbox"] {
     cursor: pointer;
     padding: 0!important;
 }
-body input[type="checkbox"]:after {
+body input[type="checkbox"]:before {
     content: " ";
     box-shadow: inset 0 0 5px 2px #ab3978;
+    position: absolute;
+    width: 2px;
+    transition: all .2s linear;
+    height: 2px;
+    top: 3px;
+    left: 4px;
+    border-radius: 50px;
+    z-index: 2;
+    background: #000;
+}
+body input[type="checkbox"]:after {
+    content: " ";
+    box-shadow: inset 0 0 12px 0 #ff31a3;
     position: absolute;
     width: 20px;
     transition: all .2s linear;
     height: 20px;
-    top: -5px;
+    top: -6px;
     border-radius: 50px;
-    background: #ff5fb8;
+    background: #581e3e;
 }
 body input[type="checkbox"]:checked:after {
     transition: all .2s linear;
     right: -5px;
+}
+body input[type="checkbox"]:checked:before {
+    box-shadow: 0 0 10px 7px #ff5fb8;
+    background: #ff5fb8;
+    left: auto;
+    right: 3px;
+
 }
 
 .edit-form input,
