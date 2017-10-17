@@ -162,7 +162,61 @@ var playSound = function(file) {
     }, true);
 };
 
-
+// TODO
 var checkUrl = function(url) {
     return true;
 };
+
+var calculateDate = function(offset_years,offset_months,offset_days,offset_hours,offset_minutes,offset_seconds) {
+    var dt = new Date();
+    dt.setFullYear(dt.getFullYear() + offset_years);
+    dt.setMonth(dt.getMonth()       + offset_months);
+    dt.setDate(dt.getDate()         + offset_days);
+    dt.setHours(dt.getHours()       + offset_hours);
+    dt.setMinutes(dt.getMinutes()   + offset_minutes);
+    dt.setSeconds(dt.getSeconds()   + offset_seconds);
+    var calculatedDate =
+        dt.getFullYear() + '-' +
+        ('0' + (dt.getMonth() + 1)).slice(-2) + '-' +
+        ('0' + dt.getDate()).slice(-2) + ' ' +
+        ('0' + dt.getHours()).slice(-2) + ':' +
+        ('0' + dt.getMinutes()).slice(-2) + ':' +
+        ('0' + dt.getSeconds()).slice(-2)
+    ;
+    return calculatedDate;
+};
+
+var getZero = function(unit) {
+    var dt = new Date();
+    switch (unit) {
+        case 'hours':
+            return dt.getHours();
+            break;
+        case 'minutes':
+            return dt.getMinutes();
+            break;
+        case 'seconds':
+            return dt.getSeconds();
+            break;
+    }
+};
+
+/*
+var calculateOtherDate = function(offset_years,offset_months,offset_days,offset_hours,offset_minutes,offset_seconds) {
+    var dt = new Date();
+    dt.setFullYear(dt.getFullYear() + offset_years);
+    dt.setMonth(dt.getMonth()       + offset_months);
+    dt.setDate(dt.getDate()         + offset_days);
+    dt.setHours(dt.getHours()       + offset_hours);
+    dt.setMinutes(dt.getMinutes()   + offset_minutes);
+    dt.setSeconds(dt.getSeconds()   + offset_seconds);
+    var calculatedDate =
+        dt.getFullYear() + '-' +
+        ('0' + (dt.getMonth() + 1)).slice(-2) + '-' +
+        ('0' + dt.getDate()).slice(-2) + ' ' +
+        ('0' + dt.getHours()).slice(-2) + ':' +
+        ('0' + dt.getMinutes()).slice(-2) + ':' +
+        ('0' + dt.getSeconds()).slice(-2)
+    ;
+    return calculatedDate;
+};*/

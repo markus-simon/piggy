@@ -234,6 +234,7 @@
                     <div class="number field">7</div>
                     <div class="number field">8</div>
                     <div class="number field">9</div>
+                    <div class="number field">0</div>
                     <div class="number" id="withdraw">&darr;</div>
                     <div class="number" id="point">.</div>
                     <div class="number" id="place">&uarr;</div>
@@ -342,6 +343,22 @@
                             </div>
                         </li>
 
+
+
+                        <li>
+                            <span class="accordion-title">Widget Config</span>
+                            <div class="accordion-content">
+                                <ul>
+                                    <li class="input">
+                                        <label for="config-timeframe">Timeframe</label>
+                                        <input id="config-timeframe" class="input-text" name="timeframe" placeholder="days - 1, 14, ..." />
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+
+
                         <li>
                             <span class="accordion-title">Rest Config</span>
                             <div class="accordion-content">
@@ -355,6 +372,8 @@
                                 </ul>
                             </div>
                         </li>
+
+
 
                         <li id="config-save-li" class="input">
                             <input id="config-save-collection" type="hidden" name="collection" value="config">
@@ -405,18 +424,19 @@
         <div id="show"><div id="show-content"></div></div>
         <div id="notice"><div id="notice-content"></div></div>
 
-        <script type="text/javascript" src="js/external/sockjs.min.js"></script>
-        <script type="text/javascript" src="js/external/vertxbus.js"></script>
-        <script type="text/javascript" src="js/external/d3.v4.min.js"></script>
-        <script type="text/javascript" src="js/external/jquery-2.2.4.min.js"></script>
-        <script type="text/javascript" src="js/external/jqColorPicker.min.js"></script>
-        <script type="text/javascript" src="js/problem.js"></script>
-        <script type="text/javascript" src="js/setup.js"></script>
-        <script type="text/javascript" src="js/helper.js"></script>
-        <script type="text/javascript" src="js/client.js"></script>
-        <script type="text/javascript" src="js/header.js"></script>
-        <script type="text/javascript" src="js/pie.js"></script>
-        <script type="text/javascript" src="js/bars.js"></script>
-        <script type="text/javascript" src="js/line.js"></script>
+        <script type="text/javascript" defer src="js/external/sockjs.min.js"></script>
+        <script type="text/javascript" defer src="js/external/vertxbus.js"></script>
+        <script type="text/javascript" defer src="js/external/d3.v4.min.js"></script>
+        <script type="text/javascript" defer src="js/external/crossfilter.min.js"></script>
+        <script type="text/javascript" defer src="js/external/jquery-2.2.4.min.js"></script>
+        <script type="text/javascript" defer src="js/external/jqColorPicker.min.js"></script>
+        <script type="text/javascript" defer src="js/problem.js"></script>
+        <script type="text/javascript" defer src="js/setup.js"></script>
+        <script type="text/javascript" defer src="js/helper.js"></script>
+        <script type="text/javascript" defer src="js/client.js"></script>
+        <script type="text/javascript" defer src="js/header.js"></script>
+        <script type="text/javascript" defer src="js/pie.js"></script>
+        <script type="text/javascript" defer src="js/bars.js"></script>
+        <script type="text/javascript" defer src="js/line.js"></script>
     </body>
 </html>

@@ -22,6 +22,11 @@ consumerHue.handler(function (message) {
                 });
             } else {
                 console.log('error'); // TODO reply error to frontend
+                console.log(JSON.stringify(ar_err)); // TODO reply error to frontend
+                ar_err.printStackTrace()
+/*
+                message.reply(ar_err);
+*/
             }
         });
         requestGet.end();

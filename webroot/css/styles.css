@@ -323,9 +323,6 @@ button:focus{
 }
 
 #config-save-form ul {
-    /*
-    width: 50vw;
-    */
     padding: 0;
     border: 1px solid #fff;
     border-right: 1px solid #c3c3c3;
@@ -579,12 +576,6 @@ body table.table td span.btn {
 #header {
     position: relative;
     z-index: 11;
-    /*
-    box-shadow: 1px 0 90px 59px #000000;
-    */
-}
-#header > div {
-    float: right;
 }
 #header > div.title {
     padding-left: 10px;
@@ -672,17 +663,18 @@ body .theme-preview-container input {
 /* Menu */
 #nav-icon3 {
     width: 8vh;
-    height: 45px;
-    position: relative;
-    margin: 50px auto;
+    height: 40px;
+    margin: 11px auto;
     transform: rotate(0deg);
     transition: .5s ease-in-out;
-    cursor: pointer; }
+    cursor: pointer;
+    }
 
 #nav-icon3 {
     position: absolute;
     left: 26px;
-    top: -25px; }
+    top: 16px;
+    }
 
 #nav-icon3 span {
     display: block;
@@ -694,7 +686,8 @@ body .theme-preview-container input {
     opacity: 1;
     left: 0;
     transform: rotate(0deg);
-    transition: .25s ease-in-out; }
+    transition: .25s ease-in-out;
+    }
 
 #nav-icon3 span:nth-child(1) {
     top: 0; }

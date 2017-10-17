@@ -49,7 +49,9 @@ eb.onopen = function()
             $('#config-save-id').val(config._id);
             eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function (reply) {
                 changeTheme(reply[0]);
+/*
                 wishesList(reply[0]);
+*/
             });
         }
         updateData();
@@ -169,9 +171,7 @@ eb.onopen = function()
                 var result = reply.result;
                 updateBars(result);
                 updatePie(result);
-/*
                 updateLine(result);
-*/
                 updateHeader(result);
             } else {
                 piggyError('Konnte Kommando nicht ausfuehren', false, reply.cause);
@@ -900,7 +900,7 @@ eb.onopen = function()
     /**
      * Wishes front list
      */
-    var wishesList = function(theme) {
+/*    var wishesList = function(theme) {
         var idx  = 1;
         var wSvg = d3.select('#wishes-p')
             .append("svg")
@@ -1002,7 +1002,7 @@ eb.onopen = function()
                 .style("font-size", "14px")
                 .text(function(d) { return 'Priority: ' + d.priority + ' %'; });
         });
-    };
+    };*/
 
     /**
      * Render table
