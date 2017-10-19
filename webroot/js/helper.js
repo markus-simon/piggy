@@ -82,8 +82,13 @@ var jsonToForm = function(prefix, data) {
  */
 var piggySelection = function(type, d, i) {
     if ('on' === type) {
-        tweenHeaderText('#total-sum-pie', (d.sumTotal/100), formatCurrency);
-        tweenHeaderText('#total-weight',  calculateWeight(d), formatWeight);
+        tweenText('#total-quantity', d.sum, formatQuantity);
+        tweenText('#total-sum-pie', (d.sumTotal/100), formatCurrency);
+        tweenText('#total-weight', calculateWeight(d), formatWeight);
+
+        d3.select("#percent").text(formatPercent(calculatePercent(d)));
+
+
         d3.select("#path_" + i)
             .transition()
             .duration(1000)
@@ -96,8 +101,13 @@ var piggySelection = function(type, d, i) {
             return (this.id === 'line_' + i) ? 1 : .1;
         });
     } else {
-        tweenHeaderText('#total-sum-pie', piggyLocal.get(sumTotalLabel), formatCurrency);
-        tweenHeaderText('#total-weight',  piggyLocal.get(weightTotalLabel), formatWeight);
+        tweenText('#total-quantity', piggyLocal.get(quantityTotalLabel), formatQuantity);
+        tweenText('#total-sum-pie', piggyLocal.get(sumTotalLabel), formatCurrency);
+        tweenText('#total-weight',  piggyLocal.get(weightTotalLabel), formatWeight);
+
+        d3.select("#percent").text(formatPercent(1));
+
+
         d3.select("#path_" + i)
             .transition()
             .duration(1000)
@@ -109,7 +119,7 @@ var piggySelection = function(type, d, i) {
 };
 
 
-var tweenHeaderText = function(id, value, format) {
+var tweenText = function(id, value, format) {
     d3.select(id).transition()
         .duration(1000)
         .ease(d3.easeCubic)
@@ -156,6 +166,13 @@ var calculateWeight = function (row) {
     }
     return weightTotal / 1000;
 };
+
+var calculatePercent = function(row) {
+    var total = piggyLocal.get(quantityTotalLabel);
+    var percent = row.sum / total;
+    return percent;
+};
+
 
 var playSound = function(file) {
     var audioElement = document.createElement('audio');

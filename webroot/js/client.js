@@ -46,6 +46,7 @@ eb.onopen = function()
     eb.send('find', {collection: 'config', matcher: {}}, function(reply) {
         config = reply[0];
         if (!$.isEmptyObject(config)) {
+            jsonToForm('config-', config);
             $('#config-save-id').val(config._id);
             eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function (reply) {
                 changeTheme(reply[0]);

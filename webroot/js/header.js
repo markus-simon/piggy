@@ -12,6 +12,17 @@ var piggyLabel = svgHeader.append("text")
     .style("font-size", headerFontSize)
     .text('Piggy');
 
+
+var quantityTotalLabel = svgHeader.append("text")
+    .attr("id","total-quantity")
+    .attr("class","header-text")
+    .attr('x', (window.innerWidth - 510))
+    .attr('y', ($('#header').outerHeight() / 1.4))
+    .attr("text-anchor", "end")
+    .style("fill", headerColor)
+    .style("font-size", headerFontSize);
+
+
 var weightTotalLabel = svgHeader.append("text")
     .attr("id","total-weight")
     .attr("class","header-text")
@@ -50,10 +61,12 @@ svgHeader.append("text")
 
 function updateHeader(result) {
 
-    var sumTotal    = 0;
-    var weightTotal = 0;
+    var quantityTotal = 0;
+    var sumTotal      = 0;
+    var weightTotal   = 0;
 
     result.forEach(function(row) {
+        quantityTotal += row.sum;
         sumTotal += row.sumTotal;
         weightTotal += calculateWeight(row);
     });
@@ -61,9 +74,11 @@ function updateHeader(result) {
     var calculatedTotalSum = sumTotal / 100;
     var calculatedTotalWeight = weightTotal;
 
+    piggyLocal.set(quantityTotalLabel, quantityTotal);
     piggyLocal.set(sumTotalLabel, calculatedTotalSum);
     piggyLocal.set(weightTotalLabel, calculatedTotalWeight);
 
+    quantityTotalLabel.text(formatQuantity(quantityTotal));
     sumTotalLabel.text(formatCurrency(calculatedTotalSum));
     weightTotalLabel.text(formatWeight(calculatedTotalWeight));
 
@@ -73,6 +88,7 @@ function updateHeader(result) {
     kgLabel.attr('x', (newX - 50)).transition().duration();
 
     piggyLabel.transition().duration(500).style('fill', headerFontColor);
+    quantityTotalLabel.transition().duration(500).style('fill', headerFontColor);
     sumTotalLabel.transition().duration(500).style('fill', headerFontColor);
     weightTotalLabel.transition().duration(500).style('fill', headerFontColor);
     svgHeader.transition().duration(500).style("background-color", headerColor);

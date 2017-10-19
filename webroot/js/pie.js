@@ -50,8 +50,8 @@ var path2 = svg1.datum(dataBars).append("g").attr("id","glabel").selectAll("path
     .transition()
     .duration(750)
     .ease(d3.easeSin)
-    .style("stroke-opacity", 1)
 
+    .style("stroke-opacity", 1)
     .attrTween("stroke-dasharray", function() {
         var len = this.getTotalLength();
         return function(t) { return (d3.interpolateString("0," + len, len + ",0"))(t) };
@@ -74,9 +74,19 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .attr("d", arc1)
     .each(function(d) { this._current = d; });
 
+var percent = svg1.append("text")
+    .attr("id","percent")
+    .attr("transform", "translate(0,10)")
+    .attr("text-anchor", "middle")
+    .style("fill", headerFontColor)
+    .style("font-size", '8vh');
 
+
+/**
+ *
+ * @param result
+ */
 function updatePie(result) {
-
     var newData = [];
     result.forEach(function(row) {
         if (row.type !== 'virtual') {
@@ -93,23 +103,16 @@ function updatePie(result) {
         .transition()
         .duration(1000)
         .ease(d3.easeElastic)
-/*
-        .delay(function(d, i) { return 100 * i } )
-*/
         .style("fill", function(d, i) { return color(i); })
         .style('stroke', backgroundColor)
         .attrTween("d", arcTween);
-
-    /*    line1.data(pie1)
-            .transition()
-            .duration(750)
-            .attr("x1", function(d) { return arc1.centroid(d)[0]; })
-            .attr("y1", function(d) { return arc1.centroid(d)[1]; })
-            .attr("stroke-opacity", 1);*/
-
 }
 
-
+/**
+ *
+ * @param a
+ * @returns {Function}
+ */
 function arcTween(a) {
     var i = d3.interpolate(this._current, a);
     this._current = i(0);
