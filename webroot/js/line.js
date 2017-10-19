@@ -66,6 +66,7 @@ var city = g.selectAll(".city")
 
 var linePath = city.append("path")
     .attr("class", "line")
+    .attr("id", function(d, i) { return "line_" + i })
     .style("fill", "none")
     .attr("d", function (d) {
         return line(d.values);
@@ -75,6 +76,7 @@ var linePath = city.append("path")
     });
 
 
+/*
 var lineText = city.append("text")
     .datum(function (d) {
         return {id: d.id, value: d.values[d.values.length - 1]};
@@ -89,6 +91,7 @@ var lineText = city.append("text")
         return d.id;
 });
 
+*/
 
 /**
  * Re-render line chart
@@ -169,18 +172,23 @@ function generateCities(reply) {
 
         var row = [];
 
+        var quantity = 0;
         var entriesFiltered       = crossfilter(entriesByAmount.top(Infinity));
         var entriesByAmountByDate = entriesFiltered.dimension(function(d) { return d.message_created_at; });
-        for(var i = 0; i < timeframe; i++) {
+        for(var i = 0; i <= timeframe; i++) {
 
             entriesByAmountByDate.filterRange([
                 calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
                 calculateDate(0, 0, 0 - timeframe + i + 1, -getZero('hours'), -getZero('minutes'), -getZero('seconds') -1)
             ]);
-
+            if (config['combine-lines'] === 'yes') {
+                quantity = quantity + entriesByAmountByDate.top(Infinity).length;
+            } else {
+                quantity = entriesByAmountByDate.top(Infinity).length;
+            }
             row.push({
                 date: parseTime(calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds'))),
-                quantity: entriesByAmountByDate.top(Infinity).length
+                quantity: quantity
             });
         }
 

@@ -282,7 +282,17 @@ body input[type="checkbox"] {
     position: relative;
     cursor: pointer;
     padding: 0!important;
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
 }
+
+body input[type="checkbox"]:focus {
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
+}
+
 body input[type="checkbox"]:before {
     content: " ";
     box-shadow: inset 0 0 5px 2px #ab3978;
@@ -325,14 +335,16 @@ body input[type="checkbox"]:checked:before {
 .edit-form button,
 #factory-reset {
     padding: 20px!important;
-    /* background-color: #ff5fb8; */
-    border: 1px solid #fff;
-    border-right: 1px solid #c3c3c3;
-    border-bottom: 1px solid #c3c3c3;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
     color: #fff;
+}
+
+.input input:not([type="checkbox"]) {
+    border: 1px solid #fff;
+    border-right: 1px solid #c3c3c3;
+    border-bottom: 1px solid #c3c3c3;
 }
 
 #config-save-form input, #config-save-form textarea, #config-save-form select, #config-save-form button {

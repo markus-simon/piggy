@@ -92,15 +92,19 @@ var piggySelection = function(type, d, i) {
         d3.selectAll('.bar').transition().style('opacity', function() {
             return (this.id === 'bar_' + i) ? 1 : .1;
         });
+        d3.selectAll('.line').transition().style('opacity', function() {
+            return (this.id === 'line_' + i) ? 1 : .1;
+        });
     } else {
         tweenHeaderText('#total-sum-pie', piggyLocal.get(sumTotalLabel), formatCurrency);
         tweenHeaderText('#total-weight',  piggyLocal.get(weightTotalLabel), formatWeight);
-        d3.selectAll(".bar").transition().style("opacity", "1");
         d3.select("#path_" + i)
             .transition()
             .duration(1000)
             .ease(d3.easeElastic)
             .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(1));
+        d3.selectAll(".bar").transition().style("opacity", "1");
+        d3.selectAll(".line").transition().style("opacity", "1");
     }
 };
 
@@ -200,23 +204,3 @@ var getZero = function(unit) {
             break;
     }
 };
-
-/*
-var calculateOtherDate = function(offset_years,offset_months,offset_days,offset_hours,offset_minutes,offset_seconds) {
-    var dt = new Date();
-    dt.setFullYear(dt.getFullYear() + offset_years);
-    dt.setMonth(dt.getMonth()       + offset_months);
-    dt.setDate(dt.getDate()         + offset_days);
-    dt.setHours(dt.getHours()       + offset_hours);
-    dt.setMinutes(dt.getMinutes()   + offset_minutes);
-    dt.setSeconds(dt.getSeconds()   + offset_seconds);
-    var calculatedDate =
-        dt.getFullYear() + '-' +
-        ('0' + (dt.getMonth() + 1)).slice(-2) + '-' +
-        ('0' + dt.getDate()).slice(-2) + ' ' +
-        ('0' + dt.getHours()).slice(-2) + ':' +
-        ('0' + dt.getMinutes()).slice(-2) + ':' +
-        ('0' + dt.getSeconds()).slice(-2)
-    ;
-    return calculatedDate;
-};*/

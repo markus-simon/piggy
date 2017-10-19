@@ -43,4 +43,3 @@ var piggyLocal = d3.local();
 /*
 var format = d3.format("($.2f")(-3.5);
 */
-
