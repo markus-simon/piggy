@@ -1,6 +1,8 @@
 
 var types   = dataBars.map(function(d) { if (d.type !== 'virtual') { return d.amount; }});
-var sum = dataBars.map(function(d) { return d.sum; });
+var sum     = dataBars.map(function(d) { return d.sumTotal / 100; });
+
+console.log(sum);
 
 var x = d3.scalePoint()
     .domain(types)
@@ -11,7 +13,8 @@ var y = d3.scaleLinear()
     .range([height - 25, 25]);
 
 var xAxis = d3.axisBottom(x);
-var yAxis = d3.axisLeft(y);
+var yAxis = d3.axisLeft(y).ticks(10, ",f");
+
 
 var svg2 = d3.select('#group2')
     .append("svg")
@@ -28,7 +31,7 @@ var bar = svg2.selectAll(".rect")
 bar.append("rect")
     .attr("x", function(d) { return x(d.amount) - barWidth / 2; })
     .attr("width", barWidth)
-    .attr("y", function(d) { return y(d.sum); })
+    .attr("y", function(d) { return y(d.sumTotal  / 100 ); })
     .attr("class","bar")
     .attr("id", function(d, i) { return "bar_" + i })
     .attr("height", function(d) { return height - 25 - y(d.amount); })
@@ -50,17 +53,17 @@ svg2.append("g")
     .attr("fill", "#000")
     .text("Type");
 
-svg2.append("g")
+var axisY = svg2.append("g")
     .attr("class", "y axis")
     .attr("transform", "translate(40, 0)")
-    .call(yAxis)
-    .append("text")
+    .call(yAxis);
+
+var axisYText = axisY.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 6)
     .attr("x", -15)
     .attr("dy", "0.71em")
-    .attr("fill", "#000")
-    .text("Menge");
+    .attr("fill", "#000");
 
 function updateBars(result) {
     var newData = [];
@@ -76,13 +79,21 @@ function updateBars(result) {
         .domain(realTypes)
         .range([40, width - 40]).padding(0.9);
 
+/*
     var xAxis = d3.axisBottom(x);
+*/
 
+/*
     var y = d3.scaleLinear()
-        .domain([0, d3.max(newData, function(d) { return d.sum })])
+*/
+        y.domain([0, d3.max(newData, function(d) { return d.calculatedTotal })])
+/*
         .range([height - 25, 25]);
+*/
 
+/*
     var yAxis = d3.axisLeft(y);
+*/
 
     var chart = d3.select('#group2').select("g");
 
@@ -93,8 +104,8 @@ function updateBars(result) {
         .ease(d3.easeElastic)
         .delay(function(d, i) { return 30 * i } )
         .attr("x", function(d) { return x(d.amount) - barWidth / 2; })
-        .attr("y", function(d) { return y(d.sum); })
-        .attr("height", function(d) { return height - y(d.sum) - 25; })
+        .attr("y", function(d) { return y(d.calculatedTotal); })
+        .attr("height", function(d) { return height - y(d.calculatedTotal) - 25; })
         .style("fill", function(d, i) { return color(i); });
 
     chart.transition().select(".x.axis")
@@ -106,6 +117,8 @@ function updateBars(result) {
         .duration(1000)
         .ease(d3.easeElastic)
         .call(yAxis);
+
+    axisYText.text(config['calculation-base']);
 
     chart.selectAll('.domain').transition().duration(500).style('stroke', axisColor);
     chart.selectAll('line').transition().duration(500).style('stroke', axisColor);

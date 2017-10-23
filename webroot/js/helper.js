@@ -85,15 +85,13 @@ var piggySelection = function(type, d, i) {
         tweenText('#total-quantity', d.sum, formatQuantity);
         tweenText('#total-sum-pie', (d.sumTotal/100), formatCurrency);
         tweenText('#total-weight', calculateWeight(d), formatWeight);
-
         d3.select("#percent").text(formatPercent(calculatePercent(d)));
-
-
+        d3.select("#percent").transition().style('opacity', 1);
         d3.select("#path_" + i)
             .transition()
             .duration(1000)
             .ease(d3.easeElastic)
-            .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 80).cornerRadius(8));
+            .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 120).cornerRadius(4));
         d3.selectAll('.bar').transition().style('opacity', function() {
             return (this.id === 'bar_' + i) ? 1 : .1;
         });
@@ -104,15 +102,12 @@ var piggySelection = function(type, d, i) {
         tweenText('#total-quantity', piggyLocal.get(quantityTotalLabel), formatQuantity);
         tweenText('#total-sum-pie', piggyLocal.get(sumTotalLabel), formatCurrency);
         tweenText('#total-weight',  piggyLocal.get(weightTotalLabel), formatWeight);
-
-        d3.select("#percent").text(formatPercent(1));
-
-
+        d3.select("#percent").transition().style('opacity', 0);
         d3.select("#path_" + i)
             .transition()
             .duration(1000)
             .ease(d3.easeElastic)
-            .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(1));
+            .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(4));
         d3.selectAll(".bar").transition().style("opacity", "1");
         d3.selectAll(".line").transition().style("opacity", "1");
     }
@@ -168,8 +163,16 @@ var calculateWeight = function (row) {
 };
 
 var calculatePercent = function(row) {
-    var total = piggyLocal.get(quantityTotalLabel);
-    var percent = row.sum / total;
+    var percent = 0;
+    var total   = 0;
+
+    if (config['calculation-base'] === 'value') {
+        total = piggyLocal.get(sumTotalLabel);
+    } else if (config['calculation-base'] === 'quantity') {
+        total = piggyLocal.get(quantityTotalLabel);
+    }
+    percent = row.calculatedTotal / total;
+
     return percent;
 };
 

@@ -344,12 +344,19 @@
                         </li>
 
                         <li>
-                            <span class="accordion-title">Widget Config</span>
+                            <span class="accordion-title">Histogram Config</span>
                             <div class="accordion-content">
                                 <ul>
                                     <li class="input">
                                         <label for="config-timeframe">Timeframe</label>
                                         <input id="config-timeframe" class="input-text" name="timeframe" placeholder="days - 1, 14, ..." />
+                                    </li>
+                                    <li class="input">
+                                        <label for="config-combine-lines">Curved</label>
+                                        <select class="input-text" id="config-curved" name="curved">
+                                            <option value="yes">Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
                                     </li>
                                     <li class="input">
                                         <label for="config-combine-lines">Combine line amounts</label>
@@ -363,14 +370,16 @@
                         </li>
 
                         <li>
-                            <span class="accordion-title">Rest Config</span>
+                            <span class="accordion-title">General Config</span>
                             <div class="accordion-content">
                                 <ul>
-                                    <li id="rest-config-li3" class="input">
-                                        <label for="config-theme">Rest config3</label>
-                                    </li>
-                                    <li id="rest-config-li24" class="input">
-                                        <label for="config-theme">Rest config24</label>
+                                    <li class="input">
+                                        <label for="config-calculation-base">Calculation base</label>
+                                        <select class="input-text" id="config-calculation-base" name="calculation-base">
+                                            <option value="quantity">Menge</option>
+                                            <option value="value">Wert</option>
+                                            <option value="both">Beides</option>
+                                        </select>
                                     </li>
                                 </ul>
                             </div>

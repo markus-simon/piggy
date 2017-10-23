@@ -3,8 +3,12 @@ var eb = vertx.eventBus();
 
 // first config init
 var config = {
-    collection: 'config',
-    theme: 'blossom'
+    'collection':   'config',
+    'theme':        'blossom',
+    'timeframe':     14,
+    'combine-lines': 'yes',
+    'curved':        'yes'
+
 };
 eb.send('save', config);
 

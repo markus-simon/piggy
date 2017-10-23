@@ -1,14 +1,14 @@
 var eb       = new vertx.EventBus(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/eventbus');
 var config   = {};
 var dataBars = [
-    { amount: "1",   sum: 0},
-    { amount: "2",   sum: 0},
-    { amount: "5",   sum: 0},
-    { amount: "10",  sum: 0},
-    { amount: "20",  sum: 0},
-    { amount: "50",  sum: 0},
-    { amount: "100", sum: 0},
-    { amount: "200", sum: 0}
+    { amount: "1",   sum: 0, sumTotal: 0},
+    { amount: "2",   sum: 0, sumTotal: 0},
+    { amount: "5",   sum: 0, sumTotal: 0},
+    { amount: "10",  sum: 0, sumTotal: 0},
+    { amount: "20",  sum: 0, sumTotal: 0},
+    { amount: "50",  sum: 0, sumTotal: 0},
+    { amount: "100", sum: 0, sumTotal: 0},
+    { amount: "200", sum: 0, sumTotal: 0}
 ];
 
 var colorMapping = {
@@ -170,10 +170,25 @@ eb.onopen = function()
         eb.send("runCommand", JSON.stringify(query), function(reply) {
             if (!reply.cause) {
                 var result = reply.result;
-                updateBars(result);
-                updatePie(result);
-                updateLine(result);
-                updateHeader(result);
+
+                var newData = [];
+
+                if (config['calculation-base'] === 'quantity') {
+                    result.forEach(function(row) {
+                        row.calculatedTotal = row.sum;
+                        newData.push(row);
+                    });
+                } else if (config['calculation-base'] === 'value') {
+                    result.forEach(function(row) {
+                        row.calculatedTotal = row.sumTotal / 100;
+                        newData.push(row);
+                    });
+                }
+
+                updateBars(newData);
+                updatePie(newData);
+                updateLine(newData);
+                updateHeader(newData);
             } else {
                 piggyError('Konnte Kommando nicht ausfuehren', false, reply.cause);
             }
@@ -453,37 +468,25 @@ eb.onopen = function()
         inputColor           = theme.colors.input[2];
 
         // change header color
-        d3.selectAll('.accordion-title')
-            .transition()
-            .duration(500)
-            .style('background-color', headerColor);
+        d3.selectAll('.accordion-title').transition().duration(500).style('background-color', headerColor);
 
         // change body/background color
         var colorParts = ['body', '#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
         $.each(colorParts, function(key, value) {
-            d3.select(value)
-                .transition()
-                .duration(500)
-                .style('background-color', backgroundColor)
+            d3.select(value).transition().duration(500).style('background-color', backgroundColor)
         });
 
         // change input color
-        d3.selectAll('.input-text')
-            .transition()
-            .duration(500)
-            .style('background', inputBackgroundColor);
+        d3.selectAll('.input-text').transition().duration(500).style('background', inputBackgroundColor);
 
-        d3.selectAll('.input-text')
-            .transition()
-            .duration(500)
-            .style('box-shadow', inputInsetColor);
+        d3.selectAll('.input-text').transition().duration(500).style('box-shadow', inputInsetColor);
 
-        d3.selectAll('.input-text')
-            .transition()
-            .duration(500)
-            .style('color', inputColor);
+        d3.selectAll('.input-text').transition().duration(500).style('color', inputColor);
+
+        d3.select('#percent').transition().duration(500).style('fill', axisColor);
 
         d3.selectAll('form').selectAll('label').transition().duration(500).style('color', fontColor); // hä?
+
         updateData();
     };
 

@@ -9,55 +9,57 @@ g = svg.append("g").attr("transform", "translate(40, 0)");
 // Sat Oct 01 2011 00:00:00 GMT+0200 (CEST)
 var parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
 
-var x = d3.scaleTime().domain([0,0]).range([0, width]);
-var y = d3.scaleLinear().domain([0,0]).range([height - 25, 0]);
+
+var cities = generateCities([]);
+
+var dates = cities[0].values.map(function (c) {
+    return c.date;
+});
+
+var x = d3.scaleTime()
+    .domain(d3.extent(dates, function (d) {
+        return d;
+    }))
+    .range([0, width * 2 - 100]);
+
+var y = d3.scaleLinear()
+    .domain([
+        d3.min(cities, function (c) {
+            return d3.min(c.values, function (d) {
+                return d.quantity;
+            });
+        }),
+        d3.max(cities, function (c) {
+            return d3.max(c.values, function (d) {
+                return d.quantity;
+            });
+        })
+    ])
+    .range([height - 25, 25]);
+
 var z = color;
 
 var line = d3.line()
-    .curve(d3.curveBasis)
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.quantity); });
 
 var xAxisLine = d3.axisBottom(x);
-var yAxisLine = d3.axisLeft(y);
-
-var cities = generateCities([]);
+var yAxisLine = d3.axisLeft(y).ticks(10, ",f");
 
 g.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + (height - 25) + ")")
     .call(xAxisLine);
 
-g.append("g")
+var axisYLine = g.append("g")
     .attr("class", "y axis")
-    .call(yAxisLine)
-    .append("text")
+    .call(yAxisLine);
+
+var axisYLineText = axisYLine.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 6)
-    .attr("dy", "0.71em")
-    .attr("fill", "#000")
-    .text('Menge');
-
-var dates = cities[0].values.map(function (c) {
-    return c.date;
-});
-
-x.domain(d3.extent(dates, function (d) {
-    return d;
-}));
-
-y.domain([
-    d3.min(cities, function (c) {
-        return d3.min(c.values, function (d) {
-            return d.quantity;
-        });
-    }),
-    d3.max(cities, function (c) {
-        return d3.max(c.values, function (d) {
-            return d.quantity;
-        });
-    })
-]);
+    .attr("y", 16)
+    .attr("x", -12)
+    .attr("fill", "#000");
 
 var city = g.selectAll(".city")
     .data(cities)
@@ -68,11 +70,18 @@ var linePath = city.append("path")
     .attr("class", "line")
     .attr("id", function(d, i) { return "line_" + i })
     .style("fill", "none")
+    .style("stroke-width", "1")
     .attr("d", function (d) {
         return line(d.values);
     })
     .style("stroke", function (d, i) {
         return color(i);
+    })
+    .on("mouseover", function(d, i) {
+        piggySelection('on', d.values[d.values.length - 1], i);
+    })
+    .on("mouseout", function(d, i) {
+        piggySelection('off', d.values[d.values.length - 1], i);
     });
 
 
@@ -125,6 +134,18 @@ function updateLine(result) {
 
         linePath.data(cities);
 
+
+        if (config['curved'] === 'yes') {
+            line = d3.line()
+                .curve(d3.curveBasis)
+                .x(function(d) { return x(d.date); })
+                .y(function(d) { return y(d.quantity); });
+        } else {
+            line = d3.line()
+                .x(function(d) { return x(d.date); })
+                .y(function(d) { return y(d.quantity); });
+        }
+
         linePath.transition()
             .duration(1000)
             .ease(d3.easeElastic)
@@ -136,6 +157,9 @@ function updateLine(result) {
                 return line(d.values);
             });
 
+
+
+
         g.transition().select(".x.axis")
             .duration(1000)
             .ease(d3.easeElastic)
@@ -145,6 +169,8 @@ function updateLine(result) {
             .duration(1000)
             .ease(d3.easeElastic)
             .call(yAxisLine);
+
+        axisYLineText.text(config['calculation-base']);
 
         d3.selectAll('line').transition().duration(500).style('stroke', axisColor);
         d3.selectAll('.domain').transition().duration(500).style('stroke', axisColor);
@@ -160,7 +186,7 @@ function updateLine(result) {
  */
 function generateCities(reply) {
 
-    var timeframe = config.timeframe ? config.timeframe : 14;
+    var timeframe       = config.timeframe ? config.timeframe : 14;
     var entries         = crossfilter(reply);
     var entriesByAmount = entries.dimension(function(d) { return d.amount; });
 
@@ -181,14 +207,28 @@ function generateCities(reply) {
                 calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
                 calculateDate(0, 0, 0 - timeframe + i + 1, -getZero('hours'), -getZero('minutes'), -getZero('seconds') -1)
             ]);
+
+            var amount = entriesByAmountByDate.top(Infinity).length;
+
             if (config['combine-lines'] === 'yes') {
-                quantity = quantity + entriesByAmountByDate.top(Infinity).length;
+                quantity = quantity + amount;
             } else {
-                quantity = entriesByAmountByDate.top(Infinity).length;
+                quantity = amount;
             }
+
             row.push({
                 date: parseTime(calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds'))),
-                quantity: quantity
+                quantity: quantity,
+                sum: quantity,
+                sumTotal: quantity * parseInt(dataBars[j].amount),
+                amount: parseInt(dataBars[j].amount)
+            });
+        }
+
+        if (config['calculation-base'] === 'value') {
+            row.forEach(function (entry) {
+                entry.quantity = entry.quantity * parseInt(dataBars[j].amount) / 100;
+                entry.sumTotal = entry.quantity * 100;
             });
         }
 

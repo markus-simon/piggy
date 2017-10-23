@@ -5,7 +5,7 @@ var pie1 = d3.pie()
 var arc1 = d3.arc()
     .innerRadius(radius - 20)
     .outerRadius(radius - 40)
-    .cornerRadius(1);
+    .cornerRadius(4);
 
 var svg1 = d3.select("#group1")
     .append("svg")
@@ -74,12 +74,13 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .attr("d", arc1)
     .each(function(d) { this._current = d; });
 
-var percent = svg1.append("text")
+svg1.append("text")
     .attr("id","percent")
     .attr("transform", "translate(0,10)")
     .attr("text-anchor", "middle")
     .style("fill", headerFontColor)
-    .style("font-size", '8vh');
+    .style("font-size", '8vh')
+    .style("opacity", 0);
 
 
 /**
@@ -94,10 +95,10 @@ function updatePie(result) {
         }
     });
 
-    var data = newData.map(function(d) { return d; });
+    var data = newData.map(function(d) { return d; }); // ??????
 
     svg1.datum(data).select("#gpie").selectAll("path").data(pie1);
-    pie1.value(function(d) { return d.sum; });
+    pie1.value(function(d) { return d.calculatedTotal; });
 
     path1.data(pie1)
         .transition()
