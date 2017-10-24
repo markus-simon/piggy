@@ -1,19 +1,16 @@
 
 var types   = dataBars.map(function(d) { if (d.type !== 'virtual') { return d.amount; }});
-var sum     = dataBars.map(function(d) { return d.sumTotal / 100; });
-
-console.log(sum);
 
 var x = d3.scalePoint()
     .domain(types)
     .range([40, width - 40]).padding(0.9);
 
 var y = d3.scaleLinear()
-    .domain([0, d3.max(sum, function(d) { return d; })])
+    .domain([0,0])
     .range([height - 25, 25]);
 
-var xAxis = d3.axisBottom(x);
-var yAxis = d3.axisLeft(y).ticks(10, ",f");
+var xAxis = d3.axisBottom(x).tickSizeInner(-height + 35);
+var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width  + 65);
 
 
 var svg2 = d3.select('#group2')
@@ -79,21 +76,10 @@ function updateBars(result) {
         .domain(realTypes)
         .range([40, width - 40]).padding(0.9);
 
-/*
-    var xAxis = d3.axisBottom(x);
-*/
+    y.domain([0, d3.max(newData, function(d) { return d.calculatedTotal })]);
 
-/*
-    var y = d3.scaleLinear()
-*/
-        y.domain([0, d3.max(newData, function(d) { return d.calculatedTotal })])
-/*
-        .range([height - 25, 25]);
-*/
-
-/*
-    var yAxis = d3.axisLeft(y);
-*/
+    var xAxis = d3.axisBottom(x).tickSizeInner(-height + 35);
+    var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width + 65);
 
     var chart = d3.select('#group2').select("g");
 

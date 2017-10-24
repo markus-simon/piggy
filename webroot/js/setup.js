@@ -19,7 +19,7 @@ var headerHeight    = "10vh";
 var barWidth = 50;
 
 var formatInt      = d3.format(".0f");
-var formatPercent  = d3.format(",.0%");
+var formatPercent  = d3.format(",.1%");
 var formatQuantity = d3.format(",.0f");
 var formatCurrency = d3.format(",.2f");
 var formatWeight   = d3.format(",.3f");

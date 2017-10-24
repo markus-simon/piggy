@@ -20,7 +20,7 @@ var x = d3.scaleTime()
     .domain(d3.extent(dates, function (d) {
         return d;
     }))
-    .range([0, width * 2 - 100]);
+    .range([0, width * 2 - 80]);
 
 var y = d3.scaleLinear()
     .domain([
@@ -43,8 +43,8 @@ var line = d3.line()
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.quantity); });
 
-var xAxisLine = d3.axisBottom(x);
-var yAxisLine = d3.axisLeft(y).ticks(10, ",f");
+var xAxisLine = d3.axisBottom(x).tickSizeInner(-height);
+var yAxisLine = d3.axisLeft(y).ticks(10, ",f").tickSizeInner((-width * 2) + 20);
 
 g.append("g")
     .attr("class", "x axis")
@@ -70,7 +70,7 @@ var linePath = city.append("path")
     .attr("class", "line")
     .attr("id", function(d, i) { return "line_" + i })
     .style("fill", "none")
-    .style("stroke-width", "1")
+    .style("stroke-width", "2")
     .attr("d", function (d) {
         return line(d.values);
     })
@@ -176,6 +176,7 @@ function updateLine(result) {
         d3.selectAll('.domain').transition().duration(500).style('stroke', axisColor);
         d3.select('#svg3').selectAll('text').transition().duration(500).style('fill', axisColor);
 
+        d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
     });
 }
 
@@ -201,6 +202,12 @@ function generateCities(reply) {
         var quantity = 0;
         var entriesFiltered       = crossfilter(entriesByAmount.top(Infinity));
         var entriesByAmountByDate = entriesFiltered.dimension(function(d) { return d.message_created_at; });
+
+        if (parseInt(timeframe) === 0) {
+            console.log('ss');
+            console.log(entriesByAmountByDate.top(Infinity));
+        }
+
         for(var i = 0; i <= timeframe; i++) {
 
             entriesByAmountByDate.filterRange([
