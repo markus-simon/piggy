@@ -2,23 +2,24 @@
 
 var margin = {top: 5, right: 5, bottom: 5, left: 0};
 
-var width, height;
+var width, height, layout;
 
-if (window.innerWidth < 800) {
-    width  = window.innerWidth;
-    height = (window.innerHeight) - 60;
+var headerHeight    = window.outerHeight /10;
+
+if (window.outerWidth < 800) {
+    layout = 1;
+    width  = window.outerWidth;
+    height = window.outerHeight - headerHeight;
 } else {
-    width  = window.innerWidth / 2;
-    height = (window.innerHeight / 2) - 60;
+    layout = 2;
+    width  = window.outerWidth / 2;
+    height = (window.outerHeight / 2) - (headerHeight);
 }
 
 var radius   = Math.min(width, height) / 2;
 
-var headerHeight    = "10vh";
+var barWidth = window.outerWidth / 30;
 
-var barWidth = 50;
-
-var formatInt      = d3.format(".0f");
 var formatPercent  = d3.format(",.1%");
 var formatQuantity = d3.format(",.0f");
 var formatCurrency = d3.format(",.2f");

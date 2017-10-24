@@ -1,7 +1,7 @@
 var svg = d3.select('#group3')
     .append("svg")
     .attr("id", "svg3")
-    .attr("width", width * 2 - 25)
+    .attr("width", width * layout - 25)
     .attr("height", height);
 
 g = svg.append("g").attr("transform", "translate(40, 0)");
@@ -20,7 +20,7 @@ var x = d3.scaleTime()
     .domain(d3.extent(dates, function (d) {
         return d;
     }))
-    .range([0, width * 2 - 80]);
+    .range([0, width * layout - 80]);
 
 var y = d3.scaleLinear()
     .domain([

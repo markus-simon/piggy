@@ -2,7 +2,7 @@ var Buffer = require("vertx-js/buffer");
 
 
 var eb     = vertx.eventBus();
-var consumerErm = eb.consumer('saved');
+var consumerErm = eb.consumer('saved333');
 consumerErm.handler(function (message) {
     var document = message.body();
     eb.send('find', {

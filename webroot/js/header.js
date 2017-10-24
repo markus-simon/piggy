@@ -5,18 +5,10 @@ var svgHeader = d3.select('#header')
     .attr("height", headerHeight)
     .style("background", headerColor);
 
-var piggyLabel = svgHeader.append("text")
-    .attr("transform", "translate(110," + ($('#header').outerHeight() / 1.4) + ")")
-    .attr("class","header-text")
-    .style("fill", headerColor)
-    .style("font-size", headerFontSize)
-    .text('Piggy');
-
-
 var quantityTotalLabel = svgHeader.append("text")
     .attr("id","total-quantity")
     .attr("class","header-text")
-    .attr('x', (window.innerWidth - 510))
+    .attr('x', (window.outerWidth - 510))
     .attr('y', ($('#header').outerHeight() / 1.4))
     .attr("text-anchor", "end")
     .style("fill", headerColor)
@@ -26,7 +18,7 @@ var quantityTotalLabel = svgHeader.append("text")
 var weightTotalLabel = svgHeader.append("text")
     .attr("id","total-weight")
     .attr("class","header-text")
-    .attr('x', (window.innerWidth - 310))
+    .attr('x', (window.outerWidth - 310))
     .attr('y', ($('#header').outerHeight() / 1.4))
     .attr("text-anchor", "end")
     .style("fill", headerColor)
@@ -35,7 +27,7 @@ var weightTotalLabel = svgHeader.append("text")
 var kgLabel = svgHeader.append("text")
     .text('kg')
     .attr("id","kg")
-    .attr('x', (window.innerWidth - 280))
+    .attr('x', (window.outerWidth - 280))
     .attr('y', ($('#header').outerHeight() / 1.4))
     .attr("text-anchor", "end")
     .style("fill", headerFontColor)
@@ -44,7 +36,7 @@ var kgLabel = svgHeader.append("text")
 var sumTotalLabel = svgHeader.append("text")
     .attr("id","total-sum-pie")
     .attr("class","header-text")
-    .attr('x', (window.innerWidth - 30))
+    .attr('x', (window.outerWidth - 30))
     .attr('y', ($('#header').outerHeight() / 1.4))
     .attr("text-anchor", "end")
     .style("fill", headerColor)
@@ -53,7 +45,7 @@ var sumTotalLabel = svgHeader.append("text")
 svgHeader.append("text")
     .html('&euro;')
     .attr("id","currency")
-    .attr("transform", "translate(" + (window.innerWidth - 10) + "," + ($('#header').outerHeight() / 1.4) + ")")
+    .attr("transform", "translate(" + (window.outerWidth - 10) + "," + ($('#header').outerHeight() / 1.4) + ")")
     .attr("text-anchor", "end")
     .style("fill", headerFontColor)
     .style("font-size", '24px');
@@ -87,7 +79,10 @@ function updateHeader(result) {
     weightTotalLabel.attr('x', (newX - 80)).transition().duration();
     kgLabel.attr('x', (newX - 50)).transition().duration();
 
-    piggyLabel.transition().duration(500).style('fill', headerFontColor);
+    // Move qty if kilogram label gets longer
+    var newXQty = parseInt(weightTotalLabel._groups[0][0].getBBox().x);
+    quantityTotalLabel.attr('x', (newXQty- 80)).transition().duration();
+
     quantityTotalLabel.transition().duration(500).style('fill', headerFontColor);
     sumTotalLabel.transition().duration(500).style('fill', headerFontColor);
     weightTotalLabel.transition().duration(500).style('fill', headerFontColor);
