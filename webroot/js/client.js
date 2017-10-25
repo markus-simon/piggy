@@ -13,30 +13,57 @@ var dataBars = [
 
 var colorMapping = {
     table: {
-        0: "head",
-        1: "odd",
-        2: "even",
-        3: "color"
+        0: {
+            'head': {
+                'property': 'background-color',
+                'elements': ['thead']
+            }
+        },
+        1: {
+            'odd': {
+                'property': 'background-color',
+                'elements': ['tr:nth-child(odd)']
+            }
+        },
+        2: {
+            'even': {
+                'property': 'background-color',
+                'elements': ['tr:nth-child(even)']
+            }
+        },
+        3: {
+            'color': {
+                'property': 'color',
+                'elements': ['th','td']
+            }
+        }
     },
     input: {
-        0: "background",
-        1: "inset",
-        2: "color"
+        0: {
+            'background': 'background-color'
+        },
+        1: {
+            'inset': 'box-shadow'
+        },
+        2: {
+            'color': 'color'
+        }
     }
 };
 
-var headerColor     = "#CB3577";
-var headerFontColor = "#fff";
 var headerFontSize  = (window.outerHeight / 16) * (layout / 1.4);
-var fontColor       = '#fff';
-var backgroundColor = "#ffdddc";
 var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231","#ff55d2"]);
-var lineColor       = "#000";
-var axisColor       = "#000";
-
-var inputBackgroundColor = '';
-var inputInsetColor;
-var inputColor;
+var colors          = {
+    'header':           '#CB3577',
+    'headerFont':       '#fff',
+    'font':             '#fff',
+    'background':       '#ffdddc',
+    'line':             '#000',
+    'axis':             '#000',
+    'input_background': '',
+    'input_inset':      '',
+    'input':            ''
+};
 
 eb.onopen = function()
 {
@@ -180,7 +207,9 @@ eb.onopen = function()
                     });
                 } else if (config['calculation-base'] === 'value') {
                     result.forEach(function(row) {
+
                         row.calculatedTotal = row.sumTotal / 100;
+
                         newData.push(row);
                     });
                 }
@@ -357,7 +386,7 @@ eb.onopen = function()
                 renderThemeProperty(property, theme[property]);
             }
         }
-        d3.selectAll('form').selectAll('label').transition().duration(500).style('color', fontColor); // doppelt hält besser
+        d3.selectAll('form').selectAll('label').transition().duration(500).style('color', colors.font); // doppelt hält besser
     };
 
     /**
@@ -385,7 +414,6 @@ eb.onopen = function()
             input.colorPicker({
                 renderCallback: function($elm, toggled) {
                     if (toggled !== true && toggled !== false) {
-                        console.log($elm);
                         var prop        = $elm[0].name; //offsetParent.innerText.replace(/(\r\n|\n|\r)/gm,"");
                         var pickedColor = $elm.text;
                         changeColor(prop, pickedColor);
@@ -396,7 +424,7 @@ eb.onopen = function()
             .css('background-color', value);
         }
 
-        li.append($(label).css('color', fontColor))
+        li.append($(label).css('color', colors.font))
             .append(input);
 
         if (true === dontAppend) {
@@ -450,44 +478,44 @@ eb.onopen = function()
      * Change theme colors undso
      */
     var changeTheme = function(theme) {
-
         renderTheme(theme);
 
         $('#theme-style').remove();
         injectStyles(theme.css);
-        color           = d3.scaleOrdinal(theme.colors.amount);
-        headerColor     = theme.colors.header;
-        headerFontColor = theme.colors.headerFont;
-        fontColor       = theme.colors.font;
-        backgroundColor = theme.colors.background;
-        axisColor       = theme.colors.axis;
-        lineColor       = theme.colors.line;
-
-        inputBackgroundColor = theme.colors.input[0];
-        inputInsetColor      = theme.colors.input[1];
-        inputColor           = theme.colors.input[2];
+        color  = d3.scaleOrdinal(theme.colors.amount);
+        colors = {
+            'header':           theme.colors.header,
+            'headerFont':       theme.colors.headerFont,
+            'font':             theme.colors.font,
+            'background':       theme.colors.background,
+            'line':             theme.colors.line,
+            'axis':             theme.colors.axis,
+            'input_background': theme.colors.input[0],
+            'input_inset'     : theme.colors.input[1],
+            'input':            theme.colors.input[2]
+        };
 
         // change header color
-        d3.selectAll('.accordion-title').transition().duration(500).style('background-color', headerColor);
-        d3.selectAll('.overlay-title').transition().duration(500).style('background-color', headerColor);
-        $('#config-overlay').css('border-color', headerColor);
+        d3.selectAll('.accordion-title').transition().duration(500).style('background-color', colors.header);
+        d3.selectAll('.overlay-title').transition().duration(500).style('background-color', colors.header);
+        $('#config-overlay').css('border-color', colors.header);
 
         // change body/background color
         var colorParts = ['body', '#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
         $.each(colorParts, function(key, value) {
-            d3.select(value).transition().duration(500).style('background-color', backgroundColor)
+            d3.select(value).transition().duration(500).style('background-color', colors.background)
         });
 
         // change input color
-        d3.selectAll('.input-text').transition().duration(500).style('background', inputBackgroundColor);
+        d3.selectAll('.input-text').transition().duration(500).style('background', colors.input_background);
 
-        d3.selectAll('.input-text').transition().duration(500).style('box-shadow', inputInsetColor);
+        d3.selectAll('.input-text').transition().duration(500).style('box-shadow', colors.input_inset);
 
-        d3.selectAll('.input-text').transition().duration(500).style('color', inputColor);
+        d3.selectAll('.input-text').transition().duration(500).style('color', colors.input);
 
-        d3.select('#percent').transition().duration(500).style('fill', axisColor);
+        d3.select('#percent').transition().duration(500).style('fill', colors.axis);
 
-        d3.selectAll('form').selectAll('label').transition().duration(500).style('color', fontColor); // hä?
+        d3.selectAll('form').selectAll('label').transition().duration(500).style('color', colors.font); // hä?
 
         updateData();
     };
@@ -783,8 +811,6 @@ eb.onopen = function()
             delete theme._id;
         }
 
-        console.log('theme');
-        console.log(theme);
         eb.send(action, theme, function(reply) {
             if (reply) {
                 changeTheme(theme);
@@ -808,88 +834,127 @@ eb.onopen = function()
         if (element.match(/_/)) {
             var mappingKey = element.split('_')[1];
             element        = element.split('_')[0];
-            element        = element + '_' + colorMapping[element][mappingKey];
+            var objectKey  = Object.keys(colorMapping[element][mappingKey]);
+            var property   = colorMapping[element][mappingKey][objectKey];
+            element        = element + '_' + objectKey;
         }
+
+        colors[element] = color;
 
         switch (element) {
             case 'header':
-                headerColor = color;
-                var colorParts = ['#menu'];
+                var colorParts = ['#menu','.accordion-title','.overlay-title'];
                 $.each(colorParts, function(key, value) {
-                    d3.select(value)
+                    d3.selectAll(value)
                         .transition()
                         .duration(500)
-                        .style('background-color', headerColor);
+                        .style('background-color', color);
                 });
-                d3.selectAll('.accordion-title')
+                $('.overlay').css('border-color', color);
+                break;
+            case 'input_background':
+            case 'input_color':
+                d3.selectAll('.input-text')
                     .transition()
                     .duration(500)
-                    .style('background-color', headerColor);
-                $('#config-overlay').css('border-color', headerColor);
-                d3.selectAll('.overlay-title')
-                    .transition()
-                    .duration(500)
-                    .style('background-color', headerColor);
+                    .style(property, color);
                 break;
-            case 'headerFont':
-                headerFontColor = color;
-                break;
-            case 'font':
-                fontColor = color;
+            case 'table_head':
+            case 'table_color':
+            case 'table_odd':
+            case 'table_even':
+                $.each(property.elements, function(key, value) {
+                    d3.selectAll(value)
+                        .transition()
+                        .duration(500)
+                        .style(property.property, color);
+                });
                 break;
             case 'background':
-                backgroundColor = color;
                 var colorParts = ['body', '#config-overlay', '#erm-overlay', '#wishes-overlay', '#piggy-overlay', '#theme-overlay', '#checkout-overlay', '#upgrade-overlay'];
                 $.each(colorParts, function(key, value) {
                     d3.select(value)
                         .transition()
                         .duration(500)
-                        .style('background-color', backgroundColor);
+                        .style('background-color', color);
                 });
-                break;
-            case 'line':
-                lineColor = color;
-                break;
-            case 'axis':
-                axisColor = color;
-                break;
-            case 'input_background':
-                d3.selectAll('.input-text')
-                    .transition()
-                    .duration(500)
-                    .style('background-color', color);
-                break;
-            case 'input_inset':
-                d3.selectAll('.input-text')
-                    .transition()
-                    .duration(500)
-                    .style('box-shadow', 'inset 0 0 5px 2px' +  color);
-                break;
-            case 'input_color':
-                d3.selectAll('.input-text')
-                    .transition()
-                    .duration(500)
-                    .style('::-webkit-input-placeholder', color)
-                    .style('color', color);
-                break;
-            case 'table_head':
-                d3.selectAll('table thead')
-                    .transition()
-                    .duration(500)
-                    .style('background-color', color);
-                break;
-            case 'table_color':
-                d3.selectAll('th')
-                    .transition()
-                    .duration(500)
-                    .style('color', color);
-                d3.selectAll('td')
-                    .transition()
-                    .duration(500)
-                    .style('color', color);
                 break;
         }
     };
+
+    /**
+     * Change color
+     *
+     * @param element
+     * @param color
+     * @deprecated
+     */
+    // var changeColor = function(element, color) {//
+    //     switch (element) {
+    //         case 'header':
+    //             var colorParts = ['#menu'];
+    //             $.each(colorParts, function(key, value) {
+    //                 d3.select(value)
+    //                     .transition()
+    //                     .duration(500)
+    //                     .style('background-color', headerColor);
+    //             });
+    //             d3.selectAll('.accordion-title')
+    //                 .transition()
+    //                 .duration(500)
+    //                 .style('background-color', headerColor);
+    //             $('#config-overlay').css('border-color', headerColor);
+    //             d3.selectAll('.overlay-title')
+    //                 .transition()
+    //                 .duration(500)
+    //                 .style('background-color', headerColor);
+    //             break;
+    //         case 'background':
+    //             var colorParts = ['body', '#config-overlay', '#erm-overlay', '#wishes-overlay', '#piggy-overlay', '#theme-overlay', '#checkout-overlay', '#upgrade-overlay'];
+    //             $.each(colorParts, function(key, value) {
+    //                 d3.select(value)
+    //                     .transition()
+    //                     .duration(500)
+    //                     .style('background-color', backgroundColor);
+    //             });
+    //             break;
+    //         case 'input_background':
+    //             d3.selectAll('.input-text')
+    //                 .transition()
+    //                 .duration(500)
+    //                 .style('background-color', color);
+    //             break;
+    //         case 'input_inset':
+    //             d3.selectAll('.input-text')
+    //                 .transition()
+    //                 .duration(500)
+    //                 .style('box-shadow', 'inset 0 0 5px 2px' +  color);
+    //             break;
+    //         case 'input_color':
+    //             d3.selectAll('.input-text')
+    //                 .transition()
+    //                 .duration(500)
+    //                 .style('::-webkit-input-placeholder', color)
+    //                 .style('color', color);
+    //             break;
+    //         case 'table_head':
+    //             d3.selectAll('table thead')
+    //                 .transition()
+    //                 .duration(500)
+    //                 .style('background-color', color);
+    //             break;
+    //         case 'table_color':
+    //             d3.selectAll('th')
+    //                 .transition()
+    //                 .duration(500)
+    //                 .style('color', color);
+    //             d3.selectAll('td')
+    //                 .transition()
+    //                 .duration(500)
+    //                 .style('color', color);
+    //             break;
+    //     }
+    // };
 
     /**
      * Accordion

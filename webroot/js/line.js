@@ -172,9 +172,9 @@ function updateLine(result) {
 
         axisYLineText.text(config['calculation-base']);
 
-        d3.selectAll('line').transition().duration(500).style('stroke', axisColor);
-        d3.selectAll('.domain').transition().duration(500).style('stroke', axisColor);
-        d3.select('#svg3').selectAll('text').transition().duration(500).style('fill', axisColor);
+        d3.selectAll('line').transition().duration(500).style('stroke', colors.axis);
+        d3.selectAll('.domain').transition().duration(500).style('stroke', colors.axis);
+        d3.select('#svg3').selectAll('text').transition().duration(500).style('fill', colors.axis);
 
         d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
     });

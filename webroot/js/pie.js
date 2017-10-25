@@ -70,7 +70,7 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     })
     .attr("fill", function(d, i) { return color(i); })
     .attr("stroke-width", 4)
-    .attr("stroke", backgroundColor)
+    .attr("stroke", colors.background)
     .attr("d", arc1)
     .each(function(d) { this._current = d; });
 
@@ -78,7 +78,7 @@ svg1.append("text")
     .attr("id","percent")
     .attr("transform", "translate(0,10)")
     .attr("text-anchor", "middle")
-    .style("fill", headerFontColor)
+    .style("fill", colors.headerFont)
     .style("font-size", '8vh')
     .style("opacity", 0);
 
@@ -105,7 +105,7 @@ function updatePie(result) {
         .duration(1000)
         .ease(d3.easeElastic)
         .style("fill", function(d, i) { return color(i); })
-        .style('stroke', backgroundColor)
+        .style('stroke',  colors.background)
         .attrTween("d", arcTween);
 }
 

@@ -3,7 +3,7 @@ var svgHeader = d3.select('#header')
     .attr("id", "svgHeader")
     .attr("width", (window.innerWidth))
     .attr("height", headerHeight)
-    .style("background", headerColor);
+    .style("background", colors.header);
 
 var quantityTotalLabel = svgHeader.append("text")
     .attr("id","total-quantity")
@@ -11,7 +11,7 @@ var quantityTotalLabel = svgHeader.append("text")
     .attr('x', (window.outerWidth - 510))
     .attr('y', ($('#header').outerHeight() / 1.4))
     .attr("text-anchor", "end")
-    .style("fill", headerColor)
+    .style("fill", colors.header)
     .style("font-size", headerFontSize);
 
 
@@ -21,7 +21,7 @@ var weightTotalLabel = svgHeader.append("text")
     .attr('x', (window.outerWidth - 310))
     .attr('y', ($('#header').outerHeight() / 1.4))
     .attr("text-anchor", "end")
-    .style("fill", headerColor)
+    .style("fill", colors.header)
     .style("font-size", headerFontSize);
 
 var kgLabel = svgHeader.append("text")
@@ -30,7 +30,7 @@ var kgLabel = svgHeader.append("text")
     .attr('x', (window.outerWidth - 280))
     .attr('y', ($('#header').outerHeight() / 1.4))
     .attr("text-anchor", "end")
-    .style("fill", headerFontColor)
+    .style("fill", colors.headerFont)
     .style("font-size", '24px');
 
 var sumTotalLabel = svgHeader.append("text")
@@ -39,7 +39,7 @@ var sumTotalLabel = svgHeader.append("text")
     .attr('x', (window.outerWidth - 30))
     .attr('y', ($('#header').outerHeight() / 1.4))
     .attr("text-anchor", "end")
-    .style("fill", headerColor)
+    .style("fill", colors.header)
     .style("font-size", headerFontSize);
 
 svgHeader.append("text")
@@ -47,7 +47,7 @@ svgHeader.append("text")
     .attr("id","currency")
     .attr("transform", "translate(" + (window.outerWidth - 10) + "," + ($('#header').outerHeight() / 1.4) + ")")
     .attr("text-anchor", "end")
-    .style("fill", headerFontColor)
+    .style("fill", colors.headerFont)
     .style("font-size", '24px');
 
 
@@ -83,10 +83,10 @@ function updateHeader(result) {
     var newXQty = parseInt(weightTotalLabel._groups[0][0].getBBox().x);
     quantityTotalLabel.attr('x', (newXQty- 80)).transition().duration();
 
-    quantityTotalLabel.transition().duration(500).style('fill', headerFontColor);
-    sumTotalLabel.transition().duration(500).style('fill', headerFontColor);
-    weightTotalLabel.transition().duration(500).style('fill', headerFontColor);
-    svgHeader.transition().duration(500).style("background-color", headerColor);
+    quantityTotalLabel.transition().duration(500).style('fill',  colors.headerFont);
+    sumTotalLabel.transition().duration(500).style('fill', colors.headerFont);
+    weightTotalLabel.transition().duration(500).style('fill', colors.headerFont);
+    svgHeader.transition().duration(500).style("background-color", colors.header);
 
-    d3.selectAll('#menu').transition().duration(500).style('background-color', headerColor);
+    d3.selectAll('#menu').transition().duration(500).style('background-color', colors.header);
 }
