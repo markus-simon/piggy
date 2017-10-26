@@ -196,8 +196,7 @@ eb.onopen = function()
 
         eb.send("runCommand", JSON.stringify(query), function(reply) {
             if (!reply.cause) {
-                var result = reply.result;
-
+                var result  = reply.result;
                 var newData = [];
 
                 if (config['calculation-base'] === 'quantity') {
@@ -207,9 +206,7 @@ eb.onopen = function()
                     });
                 } else if (config['calculation-base'] === 'value') {
                     result.forEach(function(row) {
-
                         row.calculatedTotal = row.sumTotal / 100;
-
                         newData.push(row);
                     });
                 }
@@ -508,13 +505,9 @@ eb.onopen = function()
 
         // change input color
         d3.selectAll('.input-text').transition().duration(500).style('background', colors.input_background);
-
         d3.selectAll('.input-text').transition().duration(500).style('box-shadow', colors.input_inset);
-
         d3.selectAll('.input-text').transition().duration(500).style('color', colors.input);
-
         d3.select('#percent').transition().duration(500).style('fill', colors.axis);
-
         d3.selectAll('form').selectAll('label').transition().duration(500).style('color', colors.font); // hä?
 
         updateData();
@@ -577,20 +570,13 @@ eb.onopen = function()
         var target = $(this).attr('id').split('-')[1];
         $('#header, #nav-icon3').toggleClass('open');
         $(".overlay").fadeOut('slow');
-        switch (target) {
-            case 'upgrade':
-            case 'piggy':
-            case 'checkout':
-                showOverlay(target);
-                break;
-            case 'config':
+
+        if ('' !== target && 'undefined' !== typeof target) {
+            if ('config' === target) {
                 showConfigOverlay();
-                break;
-            case 'theme':
-            case 'erm':
-            case 'wishes':
+            } else {
                 showOverlay(target);
-                break;
+            }
         }
     });
 
@@ -680,8 +666,7 @@ eb.onopen = function()
         if (erm.show === 'on') {
             // showtts || showurl
             if (!erm.showurl && !erm.showtts) {
-                $('#erm-showurl').addClass("invalid-input");
-                $('#erm-showtts').addClass("invalid-input");
+                $('#erm-showurl, #erm-showtts').addClass("invalid-input");
                 $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
                 piggyError(false, 'Du musst mindestens eine Adresse oder einen Text angeben', false);
                 return;
@@ -696,8 +681,7 @@ eb.onopen = function()
                     return;
                 }
             }
-            $('#erm-showurl').removeClass("invalid-input");
-            $('#erm-showtts').removeClass("invalid-input");
+            $('#erm-showurl, #erm-showtts').removeClass("invalid-input");
         }
 
         if (erm.hue === 'on') {
@@ -1036,21 +1020,7 @@ eb.onopen = function()
                     var func = $(column).data('func');
                     html += '<td>' + window[func](value[$(column).data('column')]) + '</td>';
                 } else if ($(column).data('wrap')) {
-                    var elem = $(column).data('wrap').split(/[.#]/);
-                    var sel  = '';
-                    var sel2 = '';
-
-                    if (elem[2]) {
-                        sel2 = value[elem[2].replace('{$','').replace('}','')];
-                    }
-
-                    if (elem[1].match(/./)) {
-                        sel += ' class="' + elem[1].replace('.','') + ' ' + sel2 + '"';
-                    } else if (elem[1].match(/#/)) {
-                        sel += ' id="' + elem[1].replace('#','') + ' ' + sel2 + '"';
-                    }
-
-                    html += '<td><' + elem[0] + sel + '>' + value[key] + '</' + elem[0] + '></td>';
+                    html += wrapValue($(column).data('wrap'), 'td', value);
                 } else {
                     html += '<td>' + value[key] + '</td>';
                 }
@@ -1084,6 +1054,65 @@ eb.onopen = function()
                 });
             });
         }
+    };
+
+    /**
+     * Wrap given value
+     *
+     * @param element
+     * @param type
+     * @param values
+     * @returns {string}
+     */
+    var wrapValue = function(element, type, values) {
+        var html     = '';
+        var wrappers = [];
+
+        if (element.match(/\[/)) {
+            wrappers = element.split(/\[/);
+            $.each(wrappers, function(key, value) {
+               wrappers[key] = value.split(/(?=[.#])/g);
+            });
+        } else {
+            wrappers[0] = element.split(/(?=[.#])/g);
+        }
+
+        html += '<' + type + '>';
+
+        // Wrappers
+        $.each(wrappers, function(key, value) {
+            var attrClass = ' class="';
+            var attrId    = ' id="';
+
+            // Ids or classes
+            $.each(value, function (kk, vv) {
+                var attrSymbol = vv.match(/#/) ? '#' :'.';
+                var needle     = vv.replace('{$', '').replace('}', '').replace(attrSymbol, '');
+
+                if (vv.match(/{/) && true === values.hasOwnProperty(needle)) {
+                    vv = values[needle];
+                }
+
+                if (null !== vv.match(/#/)) {
+                    attrId += vv.replace('#', '') + ' '
+                } else {
+                    attrClass += vv.replace('.', '') + ' '
+                }
+            });
+
+            attrClass += '"';
+            attrId    += '"';
+
+            $(type).wrap('');
+
+            html += '<' + value[0] + attrId + attrClass + '>';
+            if (key === wrappers.length) {
+                $.each(wrappers, function(k, v) {
+                    html += '</' + v[0] + '>';
+                });
+            }
+        });
+        return html += '</' + type + '>';
     };
 
     /**
