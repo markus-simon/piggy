@@ -5,50 +5,62 @@ var svgHeader = d3.select('#header')
     .attr("height", headerHeight)
     .style("background", headerColor);
 
-var quantityTotalLabel = svgHeader.append("text")
-    .attr("id","total-quantity")
-    .attr("class","header-text")
-    .attr('x', (window.outerWidth - 510))
-    .attr('y', ($('#header').outerHeight() / 1.4))
-    .attr("text-anchor", "end")
-    .style("fill", headerColor)
-    .style("font-size", headerFontSize);
+var bla = headerHeight / 2;
 
 
-var weightTotalLabel = svgHeader.append("text")
-    .attr("id","total-weight")
-    .attr("class","header-text")
-    .attr('x', (window.outerWidth - 310))
-    .attr('y', ($('#header').outerHeight() / 1.4))
-    .attr("text-anchor", "end")
-    .style("fill", headerColor)
-    .style("font-size", headerFontSize);
+var g = svgHeader.append('g')
+    .attr('height', headerHeight)
+    .attr('transform', 'translate(0, ' + bla + ')');
 
-var kgLabel = svgHeader.append("text")
-    .text('kg')
-    .attr("id","kg")
-    .attr('x', (window.outerWidth - 280))
-    .attr('y', ($('#header').outerHeight() / 1.4))
-    .attr("text-anchor", "end")
-    .style("fill", headerFontColor)
-    .style("font-size", '24px');
+var begin = window.innerWidth - 40;
 
-var sumTotalLabel = svgHeader.append("text")
-    .attr("id","total-sum-pie")
-    .attr("class","header-text")
-    .attr('x', (window.outerWidth - 30))
-    .attr('y', ($('#header').outerHeight() / 1.4))
-    .attr("text-anchor", "end")
-    .style("fill", headerColor)
-    .style("font-size", headerFontSize);
-
-svgHeader.append("text")
+var euro = g.append("text")
     .html('&euro;')
     .attr("id","currency")
-    .attr("transform", "translate(" + (window.outerWidth - 10) + "," + ($('#header').outerHeight() / 1.4) + ")")
-    .attr("text-anchor", "end")
+    .attr("x", begin )
+    .attr('alignment-baseline', 'mathematical')
     .style("fill", headerFontColor)
-    .style("font-size", '24px');
+    .style("font-size", headerFontSize / 1.4);
+
+var sumTotalLabel = g.append("text")
+    .attr("id","total-sum-pie")
+    .attr("class","header-text")
+    .attr('x', parseInt(euro._groups[0][0].getBBox().x) - headerFontSize / 4)
+    .attr("text-anchor", "end")
+    .attr('alignment-baseline', 'central')
+
+.style("fill", headerColor)
+    .style("font-size", headerFontSize);
+
+var kgLabel = g.append("text")
+    .text('kg')
+    .attr("id","kg")
+    .attr("text-anchor", "end")
+    .attr('alignment-baseline', 'mathematical')
+    .style("fill", headerFontColor)
+    .style("font-size", '24px')
+    .style("font-size", headerFontSize / 1.4);
+
+var weightTotalLabel = g.append("text")
+    .attr("id","total-weight")
+    .attr("class","header-text")
+    .attr("text-anchor", "end")
+    .attr('alignment-baseline', 'central')
+    .style("fill", headerColor)
+    .style("font-size", headerFontSize);
+
+var quantityTotalLabel = g.append("text")
+    .attr("id","total-quantity")
+    .attr("class","header-text")
+    .attr("text-anchor", "end")
+    .attr('alignment-baseline', 'central')
+    .style("fill", headerColor)
+    .style("font-size", headerFontSize);
+
+
+
+
+
 
 
 function updateHeader(result) {
@@ -74,14 +86,10 @@ function updateHeader(result) {
     sumTotalLabel.text(formatCurrency(calculatedTotalSum));
     weightTotalLabel.text(formatWeight(calculatedTotalWeight));
 
-    // Move kilogram if sum label gets longer
-    var newX = parseInt(sumTotalLabel._groups[0][0].getBBox().x);
-    weightTotalLabel.attr('x', (newX - 80)).transition().duration();
-    kgLabel.attr('x', (newX - 50)).transition().duration();
 
-    // Move qty if kilogram label gets longer
-    var newXQty = parseInt(weightTotalLabel._groups[0][0].getBBox().x);
-    quantityTotalLabel.attr('x', (newXQty- 80)).transition().duration();
+    kgLabel.attr('x', parseInt(sumTotalLabel._groups[0][0].getBBox().x) - headerFontSize / 4 * 3);
+    weightTotalLabel.attr('x', parseInt(kgLabel._groups[0][0].getBBox().x) - headerFontSize / 4);
+    quantityTotalLabel.attr('x', parseInt(weightTotalLabel._groups[0][0].getBBox().x) - headerFontSize / 4 * 3);
 
     quantityTotalLabel.transition().duration(500).style('fill', headerFontColor);
     sumTotalLabel.transition().duration(500).style('fill', headerFontColor);

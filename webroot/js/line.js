@@ -70,7 +70,7 @@ var linePath = city.append("path")
     .attr("class", "line")
     .attr("id", function(d, i) { return "line_" + i })
     .style("fill", "none")
-    .style("stroke-width", "2")
+    .style("stroke-width", "1")
     .attr("d", function (d) {
         return line(d.values);
     })
@@ -78,6 +78,12 @@ var linePath = city.append("path")
         return color(i);
     })
     .on("mouseover", function(d, i) {
+        if (config['calculation-base'] === 'quantity') {
+            d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sum;
+        } else if (config['calculation-base'] === 'value') {
+            d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sumTotal / 100;
+        }
+        console.log(d.values[d.values.length - 1]);
         piggySelection('on', d.values[d.values.length - 1], i);
     })
     .on("mouseout", function(d, i) {

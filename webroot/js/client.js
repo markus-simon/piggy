@@ -27,7 +27,7 @@ var colorMapping = {
 
 var headerColor     = "#CB3577";
 var headerFontColor = "#fff";
-var headerFontSize  = (window.outerHeight / 16) * (layout / 1.4);
+var headerFontSize  = (window.innerHeight / 17) * (layout / 2);
 var fontColor       = '#fff';
 var backgroundColor = "#ffdddc";
 var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231","#ff55d2"]);

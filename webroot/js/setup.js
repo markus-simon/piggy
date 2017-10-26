@@ -4,21 +4,21 @@ var margin = {top: 5, right: 5, bottom: 5, left: 0};
 
 var width, height, layout;
 
-var headerHeight    = window.outerHeight /10;
+var headerHeight    = window.innerHeight /10;
 
-if (window.outerWidth < 800) {
+if (window.innerWidth < 800) {
     layout = 1;
-    width  = window.outerWidth;
-    height = window.outerHeight - headerHeight;
+    width  = window.innerWidth;
+    height = window.innerHeight - headerHeight;
 } else {
     layout = 2;
-    width  = window.outerWidth / 2;
-    height = (window.outerHeight / 2) - (headerHeight);
+    width  = window.innerWidth / 2;
+    height = (window.innerHeight / 2) - (headerHeight);
 }
 
 var radius   = Math.min(width, height) / 2;
 
-var barWidth = window.outerWidth / 30;
+var barWidth = window.innerWidth / 30;
 
 var formatPercent  = d3.format(",.1%");
 var formatQuantity = d3.format(",.0f");

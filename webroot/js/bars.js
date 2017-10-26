@@ -9,7 +9,7 @@ var y = d3.scaleLinear()
     .domain([0,0])
     .range([height - 25, 25]);
 
-var xAxis = d3.axisBottom(x).tickSizeInner(-height + 35);
+var xAxis = d3.axisBottom(x);
 var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width  + 65);
 
 
@@ -78,7 +78,7 @@ function updateBars(result) {
 
     y.domain([0, d3.max(newData, function(d) { return d.calculatedTotal })]);
 
-    var xAxis = d3.axisBottom(x).tickSizeInner(-height + 35);
+    var xAxis = d3.axisBottom(x);
     var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width + 65);
 
     var chart = d3.select('#group2').select("g");
