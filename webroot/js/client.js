@@ -469,6 +469,8 @@ eb.onopen = function()
 
         // change header color
         d3.selectAll('.accordion-title').transition().duration(500).style('background-color', headerColor);
+        d3.selectAll('.overlay-title').transition().duration(500).style('background-color', headerColor);
+        $('#config-overlay').css('border-color', headerColor);
 
         // change body/background color
         var colorParts = ['body', '#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
@@ -820,6 +822,11 @@ eb.onopen = function()
                         .style('background-color', headerColor);
                 });
                 d3.selectAll('.accordion-title')
+                    .transition()
+                    .duration(500)
+                    .style('background-color', headerColor);
+                $('#config-overlay').css('border-color', headerColor);
+                d3.selectAll('.overlay-title')
                     .transition()
                     .duration(500)
                     .style('background-color', headerColor);

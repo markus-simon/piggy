@@ -86,7 +86,8 @@ body {
     min-height: 100%;
     width: 98%;
     margin-top: 10px;
-    border: 2px solid #CB3577;
+    border-width: 2px;
+    border-style: solid;
     left: 50%;
     margin-left: -49%;
 }
@@ -94,7 +95,7 @@ body {
     color: #fff;
     padding: 10px;
     font-weight: bold;
-    background: #CB3577;
+    background-color: #CB3577;
 }
 
 #display {
@@ -358,6 +359,11 @@ body input[type="checkbox"]:checked:before {
     border-radius: 5px;
     color: #fff;
 }
+
+#config-save-li {
+    padding: 15px!important;
+}
+
 
 button {
     cursor: pointer;
@@ -778,10 +784,8 @@ body .theme-preview-container input {
     margin: 20px;
     }
 
-.accordion-content > ul {
-    /*
-    float: left;
-    */
+.accordion-content ul {
+    border: none!important;
     width: 50%;
 }
 
