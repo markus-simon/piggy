@@ -836,7 +836,7 @@ eb.onopen = function()
             element        = element.split('_')[0];
             var objectKey  = Object.keys(colorMapping[element][mappingKey]);
             var property   = colorMapping[element][mappingKey][objectKey];
-            element        = element + '_' + objectKey;
+            element        = element + '_';
         }
 
         colors[element] = color;
@@ -852,17 +852,13 @@ eb.onopen = function()
                 });
                 $('.overlay').css('border-color', color);
                 break;
-            case 'input_background':
-            case 'input_color':
+            case 'input_':
                 d3.selectAll('.input-text')
                     .transition()
                     .duration(500)
                     .style(property, color);
                 break;
-            case 'table_head':
-            case 'table_color':
-            case 'table_odd':
-            case 'table_even':
+            case 'table_':
                 $.each(property.elements, function(key, value) {
                     d3.selectAll(value)
                         .transition()
@@ -881,80 +877,6 @@ eb.onopen = function()
                 break;
         }
     };
-
-    /**
-     * Change color
-     *
-     * @param element
-     * @param color
-     * @deprecated
-     */
-    // var changeColor = function(element, color) {//
-    //     switch (element) {
-    //         case 'header':
-    //             var colorParts = ['#menu'];
-    //             $.each(colorParts, function(key, value) {
-    //                 d3.select(value)
-    //                     .transition()
-    //                     .duration(500)
-    //                     .style('background-color', headerColor);
-    //             });
-    //             d3.selectAll('.accordion-title')
-    //                 .transition()
-    //                 .duration(500)
-    //                 .style('background-color', headerColor);
-    //             $('#config-overlay').css('border-color', headerColor);
-    //             d3.selectAll('.overlay-title')
-    //                 .transition()
-    //                 .duration(500)
-    //                 .style('background-color', headerColor);
-    //             break;
-    //         case 'background':
-    //             var colorParts = ['body', '#config-overlay', '#erm-overlay', '#wishes-overlay', '#piggy-overlay', '#theme-overlay', '#checkout-overlay', '#upgrade-overlay'];
-    //             $.each(colorParts, function(key, value) {
-    //                 d3.select(value)
-    //                     .transition()
-    //                     .duration(500)
-    //                     .style('background-color', backgroundColor);
-    //             });
-    //             break;
-    //         case 'input_background':
-    //             d3.selectAll('.input-text')
-    //                 .transition()
-    //                 .duration(500)
-    //                 .style('background-color', color);
-    //             break;
-    //         case 'input_inset':
-    //             d3.selectAll('.input-text')
-    //                 .transition()
-    //                 .duration(500)
-    //                 .style('box-shadow', 'inset 0 0 5px 2px' +  color);
-    //             break;
-    //         case 'input_color':
-    //             d3.selectAll('.input-text')
-    //                 .transition()
-    //                 .duration(500)
-    //                 .style('::-webkit-input-placeholder', color)
-    //                 .style('color', color);
-    //             break;
-    //         case 'table_head':
-    //             d3.selectAll('table thead')
-    //                 .transition()
-    //                 .duration(500)
-    //                 .style('background-color', color);
-    //             break;
-    //         case 'table_color':
-    //             d3.selectAll('th')
-    //                 .transition()
-    //                 .duration(500)
-    //                 .style('color', color);
-    //             d3.selectAll('td')
-    //                 .transition()
-    //                 .duration(500)
-    //                 .style('color', color);
-    //             break;
-    //     }
-    // };
 
     /**
      * Accordion
