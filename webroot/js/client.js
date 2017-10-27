@@ -247,13 +247,9 @@ eb.onopen = function()
                 }
                 showConfigOverlay();
             }
-
-            if (e.keyCode === 87) showOverlay('wishes');
-            if (e.keyCode === 69) showOverlay('erm');
-            if (e.keyCode === 72) showOverlay('piggy');
-            if (e.keyCode === 75) showOverlay('checkout');
-            if (e.keyCode === 84) showOverlay('theme');
-            if (e.keyCode === 85) showOverlay('upgrade');
+            if (true === keyMapping.hasOwnProperty(e.keyCode)) {
+                showOverlay(keyMapping[e.keyCode]);
+            }
         }
     });
 
@@ -722,9 +718,6 @@ eb.onopen = function()
             $('#erm-huesetting').removeClass("invalid-input");
         }
 
-
-
-
         erm.huepath = getHuePath();
 
         eb.send(action, erm, function(reply) {
@@ -772,16 +765,16 @@ eb.onopen = function()
         $.each(theme , function(key, value) {
             if (key !== '_id' && key !== 'collection' && key !== 'wallpaper' && key !== 'name' && key !== 'message_created_at' && key !== 'css') {
                 colors[key] = value;
-                delete theme[key]
+                delete theme[key];
             }
             if (key.match(/amount_/)) {
-                delete colors[key]
+                delete colors[key];
             }
             if (key.match(/table_/)) {
-                delete colors[key]
+                delete colors[key];
             }
             if (key.match(/input_/)) {
-                delete colors[key]
+                delete colors[key];
             }
         });
 
