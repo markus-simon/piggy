@@ -40,6 +40,15 @@ var locale = {
     "shortMonths": ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"]
 };
 
+var keyMapping = {
+    87: 'wishes',
+    69: 'erm',
+    72: 'piggy',
+    75: 'checkout',
+    84: 'theme',
+    85: 'upgrade'
+};
+
 d3.formatDefaultLocale(locale);
 
 var piggyLocal = d3.local();

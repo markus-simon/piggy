@@ -169,8 +169,7 @@ eb.onopen = function()
 
         eb.send("runCommand", JSON.stringify(query), function(reply) {
             if (!reply.cause) {
-                var result = reply.result;
-
+                var result  = reply.result;
                 var newData = [];
 
                 if (config['calculation-base'] === 'quantity') {
@@ -221,13 +220,9 @@ eb.onopen = function()
                 }
                 showConfigOverlay();
             }
-
-            if (e.keyCode === 87) showOverlay('wishes');
-            if (e.keyCode === 69) showOverlay('erm');
-            if (e.keyCode === 72) showOverlay('piggy');
-            if (e.keyCode === 75) showOverlay('checkout');
-            if (e.keyCode === 84) showOverlay('theme');
-            if (e.keyCode === 85) showOverlay('upgrade');
+            if (true === keyMapping.hasOwnProperty(e.keyCode)) {
+                showOverlay(keyMapping[e.keyCode]);
+            }
         }
     });
 
@@ -553,15 +548,13 @@ eb.onopen = function()
             case 'upgrade':
             case 'piggy':
             case 'checkout':
-                showOverlay(target);
-                break;
-            case 'config':
-                showConfigOverlay();
-                break;
             case 'theme':
             case 'erm':
             case 'wishes':
                 showOverlay(target);
+                break;
+            case 'config':
+                showConfigOverlay();
                 break;
         }
     });
@@ -760,16 +753,16 @@ eb.onopen = function()
         $.each(theme , function(key, value) {
             if (key !== '_id' && key !== 'collection' && key !== 'wallpaper' && key !== 'name' && key !== 'message_created_at' && key !== 'css') {
                 colors[key] = value;
-                delete theme[key]
+                delete theme[key];
             }
             if (key.match(/amount_/)) {
-                delete colors[key]
+                delete colors[key];
             }
             if (key.match(/table_/)) {
-                delete colors[key]
+                delete colors[key];
             }
             if (key.match(/input_/)) {
-                delete colors[key]
+                delete colors[key];
             }
         });
 
