@@ -1103,8 +1103,6 @@ eb.onopen = function()
             attrClass += '"';
             attrId    += '"';
 
-            $(type).wrap('');
-
             html += '<' + value[0] + attrId + attrClass + '>';
             if (key === wrappers.length) {
                 $.each(wrappers, function(k, v) {
