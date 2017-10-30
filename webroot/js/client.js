@@ -676,7 +676,7 @@ eb.onopen = function()
     var validate = function(form, stopFirstError) {
         $.each(form, function(element, value) {
             var dependsOn;
-            var dependancyCheck = true;
+            var dependencyCheck = true;
             var validateCheck   = true;
             var selector = $('#' + form['collection'] + '-' + element);
 
@@ -699,20 +699,21 @@ eb.onopen = function()
             if (selector[0].dataset['depends']) {
                 dependsOn = selector[0].dataset['depends'].split('.');
                 if (form[dependsOn[0].replace('$', '')] !== dependsOn[1]) {
-                    dependancyCheck = false;
+                    dependencyCheck = false;
                 }
             }
 
-            if (('true' === selector[0].dataset['required'] && !form[element] && true === dependancyCheck)
+            if (('true' === selector[0].dataset['required'] && !form[element] && true === dependencyCheck)
                 || false === validateCheck
             ) {
-                selector.addClass("invalid-input");
                 if (true === stopFirstError) {
                     if (selector[0].dataset['err_msg']) {
                         piggyError(false, selector[0].dataset['err_msg']);
                     }
-                    return;
+                    selector.addClass("invalid-input");
+                    return false;
                 }
+                selector.addClass("invalid-input");
             } else {
                 selector.removeClass("invalid-input");
             }
