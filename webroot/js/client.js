@@ -641,7 +641,7 @@ eb.onopen = function()
             delete erm._id;
         }
 
-        if (false === validate(erm)) {
+        if (true === validate(erm, true)) {
             erm.huepath = getHuePath();
             eb.send(action, erm, function (reply) {
                 if (reply) {
@@ -666,7 +666,7 @@ eb.onopen = function()
      * @param form
      * @returns {boolean}
      */
-    var validate = function(form) {
+    var validate = function(form, stopFirstError) {
         $.each(form, function(element, value) {
             var dependsOn;
             var dependancyCheck = true;
@@ -700,13 +700,19 @@ eb.onopen = function()
                 || false === validateCheck
             ) {
                 selector.addClass("invalid-input");
+                if (true === stopFirstError) {
+                    piggyError(false, selector[0].dataset['err_msg']);
+                    return;
+                }
             } else {
                 selector.removeClass("invalid-input");
             }
         });
 
-        if (0 === $('.invalid-input').length) return false;
-        return true;
+        if (0 === $('.invalid-input').length) {
+            return true;
+        }
+        return false;
     };
 
     /**
