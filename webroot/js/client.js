@@ -12,41 +12,41 @@ var dataBars = [
 ];
 
 var colorMapping = {
-    table: {
+    "table": {
         0: {
-            'head': {
-                'property': 'background-color',
-                'elements': ['thead']
+            "head": {
+                "property": 'background-color',
+                "elements": ['thead']
             }
         },
         1: {
-            'odd': {
-                'property': 'background-color',
-                'elements': ['tr:nth-child(odd)']
+            "odd": {
+                "property": 'background-color',
+                "elements": ['tr:nth-child(odd)']
             }
         },
         2: {
-            'even': {
-                'property': 'background-color',
-                'elements': ['tr:nth-child(even)']
+            "even": {
+                "property": 'background-color',
+                "elements": ['tr:nth-child(even)']
             }
         },
         3: {
-            'color': {
-                'property': 'color',
-                'elements': ['th','td']
+            "color": {
+                "property": 'color',
+                "elements": ['th','td']
             }
         }
     },
-    input: {
+    "input": {
         0: {
-            'background': 'background-color'
+            "background": 'background-color'
         },
         1: {
-            'inset': 'box-shadow'
+            "inset": 'box-shadow'
         },
         2: {
-            'color': 'color'
+            "color": 'color'
         }
     }
 };
@@ -55,15 +55,15 @@ var headerFontSize  = (window.innerHeight / 17) * (layout / 2);
 
 var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231","#ff55d2"]);
 var colors          = {
-    'header':           '#CB3577',
-    'headerFont':       '#fff',
-    'font':             '#fff',
-    'background':       '#ffdddc',
-    'line':             '#000',
-    'axis':             '#000',
-    'input_background': '',
-    'input_inset':      '',
-    'input':            ''
+    "header":           '#CB3577',
+    "headerFont":       '#fff',
+    "font":             '#fff',
+    "background":       '#ffdddc',
+    "line":             '#000',
+    "axis":             '#000',
+    "input_background": '',
+    "input_inset":      '',
+    "input":            ''
 };
 
 eb.onopen = function()
@@ -481,15 +481,15 @@ eb.onopen = function()
         injectStyles(theme.css);
         color  = d3.scaleOrdinal(theme.colors.amount);
         colors = {
-            'header':           theme.colors.header,
-            'headerFont':       theme.colors.headerFont,
-            'font':             theme.colors.font,
-            'background':       theme.colors.background,
-            'line':             theme.colors.line,
-            'axis':             theme.colors.axis,
-            'input_background': theme.colors.input[0],
-            'input_inset'     : theme.colors.input[1],
-            'input':            theme.colors.input[2]
+            "header":           theme.colors.header,
+            "headerFont":       theme.colors.headerFont,
+            "font":             theme.colors.font,
+            "background":       theme.colors.background,
+            "line":             theme.colors.line,
+            "axis":             theme.colors.axis,
+            "input_background": theme.colors.input[0],
+            "input_inset":      theme.colors.input[1],
+            "input":            theme.colors.input[2]
         };
 
         // change header color
