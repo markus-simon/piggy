@@ -661,9 +661,16 @@ eb.onopen = function()
     /**
      * Validate form
      *
-     * use data-attributes required, depends, format
+     * use data-attributes required, depends, format, err_msg
      *
-     * @param form
+     * @examples
+     * data-required="true" - field is required
+     * data-format="json" - field value must pass format check for json
+     * data-err_msg="Name fehlt" - error message
+     * data-depends="$show.on" - field is only validated if e.g. checkbox show is on
+     *
+     * @param form - form to validate
+     * @param stopFirstError - stop validation on first error and throw message
      * @returns {boolean}
      */
     var validate = function(form, stopFirstError) {
@@ -701,7 +708,9 @@ eb.onopen = function()
             ) {
                 selector.addClass("invalid-input");
                 if (true === stopFirstError) {
-                    piggyError(false, selector[0].dataset['err_msg']);
+                    if (selector[0].dataset['err_msg']) {
+                        piggyError(false, selector[0].dataset['err_msg']);
+                    }
                     return;
                 }
             } else {
