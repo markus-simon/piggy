@@ -91,13 +91,13 @@ var linePath = city.append("path")
         piggySelection('off', d.values[d.values.length - 1], i);
     });
 
-
-
-
     var area = d3.area()
         .x(function (d) { return x(d.date); })
         .y0(height - 25)
         .y1(function (d) { return y(d.quantity); });
+
+
+
 
     var areaPath = city.append("path")
         .data(cities)
@@ -162,12 +162,12 @@ function updateLine(result) {
 
         if (config['curved'] === 'yes') {
             line = d3.line()
-                .curve(d3.curveBasis)
+               // .curve(d3.curveBasis)
                 .x(function(d) { return x(d.date); })
                 .y(function(d) { return y(d.quantity); });
             if (config['area-lines'] === 'yes') {
                 area = d3.area()
-                    .curve(d3.curveBasis)
+                  //  .curve(d3.curveBasis)
                     .x(function (d) { return x(d.date); })
                     .y0(height - 25)
                     .y1(function (d) { return y(d.quantity); });
@@ -196,7 +196,6 @@ function updateLine(result) {
             areaPath.attr("opacity", 0)
         }
 
-
         linePath.transition()
             .duration(1000)
             .ease(d3.easeElastic)
@@ -204,7 +203,20 @@ function updateLine(result) {
             .style("stroke", function (d, i) { return color(i); })
             .attr("d", function (d) { return line(d.values); });
 
-
+        // Add dots
+        svg.selectAll("point")
+            .data(cities)
+            .enter()
+            .append('circle')
+            .transition()
+            .duration(1000)
+            .ease(d3.easeElastic)
+            .delay(function(d, i) { return 30 * i } )
+            .attr("class", "point")
+            .attr("r", 4)
+            .attr("cx", function(d, i){ return x(d.values[i].date); })
+            .attr("cy", function(d, i){ return y(d.values[i].quantity); })
+            .style("stroke", function (d, i) { return color(i); });
 
         g.transition().select(".x.axis")
             .duration(1000)
@@ -223,6 +235,8 @@ function updateLine(result) {
         d3.select('#svg3').selectAll('text').transition().duration(500).style('fill', colors.axis);
 
         d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
+
+
     });
 }
 
