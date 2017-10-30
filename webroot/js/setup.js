@@ -1,10 +1,7 @@
 // GENERAL #############################################
-
-var margin = {top: 5, right: 5, bottom: 5, left: 0};
-
+var margin       = {top: 5, right: 5, bottom: 5, left: 0};
+var headerHeight = window.innerHeight /10;
 var width, height, layout;
-
-var headerHeight    = window.innerHeight /10;
 
 if (window.innerWidth < 800) {
     layout = 1;
@@ -17,15 +14,8 @@ if (window.innerWidth < 800) {
 }
 
 var radius   = Math.min(width, height) / 2;
-
 var barWidth = window.innerWidth / 30;
-
-var formatPercent  = d3.format(",.1%");
-var formatQuantity = d3.format(",.0f");
-var formatCurrency = d3.format(",.2f");
-var formatWeight   = d3.format(",.3f");
-
-var formats = {
+var formats  = {
     "percent": d3.format(",.1%"),
     "quantity": d3.format(",.0f"),
     "currency": d3.format(",.2f"),

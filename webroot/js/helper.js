@@ -82,10 +82,10 @@ var jsonToForm = function(prefix, data) {
  */
 var piggySelection = function(type, d, i) {
     if ('on' === type) {
-        tweenText('#total-quantity', d.sum, formatQuantity);
-        tweenText('#total-sum-pie', (d.sumTotal/100), formatCurrency);
-        tweenText('#total-weight', calculateWeight(d), formatWeight);
-        d3.select("#percent").text(formatPercent(calculatePercent(d)));
+        tweenText('#total-quantity', d.sum, formats.quantity);
+        tweenText('#total-sum-pie', (d.sumTotal/100), formats.currency);
+        tweenText('#total-weight', calculateWeight(d), formats.weight);
+        d3.select("#percent").text(formats.percent(calculatePercent(d)));
         d3.select("#percent").transition().style('opacity', 1);
         d3.selectAll('.pie-parts').transition()
             .duration(1000)
@@ -107,9 +107,9 @@ var piggySelection = function(type, d, i) {
             return (this.id === 'line_' + i) ? 1 : .1;
         });
     } else {
-        tweenText('#total-quantity', piggyLocal.get(quantityTotalLabel), formatQuantity);
-        tweenText('#total-sum-pie', piggyLocal.get(sumTotalLabel), formatCurrency);
-        tweenText('#total-weight',  piggyLocal.get(weightTotalLabel), formatWeight);
+        tweenText('#total-quantity', piggyLocal.get(quantityTotalLabel), formats.quantity);
+        tweenText('#total-sum-pie', piggyLocal.get(sumTotalLabel), formats.currency);
+        tweenText('#total-weight',  piggyLocal.get(weightTotalLabel), formats.weight);
         d3.select("#percent").transition().style('opacity', 0);
         d3.selectAll(".pie-parts")
             .transition()
