@@ -621,105 +621,158 @@ eb.onopen = function()
             delete erm._id;
         }
 
-        if (!erm.name) {
-            $('#erm-name').addClass("invalid-input");
-            $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
-            piggyError(false, 'Ein Name wird benötigt', false);
-            return;
-        }
-        $('#erm-name').removeClass("invalid-input");
+        // if (!erm.name) {
+        //     $('#erm-name').addClass("invalid-input");
+        //     $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+        //     piggyError(false, 'Ein Name wird benötigt', false);
+        //     return;
+        // }
+        // $('#erm-name').removeClass("invalid-input");
+        //
+        // if (erm.matcher) {
+        //     erm.matcher = JSON.stringify(erm.matcher);
+        //     if (!isJson(erm.matcher)) {
+        //         $('#erm-matcher').addClass("invalid-input");
+        //         $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+        //         piggyError(false, 'Falscher Syntax', false);
+        //         return;
+        //     }
+        // } else {
+        //     erm.matcher = '';
+        // }
+        // $('#erm-matcher').removeClass("invalid-input");
+        //
+        // if (erm.show === 'on') {
+        //     // showtts || showurl
+        //     if (!erm.showurl && !erm.showtts) {
+        //         $('#erm-showurl').addClass("invalid-input");
+        //         $('#erm-showtts').addClass("invalid-input");
+        //         $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+        //         piggyError(false, 'Du musst mindestens eine Adresse oder einen Text angeben', false);
+        //         return;
+        //     }
+        //
+        //     // showurl
+        //     if (erm.showurl) {
+        //         if (checkUrl(erm.showurl) !== true) {
+        //             $('#erm-showurl').addClass("invalid-input");
+        //             $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+        //             piggyError(false, 'Du musst eine gueltige Adresse angeben', false);
+        //             return;
+        //         }
+        //     }
+        //     $('#erm-showurl').removeClass("invalid-input");
+        //     $('#erm-showtts').removeClass("invalid-input");
+        // }
+        //
+        // if (erm.hue === 'on') {
+        //
+        //     // url
+        //     if (!erm.hueurl) {
+        //         $('#erm-hueurl').addClass("invalid-input");
+        //         $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+        //         piggyError(false, 'Du musst eine Adresse angeben', false);
+        //         return;
+        //     }
+        //     $('#erm-hueurl').removeClass("invalid-input");
+        //
+        //     // key
+        //     if (!erm.huekey) {
+        //         $('#erm-huekey').addClass("invalid-input");
+        //         $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+        //         piggyError(false, 'Du musst den Schluessel angeben', false);
+        //         return;
+        //     }
+        //     $('#erm-huekey').removeClass("invalid-input");
+        //
+        //     // setting
+        //     if (erm.huesetting) {
+        //         erm.huesetting = JSON.stringify(erm.huesetting);
+        //         if (!isJson(erm.huesetting)) {
+        //             $('#erm-huesetting').addClass("invalid-input");
+        //             $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+        //             piggyError(false, 'Falscher Syntax', false);
+        //             return;
+        //         }
+        //     } else {
+        //         $('#erm-huesetting').addClass("invalid-input");
+        //         $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
+        //         piggyError(false, 'Du musst angeben was die Lampen machen sollen', false);
+        //         return;
+        //     }
+        //     $('#erm-huesetting').removeClass("invalid-input");
+        // }
 
-        if (erm.matcher) {
-            erm.matcher = JSON.stringify(erm.matcher);
-            if (!isJson(erm.matcher)) {
-                $('#erm-matcher').addClass("invalid-input");
-                $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
-                piggyError(false, 'Falscher Syntax', false);
-                return;
-            }
-        } else {
-            erm.matcher = '';
-        }
-        $('#erm-matcher').removeClass("invalid-input");
-
-        if (erm.show === 'on') {
-            // showtts || showurl
-            if (!erm.showurl && !erm.showtts) {
-                $('#erm-showurl').addClass("invalid-input");
-                $('#erm-showtts').addClass("invalid-input");
-                $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
-                piggyError(false, 'Du musst mindestens eine Adresse oder einen Text angeben', false);
-                return;
-            }
-
-            // showurl
-            if (erm.showurl) {
-                if (checkUrl(erm.showurl) !== true) {
-                    $('#erm-showurl').addClass("invalid-input");
-                    $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
-                    piggyError(false, 'Du musst eine gueltige Adresse angeben', false);
+        if (true === validate(erm, true)) {
+            erm.huepath = getHuePath();
+            eb.send(action, erm, function (reply) {
+                if (reply) {
+                    $('#erm-form')[0].reset();
+                    $('.show, .hue').hide();
+                    $('.invalid-input').removeClass('invalid-input');
+                    $('#erm-overlay').fadeOut("slow");
+                } else {
+                    piggyError('Speichern ging nicht', false);
                     return;
                 }
-            }
-            $('#erm-showurl').removeClass("invalid-input");
-            $('#erm-showtts').removeClass("invalid-input");
+            });
         }
+        event.preventDefault();
+    };
 
-        if (erm.hue === 'on') {
+    /**
+     * Validate form
+     *
+     * use data-attributes required, depends, format
+     *
+     * @param form
+     * @returns {boolean}
+     */
+    var validate = function(form, stopFirstError) {
+        $.each(form, function(element, value) {
+            var dependsOn;
+            var dependancyCheck = true;
+            var validateCheck   = true;
+            var selector = $('#' + form['collection'] + '-' + element);
 
-            // url
-            if (!erm.hueurl) {
-                $('#erm-hueurl').addClass("invalid-input");
-                $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
-                piggyError(false, 'Du musst eine Adresse angeben', false);
-                return;
+            if ('undefined' === typeof selector[0]) return true;
+
+            if (selector[0].dataset['validate'] && '' !== form[element]) {
+                switch (selector[0].dataset['validate']) {
+                    case 'json':
+                        form[element] = JSON.stringify(form[element]);
+                        if (!isJson(form[element]))
+                            validateCheck = false;
+                        break;
+                    case 'url':
+                        if (true !== checkUrl(form[element]))
+                            validateCheck = false;
+                        break;
+                }
             }
-            $('#erm-hueurl').removeClass("invalid-input");
 
-            // key
-            if (!erm.huekey) {
-                $('#erm-huekey').addClass("invalid-input");
-                $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
-                piggyError(false, 'Du musst den Schluessel angeben', false);
-                return;
+            if (selector[0].dataset['depends']) {
+                dependsOn = selector[0].dataset['depends'].split('.');
+                if (form[dependsOn[0].replace('$', '')] !== dependsOn[1]) {
+                    dependancyCheck = false;
+                }
             }
-            $('#erm-huekey').removeClass("invalid-input");
 
-            // setting
-            if (erm.huesetting) {
-                erm.huesetting = JSON.stringify(erm.huesetting);
-                if (!isJson(erm.huesetting)) {
-                    $('#erm-huesetting').addClass("invalid-input");
-                    $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
-                    piggyError(false, 'Falscher Syntax', false);
+            if (('true' === selector[0].dataset['required'] && !form[element] && true === dependancyCheck)
+                || false === validateCheck
+            ) {
+                selector.addClass("invalid-input");
+                if (true === stopFirstError) {
+                    piggyError(false, selector[0].dataset['err_msg']);
                     return;
                 }
             } else {
-                $('#erm-huesetting').addClass("invalid-input");
-                $('html, body').animate({scrollTop: ($(".invalid-input").offset().top)}, 'slow');
-                piggyError(false, 'Du musst angeben was die Lampen machen sollen', false);
-                return;
-            }
-            $('#erm-huesetting').removeClass("invalid-input");
-        }
-
-
-
-
-        erm.huepath = getHuePath();
-
-        eb.send(action, erm, function(reply) {
-            if (reply) {
-                $('#erm-form')[0].reset();
-                $('.show, .hue').hide();
-                $('.invalid-input').removeClass('invalid-input');
-                $('#erm-overlay').fadeOut("slow");
-            } else {
-                piggyError('Speichern ging nicht', false);
-                return;
+                selector.removeClass("invalid-input");
             }
         });
-        event.preventDefault();
+
+        if (0 === $('.invalid-input').length) return true;
+        return false;
     };
 
     /**

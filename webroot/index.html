@@ -148,43 +148,43 @@
                             <!-- name -->
                             <li class="input">
                                 <label for="erm-name">Name</label>
-                                <input class="input-text" id="erm-name" name="name" placeholder="Name" required/>
+                                <input data-required="true" data-err_msg="Name fehlt" class="input-text" id="erm-name" name="name" placeholder="Name" />
                             </li>
 
                             <!-- matcher -->
                             <li class="input textarea">
                                 <label for="erm-matcher">Matcher</label>
-                                <textarea class="input-text" id="erm-matcher" cols="40" rows="6" name="matcher" placeholder="Mongo Syntax"></textarea>
+                                <textarea data-format="json" class="input-text" id="erm-matcher" cols="40" rows="6" name="matcher" placeholder="Mongo Syntax"></textarea>
                             </li>
 
                             <!-- show -->
                             <li class="input">
                                 <input name="show" type="hidden" value="off" />
                                 <label for="erm-show">Show</label>
-                                <input id="erm-show" name="show" type="checkbox" unchecked/>
+                                <input id="erm-show" name="show" type="checkbox" />
                             </li>
                             <li class="input show">
                                 <label for="erm-showurl">URL</label>
-                                <input class="input-text" id="erm-showurl" name="showurl" placeholder="http://localhost/random.mp4" required/>
+                                <input data-required="true" data-depends="$show.on" class="input-text" id="erm-showurl" name="showurl" placeholder="http://localhost/random.mp4" />
                             </li>
                             <li class="input show">
                                 <label for="erm-showtts">TTS</label>
-                                <input class="input-text" id="erm-showtts" name="showtts" placeholder="Danke!" required/>
+                                <input data-required="true" data-depends="$show.on" class="input-text" id="erm-showtts" name="showtts" placeholder="Danke!" />
                             </li>
 
                             <!-- hue -->
                             <li class="input">
                                 <input name="hue" type="hidden" value="off" />
                                 <label for="erm-hue">Hue</label>
-                                <input id="erm-hue" name="hue" type="checkbox" unchecked/>
+                                <input id="erm-hue" name="hue" type="checkbox" />
                             </li>
                             <li class="input hue">
                                 <label for="erm-hueurl">URL</label>
-                                <input class="input-text" id="erm-hueurl" name="hueurl" placeholder="http://192.168.1.2" required/>
+                                <input data-format="url" data-required="true" data-depends="$hue.on" class="input-text" id="erm-hueurl" name="hueurl" placeholder="http://192.168.1.2" />
                             </li>
                             <li class="input hue">
                                 <label for="erm-huekey">Key</label>
-                                <input class="input-text" id="erm-huekey" name="huekey" placeholder="IKQDytcsdi4kunzk4GuTXUu8s34c8y3iKRCKLxVh" required/>
+                                <input data-required="true" data-depends="$hue.on" class="input-text" id="erm-huekey" name="huekey" placeholder="IKQDytcsdi4kunzk4GuTXUu8s34c8y3iKRCKLxVh" />
                             </li>
                             <li id="connect-li" class="input hue">
                                 <label for="erm-hueconnect">Connect</label>
