@@ -82,6 +82,11 @@ var jsonToForm = function(prefix, data) {
  */
 var piggySelection = function(type, d, i) {
     if ('on' === type) {
+
+        console.log(d);
+        console.log(i);
+
+
         tweenText('#total-quantity', d.sum, formatQuantity);
         tweenText('#total-sum-pie', (d.sumTotal/100), formatCurrency);
         tweenText('#total-weight', calculateWeight(d), formatWeight);
@@ -106,6 +111,9 @@ var piggySelection = function(type, d, i) {
         d3.selectAll('.line').transition().style('opacity', function() {
             return (this.id === 'line_' + i) ? 1 : .1;
         });
+        d3.selectAll('.area').transition().style('opacity', function() {
+            return (this.id === 'area_' + i) ? 0.1 : 0.01;
+        });
     } else {
         tweenText('#total-quantity', piggyLocal.get(quantityTotalLabel), formatQuantity);
         tweenText('#total-sum-pie', piggyLocal.get(sumTotalLabel), formatCurrency);
@@ -114,7 +122,7 @@ var piggySelection = function(type, d, i) {
         d3.selectAll(".pie-parts")
             .transition()
             .duration(100)
-            .style("opacity", "1")
+            .style("opacity", "1");
         d3.select("#path_" + i)
             .transition()
             .duration(1000)
@@ -122,6 +130,7 @@ var piggySelection = function(type, d, i) {
             .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(4));
         d3.selectAll(".bar").transition().style("opacity", "1");
         d3.selectAll(".line").transition().style("opacity", "1");
+        d3.selectAll(".area").transition().style("opacity", "0.1");
     }
 };
 

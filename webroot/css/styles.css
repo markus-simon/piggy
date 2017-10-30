@@ -836,3 +836,8 @@ body .theme-preview-container input {
 
 .accordion li  {
     border-bottom: none!important; }
+
+
+.area {
+    fill: lightsteelblue;
+}

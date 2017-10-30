@@ -7,16 +7,6 @@ var svgHeader = d3.select('#header')
 
 var bla = headerHeight / 2;
 
-var quantityTotalLabel = svgHeader.append("text")
-    .attr("id","total-quantity")
-    .attr("class","header-text")
-    .attr('x', (window.outerWidth - 510))
-    .attr('y', ($('#header').outerHeight() / 1.4))
-    .attr("text-anchor", "end")
-    .style("fill", colors.header)
-    .style("font-size", headerFontSize);
-
-
 var g = svgHeader.append('g')
     .attr('height', headerHeight)
     .attr('transform', 'translate(0, ' + bla + ')');
