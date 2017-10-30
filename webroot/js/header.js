@@ -74,9 +74,9 @@ function updateHeader(result) {
     piggyLocal.set(sumTotalLabel, calculatedTotalSum);
     piggyLocal.set(weightTotalLabel, calculatedTotalWeight);
 
-    quantityTotalLabel.text(formatQuantity(quantityTotal));
-    sumTotalLabel.text(formatCurrency(calculatedTotalSum));
-    weightTotalLabel.text(formatWeight(calculatedTotalWeight));
+    quantityTotalLabel.text(formats.quantity(quantityTotal));
+    sumTotalLabel.text(formats.currency(calculatedTotalSum));
+    weightTotalLabel.text(formats.weight(calculatedTotalWeight));
 
 
     kgLabel.attr('x', parseInt(sumTotalLabel._groups[0][0].getBBox().x) - headerFontSize / 4 * 3);
