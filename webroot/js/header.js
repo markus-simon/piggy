@@ -3,9 +3,18 @@ var svgHeader = d3.select('#header')
     .attr("id", "svgHeader")
     .attr("width", (window.innerWidth))
     .attr("height", headerHeight)
-    .style("background", headerColor);
+    .style("background", colors.header);
 
 var bla = headerHeight / 2;
+
+var quantityTotalLabel = svgHeader.append("text")
+    .attr("id","total-quantity")
+    .attr("class","header-text")
+    .attr('x', (window.outerWidth - 510))
+    .attr('y', ($('#header').outerHeight() / 1.4))
+    .attr("text-anchor", "end")
+    .style("fill", colors.header)
+    .style("font-size", headerFontSize);
 
 
 var g = svgHeader.append('g')
@@ -19,7 +28,7 @@ var euro = g.append("text")
     .attr("id","currency")
     .attr("x", begin )
     .attr('alignment-baseline', 'mathematical')
-    .style("fill", headerFontColor)
+    .style("fill", colors.headerFont)
     .style("font-size", headerFontSize / 1.4);
 
 var sumTotalLabel = g.append("text")
@@ -28,8 +37,7 @@ var sumTotalLabel = g.append("text")
     .attr('x', parseInt(euro._groups[0][0].getBBox().x) - headerFontSize / 4)
     .attr("text-anchor", "end")
     .attr('alignment-baseline', 'central')
-
-.style("fill", headerColor)
+    .style("fill", colors.header)
     .style("font-size", headerFontSize);
 
 var kgLabel = g.append("text")
@@ -37,7 +45,7 @@ var kgLabel = g.append("text")
     .attr("id","kg")
     .attr("text-anchor", "end")
     .attr('alignment-baseline', 'mathematical')
-    .style("fill", headerFontColor)
+    .style("fill", colors.headerFont)
     .style("font-size", '24px')
     .style("font-size", headerFontSize / 1.4);
 
@@ -46,7 +54,7 @@ var weightTotalLabel = g.append("text")
     .attr("class","header-text")
     .attr("text-anchor", "end")
     .attr('alignment-baseline', 'central')
-    .style("fill", headerColor)
+    .style("fill", colors.header)
     .style("font-size", headerFontSize);
 
 var quantityTotalLabel = g.append("text")
@@ -54,14 +62,8 @@ var quantityTotalLabel = g.append("text")
     .attr("class","header-text")
     .attr("text-anchor", "end")
     .attr('alignment-baseline', 'central')
-    .style("fill", headerColor)
+    .style("fill", colors.headerFont)
     .style("font-size", headerFontSize);
-
-
-
-
-
-
 
 function updateHeader(result) {
 
@@ -91,10 +93,10 @@ function updateHeader(result) {
     weightTotalLabel.attr('x', parseInt(kgLabel._groups[0][0].getBBox().x) - headerFontSize / 4);
     quantityTotalLabel.attr('x', parseInt(weightTotalLabel._groups[0][0].getBBox().x) - headerFontSize / 4 * 3);
 
-    quantityTotalLabel.transition().duration(500).style('fill', headerFontColor);
-    sumTotalLabel.transition().duration(500).style('fill', headerFontColor);
-    weightTotalLabel.transition().duration(500).style('fill', headerFontColor);
-    svgHeader.transition().duration(500).style("background-color", headerColor);
+    quantityTotalLabel.transition().duration(500).style('fill',  colors.headerFont);
+    sumTotalLabel.transition().duration(500).style('fill', colors.headerFont);
+    weightTotalLabel.transition().duration(500).style('fill', colors.headerFont);
+    svgHeader.transition().duration(500).style("background-color", colors.header);
 
-    d3.selectAll('#menu').transition().duration(500).style('background-color', headerColor);
+    d3.selectAll('#menu').transition().duration(500).style('background-color', colors.header);
 }

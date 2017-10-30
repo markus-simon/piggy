@@ -64,19 +64,23 @@ var axisYText = axisY.append("text")
 
 function updateBars(result) {
     var newData = [];
-    result.forEach(function(row) {
+    result.forEach(function (row) {
         if (row.type !== 'virtual') {
             newData.push(row);
         }
     });
 
-    var realTypes = newData.map(function(d) { return d.amount; });
+    var realTypes = newData.map(function (d) {
+        return d.amount;
+    });
 
     var x = d3.scalePoint()
         .domain(realTypes)
         .range([40, width - 40]).padding(0.9);
 
-    y.domain([0, d3.max(newData, function(d) { return d.calculatedTotal })]);
+    y.domain([0, d3.max(newData, function (d) {
+        return d.calculatedTotal
+    })]);
 
     var xAxis = d3.axisBottom(x);
     var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width + 65);
@@ -88,11 +92,21 @@ function updateBars(result) {
         .transition()
         .duration(1000)
         .ease(d3.easeElastic)
-        .delay(function(d, i) { return 30 * i } )
-        .attr("x", function(d) { return x(d.amount) - barWidth / 2; })
-        .attr("y", function(d) { return y(d.calculatedTotal); })
-        .attr("height", function(d) { return height - y(d.calculatedTotal) - 25; })
-        .style("fill", function(d, i) { return color(i); });
+        .delay(function (d, i) {
+            return 30 * i
+        })
+        .attr("x", function (d) {
+            return x(d.amount) - barWidth / 2;
+        })
+        .attr("y", function (d) {
+            return y(d.calculatedTotal);
+        })
+        .attr("height", function (d) {
+            return height - y(d.calculatedTotal) - 25;
+        })
+        .style("fill", function (d, i) {
+            return color(i);
+        });
 
     chart.transition().select(".x.axis")
         .duration(1000)
@@ -106,7 +120,7 @@ function updateBars(result) {
 
     axisYText.text(config['calculation-base']);
 
-    chart.selectAll('.domain').transition().duration(500).style('stroke', axisColor);
-    chart.selectAll('line').transition().duration(500).style('stroke', axisColor);
-    chart.selectAll('text').transition().duration(500).style('fill', axisColor);
+    chart.selectAll('.domain').transition().duration(500).style('stroke', colors.axis);
+    chart.selectAll('line').transition().duration(500).style('stroke', colors.axis);
+    chart.selectAll('text').transition().duration(500).style('fill', colors.axis);
 }
