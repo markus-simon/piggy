@@ -96,9 +96,6 @@ var linePath = city.append("path")
         .y0(height - 25)
         .y1(function (d) { return y(d.quantity); });
 
-
-
-
     var areaPath = city.append("path")
         .data(cities)
         .attr("class", "area")
@@ -120,6 +117,19 @@ var linePath = city.append("path")
         piggySelection('off', d.values[d.values.length - 1], i);
     });
 
+    var dotGroup = city.append('g')
+        .attr("id", function(d, i) { return "dots_" + i })
+        .on("mouseover", function(d, i) {
+            if (config['calculation-base'] === 'quantity') {
+                d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sum;
+            } else if (config['calculation-base'] === 'value') {
+                d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sumTotal / 100;
+            }
+            piggySelection('on', d.values[d.values.length - 1], i);
+        })
+        .on("mouseout", function(d, i) {
+            piggySelection('off', d.values[d.values.length - 1], i);
+        });
 
 /**
  * Re-render line chart
@@ -208,7 +218,8 @@ function updateLine(result) {
          * @todo: bugs: config change, curved
          */
         $.each(dates, function(dk, dv) {
-            city.data(cities).append('circle')
+            dotGroup.data(cities).append('circle')
+                .attr('class', 'dot')
                 .transition()
                 .duration(1000)
                 .ease(d3.easeElastic)

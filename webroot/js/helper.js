@@ -103,6 +103,9 @@ var piggySelection = function(type, d, i) {
         d3.selectAll('.bar').transition().style('opacity', function() {
             return (this.id === 'bar_' + i) ? 1 : .1;
         });
+        d3.selectAll('.dot').transition().style('opacity', function() {
+            return (this.parentNode.id === 'dots_' + i) ? 1 : .1;
+        });
         d3.selectAll('.line').transition().style('opacity', function() {
             return (this.id === 'line_' + i) ? 1 : .1;
         });
@@ -124,6 +127,7 @@ var piggySelection = function(type, d, i) {
             .ease(d3.easeElastic)
             .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(4));
         d3.selectAll(".bar").transition().style("opacity", "1");
+        d3.selectAll(".dot").transition().style("opacity", "1");
         d3.selectAll(".line").transition().style("opacity", "1");
         d3.selectAll(".area").transition().style("opacity", "0.1");
     }
