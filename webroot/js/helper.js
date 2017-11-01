@@ -1,3 +1,7 @@
+/**
+ *
+ * @returns {string}
+ */
 var getHuePath = function () {
     var url = '';
     var lights = 6; // refactor ...
@@ -14,6 +18,11 @@ var getHuePath = function () {
     return url;
 };
 
+/**
+ *
+ * @param form
+ * @returns {{}}
+ */
 var formToJson = function(form) {
     var json = {};
     $.each(form, function(key, value) {
@@ -30,6 +39,12 @@ var formToJson = function(form) {
     return json;
 };
 
+/**
+ * Determine if given string is valid json
+ *
+ * @param str
+ * @returns {boolean}
+ */
 function isJson(str) {
     try {
         var parsed = JSON.parse(str);
@@ -41,6 +56,11 @@ function isJson(str) {
     }
 }
 
+/**
+ *
+ * @param prefix
+ * @param data
+ */
 var jsonToForm = function(prefix, data) {
     $.each(data, function(key, value) {
         key = key.replace(/_/g, '-');
@@ -69,9 +89,6 @@ var jsonToForm = function(prefix, data) {
         }
     });
 };
-
-
-
 
 /**
  * Highlight selected amount
@@ -120,20 +137,23 @@ var piggySelection = function(type, d, i) {
         d3.selectAll(".pie-parts")
             .transition()
             .duration(100)
-            .style("opacity", "1");
+            .style("opacity", 1);
         d3.select("#path_" + i)
             .transition()
             .duration(1000)
             .ease(d3.easeElastic)
             .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(4));
-        d3.selectAll(".bar").transition().style("opacity", "1");
-        d3.selectAll(".dot").transition().style("opacity", "1");
-        d3.selectAll(".line").transition().style("opacity", "1");
-        d3.selectAll(".area").transition().style("opacity", "0.1");
+        d3.selectAll(".bar, .dot, .line").transition().style("opacity", 1);
+        d3.selectAll(".area").transition().style("opacity", .1);
     }
 };
 
-
+/**
+ *
+ * @param id
+ * @param value
+ * @param format
+ */
 var tweenText = function(id, value, format) {
     d3.select(id).transition()
         .duration(1000)
@@ -151,39 +171,35 @@ var tweenText = function(id, value, format) {
         })
 };
 
-var calculateWeight = function (row) {
-    var weightTotal = 0;
-    switch (row.amount) {
-        case 1:
-            weightTotal = row.sum * 2.3;
-            break;
-        case 2:
-            weightTotal = row.sum * 3.06;
-            break;
-        case 5:
-            weightTotal = row.sum * 3.92;
-            break;
-        case 10:
-            weightTotal = row.sum * 4.1;
-            break;
-        case 20:
-            weightTotal = row.sum * 5.74;
-            break;
-        case 50:
-            weightTotal = row.sum * 7.8;
-            break;
-        case 100:
-            weightTotal = row.sum * 7.5;
-            break;
-        case 200:
-            weightTotal = row.sum * 8.5;
-            break;
-    }
-    return weightTotal / 1000;
+/**
+ * Weight per amount
+ *
+ * @type {{1: number, 2: number, 5: number, 10: number, 20: number, 50: number, 100: number, 200: number}}
+ */
+var weightMapping = {
+    1: 2.3, 2: 3.06, 5: 3.92, 10: 4.1, 20: 5.74, 50: 7.8, 100: 7.5, 200: 8.5
 };
 
+/**
+ * Calculate amount weight
+ *
+ * @param row
+ * @returns {number}
+ */
+var calculateWeight = function (row) {
+    if (weightMapping.hasOwnProperty(row.amount)) {
+        return row.sum * weightMapping[row.amount] / 1000;
+    }
+    return 0;
+};
+
+/**
+ *
+ * @param row
+ * @returns {number}
+ */
 var calculatePercent = function(row) {
-    var total   = 0;
+    var total = 0;
 
     if (config['calculation-base'] === 'value') {
         total = piggyLocal.get(sumTotalLabel);
@@ -193,7 +209,10 @@ var calculatePercent = function(row) {
     return row.calculatedTotal / total;
 };
 
-
+/**
+ *
+ * @param file
+ */
 var playSound = function(file) {
     var audioElement = document.createElement('audio');
     audioElement.setAttribute('src', file);
@@ -208,6 +227,16 @@ var checkUrl = function(url) {
     return true;
 };
 
+/**
+ *
+ * @param offset_years
+ * @param offset_months
+ * @param offset_days
+ * @param offset_hours
+ * @param offset_minutes
+ * @param offset_seconds
+ * @returns {string}
+ */
 var calculateDate = function(offset_years,offset_months,offset_days,offset_hours,offset_minutes,offset_seconds) {
     var dt = new Date();
     dt.setFullYear(dt.getFullYear() + offset_years);
@@ -227,17 +256,19 @@ var calculateDate = function(offset_years,offset_months,offset_days,offset_hours
     return calculatedDate;
 };
 
+/**
+ *
+ * @param unit
+ * @returns {number}
+ */
 var getZero = function(unit) {
     var dt = new Date();
     switch (unit) {
         case 'hours':
             return dt.getHours();
-            break;
         case 'minutes':
             return dt.getMinutes();
-            break;
         case 'seconds':
             return dt.getSeconds();
-            break;
     }
 };

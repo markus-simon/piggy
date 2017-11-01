@@ -222,7 +222,6 @@ function updateLine(result) {
                 .attr('class', 'dot')
                 .transition()
                 .duration(1000)
-                .ease(d3.easeElastic)
                 .delay(function(d, i) { return 30 * i } )
                 .attr("r", function(d) { return (0 !== d.values[dk].quantity || dk % 2 !== 1) ? 4 : 0; })
                 .attr("cx", function(d){ return x(d.values[dk].date); })
