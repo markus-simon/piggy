@@ -162,12 +162,12 @@ function updateLine(result) {
 
         if (config['curved'] === 'yes') {
             line = d3.line()
-               // .curve(d3.curveBasis)
+                .curve(d3.curveBasis)
                 .x(function(d) { return x(d.date); })
                 .y(function(d) { return y(d.quantity); });
             if (config['area-lines'] === 'yes') {
                 area = d3.area()
-                  //  .curve(d3.curveBasis)
+                    .curve(d3.curveBasis)
                     .x(function (d) { return x(d.date); })
                     .y0(height - 25)
                     .y1(function (d) { return y(d.quantity); });
@@ -204,19 +204,20 @@ function updateLine(result) {
             .attr("d", function (d) { return line(d.values); });
 
         // Add dots
-        svg.selectAll("point")
-            .data(cities)
-            .enter()
-            .append('circle')
-            .transition()
-            .duration(1000)
-            .ease(d3.easeElastic)
-            .delay(function(d, i) { return 30 * i } )
-            .attr("class", "point")
-            .attr("r", 4)
-            .attr("cx", function(d, i){ return x(d.values[i].date); })
-            .attr("cy", function(d, i){ return y(d.values[i].quantity); })
-            .style("stroke", function (d, i) { return color(i); });
+        /**
+         * @todo: bugs: config change, curved
+         */
+        $.each(dates, function(dk, dv) {
+            city.data(cities).append('circle')
+                .transition()
+                .duration(1000)
+                .ease(d3.easeElastic)
+                .delay(function(d, i) { return 30 * i } )
+                .attr("r", function(d) { return (0 !== d.values[dk].quantity || dk % 2 !== 1) ? 4 : 0; })
+                .attr("cx", function(d){ return x(d.values[dk].date); })
+                .attr("cy", function(d){ return y(d.values[dk].quantity); })
+                .style("stroke", function (d, i) { return color(i); });
+       });
 
         g.transition().select(".x.axis")
             .duration(1000)
@@ -246,7 +247,6 @@ function updateLine(result) {
  * @returns {Array}
  */
 function generateCities(reply) {
-
     var timeframe       = config.timeframe ? config.timeframe : 14;
     var entries         = crossfilter(reply);
     var entriesByAmount = entries.dimension(function(d) { return d.amount; });
