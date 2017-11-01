@@ -226,6 +226,7 @@ function updateLine(result) {
                 .attr("r", function(d) { return (0 !== d.values[dk].quantity || dk % 2 !== 1) ? 4 : 0; })
                 .attr("cx", function(d){ return x(d.values[dk].date); })
                 .attr("cy", function(d){ return y(d.values[dk].quantity); })
+                .style("fill", function (d, i) { return color(i); })
                 .style("stroke", function (d, i) { return color(i); });
        });
 
