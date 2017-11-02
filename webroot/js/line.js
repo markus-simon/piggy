@@ -64,7 +64,8 @@ var axisYLineText = axisYLine.append("text")
 var coinType = g.selectAll(".coin-type")
     .data(coinTypes)
     .enter().append("g")
-    .attr("class", "coin-type");
+    .attr("class", "coin-type")
+    .attr("id", function(d, i) { return "coin-type-" + i });
 
 var linePath = coinType.append("path")
     .attr("class", "lines")
@@ -133,10 +134,9 @@ var dots = coinType.selectAll("circle")
     .data(function(d) { return d.values; })
     .enter()
     .append("circle")
-    .style("fill", function(d,i) { return '#fff' })
+    .style("fill", function() { var realI = d3.select(this)._groups[0][0].parentElement.id.substr((d3.select(this)._groups[0][0].parentElement.id.lastIndexOf('-') + 1)).toLowerCase(); return color(realI) })
     .attr("cx",function(d) { return xLine(d.date); })
-    .attr("cy",function(d) { return yLine(d.values); })
-    .attr("r", 4 );
+    .attr("r", function(d)  { return d.quantity ? 4 : 0 });
 
 
 /**
@@ -176,11 +176,11 @@ function updateLine(result) {
         linePath.data(coinTypes).enter().append().exit();
 
         if (config['curved'] === 'yes') {
-            line.curve(d3.curveBasis)
+            line.curve(d3.curveMonotoneX)
                 .x(function(d) { return xLine(d.date); })
                 .y(function(d) { return yLine(d.quantity); });
             if (config['area-lines'] === 'yes') {
-                area.curve(d3.curveBasis)
+                area.curve(d3.curveMonotoneX)
                     .x(function(d) { return xLine(d.date); })
                     .y0(height - 25)
                     .y1(function(d) { return yLine(d.quantity); });
@@ -210,46 +210,20 @@ function updateLine(result) {
         linePath.transition()
             .duration(500)
             .ease(d3.easeElastic)
-            .delay(function(d, i) { return 30 * i } )
             .style("stroke", function(d, i) { return color(i); })
             .attr("d", function(d) { return line(d.values); });
 
         coinType.data(coinTypes).enter().append().exit();
-        dots.data(function(e) {return e.values;}).enter().append().exit();
+        dots.data(function(e) { return e.values; }).enter().append().exit();
 
         dots.exit().remove();
-       //  //
-       //  dots.data(function(d) {return d.values;})
-       //      .enter()
-       //      .append("circle")
-       //      .style("fill", function(d,i) { return '#fff' })
-       //      .attr("cx",function(d) { return console.log(d); xLine(d.date); })
-       //      .attr("cy",function(d) { return yLine(d.quantity); })
-       //      .attr("r", 4 );
-        //
         dots.transition()
             .duration(500)
             .ease(d3.easeElastic)
-            .delay(function(d, i) { return 30 * i } )
-            .attr("cx",function(d) { console.log(d); return xLine(d.date); })
-            .attr("cy",function(d) { return yLine(d.quantity); });
-
-
-
-
-        // Add dots
-        /**
-         * @todo: bugs: config change, curved
-         */
-        //
-        // d3.selectAll('circle')
-        //     .data(coinTypes, function(d) { return d.values })
-        //     .enter()
-        //     .append("circle")
-        //     .attr("cx",function(d) { return xLine(d.date); })
-        //     .attr("cy",function(d) { return yLine(d.quantity); })
-        //     .attr("r", 4 );
-
+            .attr("cx",function(d) { return xLine(d.date); })
+            .attr("cy",function(d) { return yLine(d.quantity); })
+            .attr("r", function(d) { return d.quantity ? 4 : 0 })
+            .style("fill", function() { var realI = d3.select(this)._groups[0][0].parentElement.id.substr((d3.select(this)._groups[0][0].parentElement.id.lastIndexOf('-') + 1)).toLowerCase(); return color(realI) })
 
         g.transition().select(".x.axis")
             .duration(500)
@@ -332,7 +306,7 @@ function generateCoinTypes(reply) {
     }
 
     // TODO shame on me
-/*    if (config['combine-all-lines'] === 'yes') {
+    if (config['combine-all-lines'] === 'yes') {
         var all = [];
         coinTypes.forEach(function(entry2) {
             entry2.values.forEach(function(entry3) {
@@ -373,6 +347,6 @@ function generateCoinTypes(reply) {
             id: "999",
             values: row2
         });
-    }*/
+    }
     return coinTypes;
 }
