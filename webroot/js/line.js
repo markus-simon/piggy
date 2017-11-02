@@ -130,12 +130,12 @@ var areaPath = coinType.append("path")
     });*/
 
 var dots = coinType.selectAll("circle")
-    .data(function(coinTypes) { return coinTypes.values })
+    .data(function(d) { return d.values; })
     .enter()
     .append("circle")
     .style("fill", function(d,i) { return '#fff' })
     .attr("cx",function(d) { return xLine(d.date); })
-    .attr("cy",function(d) { return yLine(d.quantity); })
+    .attr("cy",function(d) { return yLine(d.values); })
     .attr("r", 4 );
 
 
@@ -144,12 +144,8 @@ var dots = coinType.selectAll("circle")
  * @param result
  */
 function updateLine(result) {
-
     eb.send('find', {collection: 'piggy', matcher: {}}, function(reply) {
-
         coinTypes = generateCoinTypes(reply);
-
-        console.log(coinTypes);
 
         xLine.domain([
             d3.min(coinTypes, function(c) {
@@ -177,11 +173,6 @@ function updateLine(result) {
             })
         ]);
 
-
-
-
-
-
         linePath.data(coinTypes).enter().append().exit();
 
         if (config['curved'] === 'yes') {
@@ -204,11 +195,10 @@ function updateLine(result) {
             }
         }
 
-
         if (config['area-lines'] === 'yes') {
             areaPath.data(coinTypes);
             areaPath.transition()
-                .duration(10000)
+                .duration(500)
                 .ease(d3.easeElastic)
                 .attr("opacity", 0.1)
                 .style("fill", function(d, i) { return color(i); })
@@ -217,24 +207,32 @@ function updateLine(result) {
             areaPath.attr("opacity", 0)
         }
 
-
         linePath.transition()
-            .duration(10000)
+            .duration(500)
             .ease(d3.easeElastic)
             .delay(function(d, i) { return 30 * i } )
             .style("stroke", function(d, i) { return color(i); })
             .attr("d", function(d) { return line(d.values); });
 
+        coinType.data(coinTypes).enter().append().exit();
+        dots.data(function(e) {return e.values;}).enter().append().exit();
 
-
-
-        dots.data(function(coinTypes) { return coinTypes.values; }).enter().append().exit();
-
+        dots.exit().remove();
+       //  //
+       //  dots.data(function(d) {return d.values;})
+       //      .enter()
+       //      .append("circle")
+       //      .style("fill", function(d,i) { return '#fff' })
+       //      .attr("cx",function(d) { return console.log(d); xLine(d.date); })
+       //      .attr("cy",function(d) { return yLine(d.quantity); })
+       //      .attr("r", 4 );
+        //
         dots.transition()
-            .duration(10000)
+            .duration(500)
             .ease(d3.easeElastic)
             .delay(function(d, i) { return 30 * i } )
-            .attr("cy",function(d, i) { console.log(d); return yLine(d.quantity); });
+            .attr("cx",function(d) { console.log(d); return xLine(d.date); })
+            .attr("cy",function(d) { return yLine(d.quantity); });
 
 
 
@@ -243,21 +241,23 @@ function updateLine(result) {
         /**
          * @todo: bugs: config change, curved
          */
-/*
-        d3.selectAll('circle').data(function(coinTypes) { return coinTypes.values })
-            .enter()
-            .attr("cx",function(d) { console.log(d); return xLine(d.date); })
-            .attr("cy",function(d) { return yLine(d.quantity); })
-            .attr("r", 4 );
-*/
+        //
+        // d3.selectAll('circle')
+        //     .data(coinTypes, function(d) { return d.values })
+        //     .enter()
+        //     .append("circle")
+        //     .attr("cx",function(d) { return xLine(d.date); })
+        //     .attr("cy",function(d) { return yLine(d.quantity); })
+        //     .attr("r", 4 );
+
 
         g.transition().select(".x.axis")
-            .duration(10000)
+            .duration(500)
             .ease(d3.easeElastic)
             .call(xAxisLine);
 
         g.transition().select(".y.axis")
-            .duration(10000)
+            .duration(500)
             .ease(d3.easeElastic)
             .call(yAxisLine);
 
