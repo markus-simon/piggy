@@ -9,34 +9,31 @@ g = svg.append("g").attr("transform", "translate(40, 0)");
 var parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
 var coinTypes = generateCoinTypes([]);
 
-var xLine = d3.scaleTime()
-    .domain([
+/**
+ *
+ * @param value
+ */
+var setDomain = function(value) {
+    return [
         d3.min(coinTypes, function(c) {
             return d3.min(c.values, function(d) {
-                return d.date;
+                return d[value];
             });
         }),
         d3.max(coinTypes, function(c) {
             return d3.max(c.values, function(d) {
-                return d.date;
+                return d[value];
             });
         })
-    ])
+    ];
+};
+
+var xLine = d3.scaleTime()
+    .domain(setDomain('date'))
     .range([0, width * layout - 80]);
 
 var yLine = d3.scaleLinear()
-    .domain([
-        d3.min(coinTypes, function(c) {
-            return d3.min(c.values, function(d) {
-                return d.quantity;
-            });
-        }),
-        d3.max(coinTypes, function(c) {
-            return d3.max(c.values, function(d) {
-                return d.quantity;
-            });
-        })
-    ])
+    .domain(setDomain('quantity'))
     .range([height - 25, 25]);
 
 var line = d3.line()
@@ -79,11 +76,7 @@ var linePath = coinType.append("path")
         return color(i);
     })
 /*    .on("mouseover", function(d, i) {
-        if (config['calculation-base'] === 'quantity') {
-            d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sum;
-        } else if (config['calculation-base'] === 'value') {
-            d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sumTotal / 100;
-        }
+        changeCalculationBase(d, i);
         piggySelection('on', d.values[d.values.length - 1], i);
     })
     .on("mouseout", function(d, i) {
@@ -105,11 +98,7 @@ var areaPath = coinType.append("path")
         /*
     // TODO crap ... forget it!
     .on("mouseover", function(d, i) {
-        if (config['calculation-base'] === 'quantity') {
-            d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sum;
-        } else if (config['calculation-base'] === 'value') {
-            d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sumTotal / 100;
-        }
+        changeCalculationBase(d, i);
         piggySelection('on', d.values[d.values.length - 1], i);
     })
     .on("mouseout", function(d, i) {
@@ -119,16 +108,20 @@ var areaPath = coinType.append("path")
 /*var dotGroup = coinType.append('g')
     .attr("id", function(d, i) { return "dots_" + i })*/
 /*    .on("mouseover", function(d, i) {
-        if (config['calculation-base'] === 'quantity') {
-            d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sum;
-        } else if (config['calculation-base'] === 'value') {
-            d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sumTotal / 100;
-        }
+        changeCalculationBase(d, i);
         piggySelection('on', d.values[d.values.length - 1], i);
     })
     .on("mouseout", function(d, i) {
         piggySelection('off', d.values[d.values.length - 1], i);
     });*/
+
+var changeCalculationBase = function(d, i) {
+    if (config['calculation-base'] === 'quantity') {
+        d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sum;
+    } else if (config['calculation-base'] === 'value') {
+        d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sumTotal / 100;
+    }
+};
 
 var dots = coinType.selectAll("circle")
     .data(function(d) { return d.values; })
@@ -136,8 +129,7 @@ var dots = coinType.selectAll("circle")
     .append("circle")
     .style("fill", function() { var realI = d3.select(this)._groups[0][0].parentElement.id.substr((d3.select(this)._groups[0][0].parentElement.id.lastIndexOf('-') + 1)).toLowerCase(); return color(realI) })
     .attr("cx",function(d) { return xLine(d.date); })
-    .attr("r", function(d)  { return d.quantity ? 4 : 0 });
-
+    .attr("r", function(d) { return d.quantity ? 4 : 0 });
 
 /**
  * Re-render line chart
@@ -147,64 +139,31 @@ function updateLine(result) {
     eb.send('find', {collection: 'piggy', matcher: {}}, function(reply) {
         coinTypes = generateCoinTypes(reply);
 
-        xLine.domain([
-            d3.min(coinTypes, function(c) {
-                return d3.min(c.values, function(d) {
-                    return d.date;
-                });
-            }),
-            d3.max(coinTypes, function(c) {
-                return d3.max(c.values, function (d) {
-                    return d.date;
-                });
-            })
-        ]);
-
-        yLine.domain([
-            d3.min(coinTypes, function(c) {
-                return d3.min(c.values, function(d) {
-                    return d.quantity;
-                });
-            }),
-            d3.max(coinTypes, function(c) {
-                return d3.max(c.values, function(d) {
-                    return d.quantity;
-                });
-            })
-        ]);
+        xLine.domain(setDomain('date'));
+        yLine.domain(setDomain('quantity'));
 
         linePath.data(coinTypes).enter().append().exit();
 
-        if (config['curved'] === 'yes') {
-            line.curve(d3.curveMonotoneX)
-                .x(function(d) { return xLine(d.date); })
-                .y(function(d) { return yLine(d.quantity); });
-            if (config['area-lines'] === 'yes') {
-                area.curve(d3.curveMonotoneX)
-                    .x(function(d) { return xLine(d.date); })
-                    .y0(height - 25)
-                    .y1(function(d) { return yLine(d.quantity); });
-            }
-        } else {
-            line.x(function(d) { return xLine(d.date); })
-                .y(function(d) { return yLine(d.quantity); });
-            if (config['area-lines'] === 'yes') {
-                area.x(function(d) { return xLine(d.date); })
-                    .y0(height - 25)
-                    .y1(function(d) { return yLine(d.quantity); });
-            }
-        }
+        line.x(function(d) { return xLine(d.date); })
+            .y(function(d) { return yLine(d.quantity); })
+            .curve(configMapping["curved"][config["curved"]]);
 
         if (config['area-lines'] === 'yes') {
+            area.x(function(d) { return xLine(d.date); })
+                .y0(height - 25)
+                .y1(function(d) { return yLine(d.quantity); });
             areaPath.data(coinTypes);
             areaPath.transition()
                 .duration(500)
                 .ease(d3.easeElastic)
                 .attr("opacity", 0.1)
-                .style("fill", function(d, i) { return color(i); })
-                .attr("d", function(d) { return area(d.values); });
+                .attr("d", function(d) { return area(d.values); })
+                .style("fill", function(d, i) { return color(i); });
+            if (config['curved'] === 'yes') {
+                area.curve(d3.curveMonotoneX);
+            }
         } else {
-            areaPath.attr("opacity", 0)
+            areaPath.attr("opacity", 0);
         }
 
         linePath.transition()

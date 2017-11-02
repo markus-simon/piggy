@@ -13,6 +13,13 @@ if (window.innerWidth < 800) {
     height = (window.innerHeight / 2) - (headerHeight);
 }
 
+var configMapping = {
+    "curved": {
+        "yes": d3.curveMonotoneX,
+        "no": d3.curveLinear
+    }
+};
+
 var radius   = Math.min(width, height) / 2;
 var barWidth = window.innerWidth / 30;
 var formats  = {
