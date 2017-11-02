@@ -8,28 +8,21 @@ g = svg.append("g").attr("transform", "translate(40, 0)");
 
 // Sat Oct 01 2011 00:00:00 GMT+0200 (CEST)
 var parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
-var cities    = generateCities([]);
-var dates     = cities[0].values.map(function(c) { return c.date; });
+var coinTypes = generateCoinTypes([]);
+var dates     = coinTypes[0].values.map(function(c) { return c; });
 
 var x = d3.scaleTime()
-    .domain(d3.extent(dates, function(d) {
-        return d;
+    .domain(d3.extent(coinTypes, function(d) {
+        return d.date;
     }))
     .range([0, width * layout - 80]);
 
 var y = d3.scaleLinear()
-    .domain([
-        d3.min(cities, function(c) {
-            return d3.min(c.values, function(d) {
-                return d.quantity;
-            });
-        }),
-        d3.max(cities, function(c) {
-            return d3.max(c.values, function(d) {
-                return d.quantity;
-            });
-        })
-    ])
+    .domain(d3.extent(coinTypes, function(d) {
+        return d3.extent(d.values, function(d) {
+            return d.quantity;
+        });
+    }))
     .range([height - 25, 25]);
 
 var z    = color;
@@ -55,12 +48,12 @@ var axisYLineText = axisYLine.append("text")
     .attr("x", -12)
     .attr("fill", "#000");
 
-var city = g.selectAll(".city")
-    .data(cities)
+var coinType = g.selectAll(".coin-type")
+    .data(coinTypes)
     .enter().append("g")
-    .attr("class", "city");
+    .attr("class", "coin-type");
 
-var linePath = city.append("path")
+var linePath = coinType.append("path")
     .attr("class", "line")
     .attr("id", function(d, i) { return "line_" + i })
     .style("fill", "none")
@@ -88,8 +81,8 @@ var area = d3.area()
     .y0(height - 25)
     .y1(function(d) { return y(d.quantity); });
 
-var areaPath = city.append("path")
-    .data(cities)
+var areaPath = coinType.append("path")
+    .data(coinTypes)
     .attr("class", "area")
     .attr("id", function(d, i) { return "area_" + i })
     .attr("d", function(d) {
@@ -108,7 +101,7 @@ var areaPath = city.append("path")
         piggySelection('off', d.values[d.values.length - 1], i);
     });
 
-var dotGroup = city.append('g')
+var dotGroup = coinType.append('g')
     .attr("id", function(d, i) { return "dots_" + i })
     .on("mouseover", function(d, i) {
         if (config['calculation-base'] === 'quantity') {
@@ -122,29 +115,58 @@ var dotGroup = city.append('g')
         piggySelection('off', d.values[d.values.length - 1], i);
     });
 
+
+/*
+
+$.each(dates, function(dk, dv) {
+    dotGroup.data(coinTypes).append('circle')
+        .attr('class', 'dot')
+        .transition()
+        .duration(1000)
+        .delay(function(d, i) { return 30 * i } )
+        .attr("r", function(d) { return 0 !== d.values[dk].quantity  ? 4 : 0; })
+        .attr("cx", function(d){ return x(d.values[dk].date); })
+        .attr("cy", function(d){ return y(d.values[dk].quantity); })
+        .style("fill", function(d, i) { return color(i); })
+        .style("stroke", function(d, i) { return color(i); });
+});
+*/
+
+dotGroup.selectAll("circle")
+    .data(coinTypes)
+    .enter()
+    .append("circle")
+    .style("fill", function(d,i) { return color(i); })
+    .attr("cx",function(d, i) { console.log(d.values); return x(d.values); })
+/*
+    .attr("cy",function(d) { return y(d.quantity); })
+*/
+    .attr("r", 4 );
+
+
 /**
  * Re-render line chart
  * @param result
  */
 function updateLine(result) {
     eb.send('find', {collection: 'piggy', matcher: {}}, function(reply) {
-        cities = generateCities(reply);
+        coinTypes = generateCoinTypes(reply);
 
-        dates = cities[0].values.map(function(c) {
-            return c.date;
+        dates = coinTypes[0].values.map(function(c) {
+            return c;
         });
 
         x.domain(d3.extent(dates, function(d) {
-            return d;
+            return d.date;
         }));
 
         y.domain([
-            d3.min(cities, function(c) {
+            d3.min(coinTypes, function(c) {
                 return d3.min(c.values, function(d) {
                     return d.quantity;
                 });
             }),
-            d3.max(cities, function(c) {
+            d3.max(coinTypes, function(c) {
                 return d3.max(c.values, function(d) {
                     return d.quantity;
                 });
@@ -152,11 +174,11 @@ function updateLine(result) {
         ]);
 
         // TODO crap
-        linePath.data(cities)
+        linePath.data(coinTypes)
             .enter().append().exit();
 
 /*
-        linePath.data(cities);
+        linePath.data(coinTypes);
 */
 
         if (config['curved'] === 'yes') {
@@ -184,7 +206,7 @@ function updateLine(result) {
         }
 
         if (config['area-lines'] === 'yes') {
-            areaPath.data(cities);
+            areaPath.data(coinTypes);
             areaPath.transition()
                 .duration(1000)
                 .ease(d3.easeElastic)
@@ -206,19 +228,18 @@ function updateLine(result) {
         /**
          * @todo: bugs: config change, curved
          */
-        $.each(dates, function(dk, dv) {
-            dotGroup.data(cities).append('circle')
-                .attr('class', 'dot')
-                .transition()
-                .duration(1000)
-                .delay(function(d, i) { return 30 * i } )
-                .attr("r", function(d) { return (0 !== d.values[dk].quantity || (dk % 2 !== 1 && 0 !== d.values[dk].quantity)) ? 4 : 0; })
-                .attr("cx", function(d){ return x(d.values[dk].date); })
-                .attr("cy", function(d){ return y(d.values[dk].quantity); })
-                .style("fill", function(d, i) { return color(i); })
-                .style("stroke", function(d, i) { return color(i); });
-       });
+/*        dotGroup.data(dates).selectAll('circle')
+            .transition()
+            .duration(1000)
+            .delay(function(d, i) { return 30 * i } )
 
+            .attr("cx",function(d,i) { return x(d.date); })
+            .attr("cy",function(d,i) { console.log(d); return y(d.quantity); });
+
+        console.log('coinTypes');
+        console.log(coinTypes);
+        console.log('dates');
+        console.log(dates);*/
         g.transition().select(".x.axis")
             .duration(1000)
             .ease(d3.easeElastic)
@@ -243,11 +264,11 @@ function updateLine(result) {
  * @param reply
  * @returns {Array}
  */
-function generateCities(reply) {
+function generateCoinTypes(reply) {
     var timeframe       = config.timeframe ? config.timeframe : 14;
     var entries         = crossfilter(reply);
     var entriesByAmount = entries.dimension(function(d) { return d.amount; });
-    var cities          = [];
+    var coinTypes          = [];
 
     for(var j = 0; j < dataBars.length; j++) {
         entriesByAmount.filter(function(d) { return d === parseInt(dataBars[j].amount)});
@@ -293,7 +314,7 @@ function generateCities(reply) {
             });
         }
 
-        cities.push({
+        coinTypes.push({
             id:     dataBars[j].amount,
             values: row
         });
@@ -302,7 +323,7 @@ function generateCities(reply) {
     // TODO shame on me
     if (config['combine-all-lines'] === 'yes') {
         var all = [];
-        cities.forEach(function(entry2) {
+        coinTypes.forEach(function(entry2) {
             entry2.values.forEach(function(entry3) {
                 all.push(entry3);
             })
@@ -336,11 +357,11 @@ function generateCities(reply) {
             });
         }
 
-        var cities = [];
-        cities.push({
+        var coinTypes = [];
+        coinTypes.push({
             id: "999",
             values: row2
         });
     }
-    return cities;
+    return coinTypes;
 }
