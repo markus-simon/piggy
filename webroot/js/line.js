@@ -151,7 +151,8 @@ function updateLine(result) {
         if (config['area-lines'] === 'yes') {
             area.x(function(d) { return xLine(d.date); })
                 .y0(height - 25)
-                .y1(function(d) { return yLine(d.quantity); });
+                .y1(function(d) { return yLine(d.quantity); })
+                .curve(configMapping["curved"][config["curved"]]);
             areaPath.data(coinTypes);
             areaPath.transition()
                 .duration(500)
@@ -159,9 +160,6 @@ function updateLine(result) {
                 .attr("opacity", 0.1)
                 .attr("d", function(d) { return area(d.values); })
                 .style("fill", function(d, i) { return color(i); });
-            if (config['curved'] === 'yes') {
-                area.curve(d3.curveMonotoneX);
-            }
         } else {
             areaPath.attr("opacity", 0);
         }
