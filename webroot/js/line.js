@@ -146,13 +146,13 @@ function updateLine(result) {
 
         line.x(function(d) { return xLine(d.date); })
             .y(function(d) { return yLine(d.quantity); })
-            .curve(configMapping["curved"][config["curved"]]);
+            .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
 
         if (config['area-lines'] === 'yes') {
             area.x(function(d) { return xLine(d.date); })
                 .y0(height - 25)
                 .y1(function(d) { return yLine(d.quantity); })
-                .curve(configMapping["curved"][config["curved"]]);
+                .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
             areaPath.data(coinTypes);
             areaPath.transition()
                 .duration(500)
