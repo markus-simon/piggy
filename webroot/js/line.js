@@ -89,15 +89,14 @@ var areaPath = coinType.append("path")
         return area(d.values);
     });
 
-/*var dotGroup = coinType.append('g')
-    .attr("id", function(d, i) { return "dots_" + i })*/
-/*    .on("mouseover", function(d, i) {
-        changeCalculationBase(d, i);
-        piggySelection('on', d.values[d.values.length - 1], i);
-    })
-    .on("mouseout", function(d, i) {
-        piggySelection('off', d.values[d.values.length - 1], i);
-    });*/
+var focus = g.append('g').style('display', 'none');
+    focus.append('line')
+        .attr('id', 'focusLineX')
+        .attr('class', 'focusLine');
+    focus.append('line')
+        .attr('id', 'focusLineY')
+        .attr('class', 'focusLine');
+
 
 /**
  *
@@ -127,9 +126,30 @@ var dots = coinType.selectAll("circle")
         var aux  = findByAttribute(coinTypes, 'id', d.amount);
         var aux2 = changeCalculationBase(aux);
         piggySelection('on', aux2.values[aux2.values.length - 1], d.idx);
+
+        if ("no" !== config['cross'] && "undefined" !== config['cross']) {
+            focus.style('display', null);
+
+            // Vertical line
+            focus.select('#focusLineX')
+                .style('stroke', coinColors[d.idx])
+                .attr('x1', xLine(d.date))
+                .attr('x2', xLine(d.date))
+                .attr('y1', height - 25)
+                .attr('y2', "extended" === config['cross'] ? yLine(yLine.domain()[1]) : yLine(d.quantity));
+
+            // Horizontal line
+            focus.select('#focusLineY')
+                .style('stroke', coinColors[d.idx])
+                .attr('x1', 0)
+                .attr('x2', "extended" === config['cross'] ? xLine(xLine.domain()[1]) : xLine(d.date))
+                .attr('y1', yLine(d.quantity))
+                .attr('y2', yLine(d.quantity));
+        }
     })
     .on("mouseout", function(d) {
         piggySelection('off', null, d.idx);
+        focus.style('display', 'none');
     });
 
 /**
