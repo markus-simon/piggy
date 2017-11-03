@@ -68,7 +68,7 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .on("mouseout", function(d) {
         piggySelection('off', d.data, d.data.idx);
     })
-    .attr("fill", function(d) { return coinColors[d.data.idx] ? coinColors[d.data.idxs] : fallbackColor; })
+    .attr("fill", function(d) { return coinColors[d.data.idx] ? coinColors[d.data.idx] : fallbackColor; })
     .attr("stroke-width", 4)
     .attr("stroke", colors.background)
     .attr("d", arc1)
@@ -106,7 +106,7 @@ function updatePie(result) {
         .duration(ms)
         .ease(d3.easeElastic)
         .attr("id", function(d) { return "path_" + d.data.idx })
-        .attr("fill", function(d) { return coinColors[d.data.idx] ? coinColors[d.data.idxs] : fallbackColor; })
+        .attr("fill", function(d) { return coinColors[d.data.idx] ? coinColors[d.data.idx] : fallbackColor; })
         .style('stroke',  colors.background)
         .attrTween("d", arcTween);
 }
