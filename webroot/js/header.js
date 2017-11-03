@@ -83,10 +83,10 @@ function updateHeader(result) {
     weightTotalLabel.attr('x', parseInt(kgLabel._groups[0][0].getBBox().x) - headerFontSize / 4);
     quantityTotalLabel.attr('x', parseInt(weightTotalLabel._groups[0][0].getBBox().x) - headerFontSize / 4 * 3);
 
-    quantityTotalLabel.transition().duration(5000).style('fill',  colors.headerFont);
-    sumTotalLabel.transition().duration(5000).style('fill', colors.headerFont);
-    weightTotalLabel.transition().duration(5000).style('fill', colors.headerFont);
-    svgHeader.transition().duration(5000).style("background-color", colors.header);
+    quantityTotalLabel.transition().duration(ms).style('fill',  colors.headerFont);
+    sumTotalLabel.transition().duration(ms).style('fill', colors.headerFont);
+    weightTotalLabel.transition().duration(ms).style('fill', colors.headerFont);
+    svgHeader.transition().duration(ms).style("background-color", colors.header);
 
-    d3.selectAll('#menu').transition().duration(5000).style('background-color', colors.header);
+    d3.selectAll('#menu').transition().duration(ms).style('background-color', colors.header);
 }

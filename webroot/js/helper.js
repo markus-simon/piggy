@@ -105,7 +105,7 @@ var piggySelection = function(type, d, i) {
         d3.select("#percent").text(formats.percent(calculatePercent(d)));
         d3.select("#percent").transition().style('opacity', 1);
         d3.selectAll('.pie-parts').transition()
-            .duration(5000)
+            .duration(ms)
             .ease(d3.easeElastic)
             .style('opacity', function() {
                 return (this.id === 'path_' + i) ? 1 : .1;
@@ -113,7 +113,7 @@ var piggySelection = function(type, d, i) {
             .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(4));
         d3.select("#path_" + i)
             .transition()
-            .duration(5000)
+            .duration(ms)
             .ease(d3.easeElastic)
             .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 120).cornerRadius(4))
             .style("opacity", "1");
@@ -136,11 +136,11 @@ var piggySelection = function(type, d, i) {
         d3.select("#percent").transition().style('opacity', 0);
         d3.selectAll(".pie-parts")
             .transition()
-            .duration(5000)
+            .duration(ms)
             .style("opacity", 1);
         d3.select("#path_" + i)
             .transition()
-            .duration(5000)
+            .duration(ms)
             .ease(d3.easeElastic)
             .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(4));
         d3.selectAll(".bar, .dot, .line").transition().style("opacity", 1);
@@ -156,7 +156,7 @@ var piggySelection = function(type, d, i) {
  */
 var tweenText = function(id, value, format) {
     d3.select(id).transition()
-        .duration(5000)
+        .duration(ms)
         .ease(d3.easeCubic)
         .on("start", function repeat() {
             d3.active(this)

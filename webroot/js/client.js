@@ -76,6 +76,7 @@ eb.onopen = function()
         if (!$.isEmptyObject(config)) {
             jsonToForm('config-', config);
             $('#config-save-id').val(config._id);
+            ms = config['duration'] ? config['duration'] : 5000;
             eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function (reply) {
                 changeTheme(reply[0]);
 /*
@@ -136,7 +137,7 @@ eb.onopen = function()
                 case 'png':
                     var gif = '<img width="1920" src="' + document.showurl + '"/>';
                     $('#show-content').empty().append(gif);
-                    $('#show').fadeTo('slow', 1).delay(5000).fadeOut('slow');
+                    $('#show').fadeTo('slow', 1).delay(ms).fadeOut('slow');
                     break;
                 case 'wav':
                 case 'mp3':
@@ -383,7 +384,7 @@ eb.onopen = function()
                 renderThemeProperty(property, theme[property]);
             }
         }
-        d3.selectAll('form').selectAll('label').transition().duration(5000).style('color', colors.font); // doppelt hält besser
+        d3.selectAll('form').selectAll('label').transition().duration(ms).style('color', colors.font); // doppelt hält besser
     };
 
     /**
@@ -493,22 +494,22 @@ eb.onopen = function()
         };
 
         // change header color
-        d3.selectAll('.accordion-title').transition().duration(5000).style('background-color', colors.header);
-        d3.selectAll('.overlay-title').transition().duration(5000).style('background-color', colors.header);
+        d3.selectAll('.accordion-title').transition().duration(ms).style('background-color', colors.header);
+        d3.selectAll('.overlay-title').transition().duration(ms).style('background-color', colors.header);
         $('#config-overlay').css('border-color', colors.header);
 
         // change body/background color
         var colorParts = ['body', '#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
         $.each(colorParts, function(key, value) {
-            d3.select(value).transition().duration(5000).style('background-color', colors.background)
+            d3.select(value).transition().duration(ms).style('background-color', colors.background)
         });
 
         // change input color
-        d3.selectAll('.input-text').transition().duration(5000).style('background', colors.input_background);
-        d3.selectAll('.input-text').transition().duration(5000).style('box-shadow', colors.input_inset);
-        d3.selectAll('.input-text').transition().duration(5000).style('color', colors.input);
-        d3.select('#percent').transition().duration(5000).style('fill', colors.axis);
-        d3.selectAll('form').selectAll('label').transition().duration(5000).style('color', colors.font); // hä?
+        d3.selectAll('.input-text').transition().duration(ms).style('background', colors.input_background);
+        d3.selectAll('.input-text').transition().duration(ms).style('box-shadow', colors.input_inset);
+        d3.selectAll('.input-text').transition().duration(ms).style('color', colors.input);
+        d3.select('#percent').transition().duration(ms).style('fill', colors.axis);
+        d3.selectAll('form').selectAll('label').transition().duration(ms).style('color', colors.font); // hä?
 
         updateData();
     };
@@ -815,7 +816,7 @@ eb.onopen = function()
                 $.each(colorParts, function(key, value) {
                     d3.selectAll(value)
                         .transition()
-                        .duration(5000)
+                        .duration(ms)
                         .style('background-color', color);
                 });
                 $('.overlay').css('border-color', color);
@@ -823,14 +824,14 @@ eb.onopen = function()
             case 'input_':
                 d3.selectAll('.input-text')
                     .transition()
-                    .duration(5000)
+                    .duration(ms)
                     .style(property, color);
                 break;
             case 'table_':
                 $.each(property.elements, function(key, value) {
                     d3.selectAll(value)
                         .transition()
-                        .duration(5000)
+                        .duration(ms)
                         .style(property.property, color);
                 });
                 break;
@@ -839,7 +840,7 @@ eb.onopen = function()
                 $.each(colorParts, function(key, value) {
                     d3.select(value)
                         .transition()
-                        .duration(5000)
+                        .duration(ms)
                         .style('background-color', color);
                 });
                 break;
@@ -878,7 +879,7 @@ eb.onopen = function()
 
         wSvg.append("text")
             .transition()
-            .duration(5000)
+            .duration(ms)
             .ease(d3.easeElastic)
             .attr("y", 0)
             .attr("x", 10)
@@ -893,7 +894,7 @@ eb.onopen = function()
 
             bar.append("rect")
                 .transition()
-                .duration(5000)
+                .duration(ms)
                 .ease(d3.easeElastic)
                 .delay(function(d, i) { return 30 * i } )
                 .attr("x", function(d, i) {
@@ -912,7 +913,7 @@ eb.onopen = function()
 
             bar.append("text")
                 .transition()
-                .duration(5000)
+                .duration(ms)
                 .ease(d3.easeElastic)
                 .delay(function(d, i) { return 30 * i } )
                 .attr("y", 45)
@@ -932,7 +933,7 @@ eb.onopen = function()
 
             bar.append("text")
                 .transition()
-                .duration(5000)
+                .duration(ms)
                 .ease(d3.easeElastic)
                 .delay(function(d, i) { return 30 * i } )
                 .attr("y", 80)
@@ -952,7 +953,7 @@ eb.onopen = function()
 
             bar.append("text")
                 .transition()
-                .duration(5000)
+                .duration(ms)
                 .ease(d3.easeElastic)
                 .delay(function(d, i) { return 30 * i } )
                 .attr("y", 100)

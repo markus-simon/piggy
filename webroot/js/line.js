@@ -155,7 +155,7 @@ function updateLine(result) {
                 .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
             areaPath.data(coinTypes);
             areaPath.transition()
-                .duration(5000)
+                .duration(ms)
                 .ease(d3.easeElastic)
                 .attr("opacity", 0.1)
                 .attr("d", function(d) { return area(d.values); })
@@ -165,7 +165,7 @@ function updateLine(result) {
         }
 
         linePath.transition()
-            .duration(5000)
+            .duration(ms)
             .ease(d3.easeElastic)
             .style("stroke", function(d, i) { return color(i); })
             .attr("d", function(d) { return line(d.values); });
@@ -175,7 +175,7 @@ function updateLine(result) {
 
         dots.exit().remove();
         dots.transition()
-            .duration(5000)
+            .duration(ms)
             .ease(d3.easeElastic)
             .attr("cx",function(d) { return xLine(d.date); })
             .attr("cy",function(d) { return yLine(d.quantity); })
@@ -183,20 +183,20 @@ function updateLine(result) {
             .style("fill", function() { var realI = d3.select(this)._groups[0][0].parentElement.id.substr((d3.select(this)._groups[0][0].parentElement.id.lastIndexOf('-') + 1)).toLowerCase(); return color(realI) })
 
         g.transition().select(".x.axis")
-            .duration(5000)
+            .duration(ms)
             .ease(d3.easeElastic)
             .call(xAxisLine);
 
         g.transition().select(".y.axis")
-            .duration(5000)
+            .duration(ms)
             .ease(d3.easeElastic)
             .call(yAxisLine);
 
         axisYLineText.text(config['calculation-base']);
 
-        d3.selectAll('line').transition().duration(5000).style('stroke', colors.axis);
-        d3.selectAll('.domain').transition().duration(5000).style('stroke', colors.axis);
-        d3.select('#svg3').selectAll('text').transition().duration(5000).style('fill', colors.axis);
+        d3.selectAll('line').transition().duration(ms).style('stroke', colors.axis);
+        d3.selectAll('.domain').transition().duration(ms).style('stroke', colors.axis);
+        d3.select('#svg3').selectAll('text').transition().duration(ms).style('fill', colors.axis);
         d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
     });
 }
