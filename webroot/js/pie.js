@@ -48,7 +48,7 @@ var path2 = svg1.datum(dataBars).append("g").attr("id","glabel").selectAll("path
     .attr("fill", "none")
     .style("stroke-opacity", 0)
     .transition()
-    .duration(750)
+    .duration(5000)
     .ease(d3.easeSin)
 
     .style("stroke-opacity", 1)
@@ -102,7 +102,7 @@ function updatePie(result) {
 
     path1.data(pie1)
         .transition()
-        .duration(1000)
+        .duration(5000)
         .ease(d3.easeElastic)
         .style("fill", function(d, i) { return color(i); })
         .style('stroke',  colors.background)
