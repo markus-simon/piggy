@@ -157,7 +157,7 @@ var piggySelection = function(type, d, i) {
         d3.selectAll('.dot').transition().style('opacity', function() {
             return (this.parentNode.id === 'dots_' + i) ? 1 : .1;
         });
-        d3.selectAll('.line').transition().style('opacity', function() {
+        d3.selectAll('.lines').transition().style('opacity', function() {
             return (this.id === 'line_' + i) ? 1 : .1;
         });
         d3.selectAll('.area').transition().style('opacity', function() {
@@ -177,7 +177,7 @@ var piggySelection = function(type, d, i) {
             .duration(ms)
             .ease(d3.easeElastic)
             .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(4));
-        d3.selectAll(".bar, .dot, .line").transition().style("opacity", 1);
+        d3.selectAll(".bar, .dot, .lines").transition().style("opacity", 1);
         d3.selectAll(".area").transition().style("opacity", .1);
     }
 };

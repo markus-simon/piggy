@@ -60,15 +60,15 @@ var path2 = svg1.datum(dataBars).append("g").attr("id","glabel").selectAll("path
 var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .data(pie1)
     .enter().append("path")
-    .attr("id", function(d, i) { return "path_" + i })
+    .attr("id", function(d) { return "path_" + d.data.idx })
     .attr("class", "pie-parts")
-    .on("mouseover", function(d, i) {
-        piggySelection('on', d.data, i);
+    .on("mouseover", function(d) {
+        piggySelection('on', d.data, d.data.idx);
     })
-    .on("mouseout", function(d, i) {
-        piggySelection('off', d.data, i);
+    .on("mouseout", function(d) {
+        piggySelection('off', d.data, d.data.idx);
     })
-    .attr("fill", function(d, i) { return color(d.idx); })
+    .attr("fill", function(d) { return color(d.data.idx); })
     .attr("stroke-width", 4)
     .attr("stroke", colors.background)
     .attr("d", arc1)
@@ -105,7 +105,8 @@ function updatePie(result) {
         .transition()
         .duration(ms)
         .ease(d3.easeElastic)
-        .style("fill", function(d, i) { return color(i); })
+        .attr("id", function(d) { return "path_" + d.data.idx })
+        .attr("fill", function(d) { return color(d.data.idx); })
         .style('stroke',  colors.background)
         .attrTween("d", arcTween);
 }

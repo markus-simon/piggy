@@ -62,17 +62,17 @@ var coinType = g.selectAll(".coin-type")
     .data(coinTypes)
     .enter().append("g")
     .attr("class", "coin-type")
-    .attr("id", function(d, i) { return "coin-type-" + i });
+    .attr("id", function(d) { return "coin-type-" + d.idxs });
 
 var linePath = coinType.append("path")
     .attr("class", "lines")
-    .attr("id", function(d, i) { return "line_" + i })
+    .attr("id", function(d) { return "line_" + d.idxs })
     .style("fill", "none")
     .style("stroke-width", "1")
     .attr("d", function(d) {
         return line(d.values);
     })
-    .style("stroke", function(d, i) {
+    .style("stroke", function(d) {
         return color(d.idx);
     });
 
@@ -84,7 +84,7 @@ var area = d3.area()
 var areaPath = coinType.append("path")
     .data(coinTypes)
     .attr("class", "area")
-    .attr("id", function(d, i) { return "area_" + i })
+    .attr("id", function(d) { return "area_" + d.idxs })
     .attr("d", function(d) {
         return area(d.values);
     });
@@ -116,21 +116,20 @@ var changeCalculationBase = function(d) {
     return d;
 };
 
-var realI;
 var dots = coinType.selectAll("circle")
     .data(function(d) { return d.values; })
     .enter()
     .append("circle")
-    .style("fill", function(d) { return color(d.idx); })
+    .attr("class", "dot")
     .attr("cx",function(d) { return xLine(d.date); })
     .attr("r", function(d) { return d.quantity ? 4 : 0 })
     .on("mouseover", function(d) {
         var aux  = findByAttribute(coinTypes, 'id', d.amount);
         var aux2 = changeCalculationBase(aux);
-        piggySelection('on', aux2.values[aux2.values.length - 1], realI);
+        piggySelection('on', aux2.values[aux2.values.length - 1], d.idx);
     })
-    .on("mouseout", function(d, i) {
-        piggySelection('off', null, i);
+    .on("mouseout", function(d) {
+        piggySelection('off', null, d.idx);
     });
 
 /**
@@ -169,7 +168,7 @@ function updateLine(result) {
         linePath.transition()
             .duration(ms)
             .ease(d3.easeElastic)
-            .style("stroke", function(d, i) { console.log(d.idxs); return color(d.idxs); })
+            .style("stroke", function(d, i) {return color(d.idxs); })
             .attr("d", function(d) { return line(d.values); });
 
         coinType.data(coinTypes).enter().append().exit();

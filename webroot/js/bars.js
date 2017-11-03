@@ -32,12 +32,12 @@ bar.append("rect")
     .attr("class", "bar")
     .attr("id", function(d, i) { return "bar_" + d.idx; })
     .attr("height", function(d) { return height - 25 - y(d.amount); })
-    .style("fill", function(d, i) { return color(i); })
-    .on("mouseover", function(d, i) {
-        piggySelection('on', d, i);
+    .attr("fill", function(d) { return color(d.idx); })
+    .on("mouseover", function(d) {
+        piggySelection('on', d, d.idx);
     })
-    .on("mouseout", function(d, i) {
-        piggySelection('off', d, i);
+    .on("mouseout", function(d) {
+        piggySelection('off', d, d.idx);
     });
 
 svg2.append("g")
@@ -96,13 +96,19 @@ function updateBars(result) {
         .append("g").attr('class', 'bar-group')
         .append("rect")
         .data(newData)
+        .on("mouseover", function(d) {
+            piggySelection('on', d, d.idx);
+        })
+        .on("mouseout", function(d) {
+            piggySelection('off', d, d.idx);
+        })
         .transition()
         .duration(ms)
         .ease(d3.easeElastic)
         .delay(function (d, i) {
             return 30 * i
         })
-        .attr("id", function(d, i) { return "bar_" + d.idx; })
+        .attr("id", function(d) { return "bar_" + d.idx; })
         .attr("class", "bar")
         .attr("x", function(d) {
             return x(d.amount) - barWidth / 2;
@@ -114,8 +120,8 @@ function updateBars(result) {
         .attr("height", function (d) {
             return height - y(d.calculatedTotal) - 25;
         })
-        .style("fill", function (d, i) {
-            return color(i);
+        .attr("fill", function (d) {
+            return color(d.idx);
         });
 
     chart.transition().select(".x.axis")
