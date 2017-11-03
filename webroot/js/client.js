@@ -480,8 +480,8 @@ eb.onopen = function()
 
         $('#theme-style').remove();
         injectStyles(theme.css);
-        color  = d3.scaleOrdinal(theme.colors.amount);
-        colors = {
+        coinColors  = theme.colors.amount;
+        colors      = {
             "header":           theme.colors.header,
             "headerFont":       theme.colors.headerFont,
             "font":             theme.colors.font,

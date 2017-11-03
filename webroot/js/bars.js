@@ -30,7 +30,7 @@ bar.append("rect")
     .attr("width", barWidth)
     .attr("y", function(d) { return y(d.sumTotal / 100 ); })
     .attr("class", "bar")
-    .attr("id", function(d, i) { return "bar_" + d.idx; })
+    .attr("id", function(d) { return "bar_" + d.idx; })
     .attr("height", function(d) { return height - 25 - y(d.amount); })
     .attr("fill", function(d) { return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor; })
     .on("mouseover", function(d) {
