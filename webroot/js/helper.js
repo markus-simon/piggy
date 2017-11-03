@@ -1,3 +1,14 @@
+var coinIndex = {
+    "1": 0,
+    "2": 1,
+    "5": 2,
+    "10": 3,
+    "20": 4,
+    "50": 5,
+    "100": 6,
+    "200": 7
+};
+
 /**
  *
  * @returns {string}
@@ -88,6 +99,29 @@ var jsonToForm = function(prefix, data) {
             }
         }
     });
+};
+
+/**
+ * Search in object
+ *
+ * @param items
+ * @param attribute
+ * @param value
+ * @returns {*}
+ */
+var findByAttribute = function(items, attribute, value) {
+    for (var i = 0; i < items.length; i++) {
+        if ('number' === typeof value) {
+            if (value === parseInt(items[i][attribute])) {
+                return items[i];
+            }
+        } else {
+            if (value === items[i][attribute]) {
+                return items[i];
+            }
+        }
+    }
+    return null;
 };
 
 /**

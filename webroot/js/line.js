@@ -73,15 +73,8 @@ var linePath = coinType.append("path")
         return line(d.values);
     })
     .style("stroke", function(d, i) {
-        return color(i);
-    })
-/*    .on("mouseover", function(d, i) {
-        changeCalculationBase(d, i);
-        piggySelection('on', d.values[d.values.length - 1], i);
-    })
-    .on("mouseout", function(d, i) {
-        piggySelection('off', d.values[d.values.length - 1], i);
-    });*/
+        return color(d.idx);
+    });
 
 var area = d3.area()
     .x(function(d) { return xLine(d.date); })
@@ -95,15 +88,6 @@ var areaPath = coinType.append("path")
     .attr("d", function(d) {
         return area(d.values);
     });
-        /*
-    // TODO crap ... forget it!
-    .on("mouseover", function(d, i) {
-        changeCalculationBase(d, i);
-        piggySelection('on', d.values[d.values.length - 1], i);
-    })
-    .on("mouseout", function(d, i) {
-        piggySelection('off', d.values[d.values.length - 1], i);
-    });*/
 
 /*var dotGroup = coinType.append('g')
     .attr("id", function(d, i) { return "dots_" + i })*/
@@ -115,21 +99,39 @@ var areaPath = coinType.append("path")
         piggySelection('off', d.values[d.values.length - 1], i);
     });*/
 
-var changeCalculationBase = function(d, i) {
-    if (config['calculation-base'] === 'quantity') {
-        d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sum;
-    } else if (config['calculation-base'] === 'value') {
-        d.values[d.values.length - 1].calculatedTotal = d.values[d.values.length - 1].sumTotal / 100;
-    }
+/**
+ *
+ * @param d
+ * @returns {*}
+ */
+var changeCalculationBase = function(d) {
+    var calulatedTotal = 0;
+    $.each(d.values, function(key, value) {
+        if (config['calculation-base'] === 'quantity') {
+            d.values[key].calculatedTotal = calulatedTotal += value.sum;
+        } else if (config['calculation-base'] === 'value') {
+            d.values[key].calculatedTotal = calulatedTotal += (value.sumTotal / 100);
+        }
+    });
+    return d;
 };
 
+var realI;
 var dots = coinType.selectAll("circle")
     .data(function(d) { return d.values; })
     .enter()
     .append("circle")
-    .style("fill", function() { var realI = d3.select(this)._groups[0][0].parentElement.id.substr((d3.select(this)._groups[0][0].parentElement.id.lastIndexOf('-') + 1)).toLowerCase(); return color(realI) })
+    .style("fill", function(d) { return color(d.idx); })
     .attr("cx",function(d) { return xLine(d.date); })
-    .attr("r", function(d) { return d.quantity ? 4 : 0 });
+    .attr("r", function(d) { return d.quantity ? 4 : 0 })
+    .on("mouseover", function(d) {
+        var aux  = findByAttribute(coinTypes, 'id', d.amount);
+        var aux2 = changeCalculationBase(aux);
+        piggySelection('on', aux2.values[aux2.values.length - 1], realI);
+    })
+    .on("mouseout", function(d, i) {
+        piggySelection('off', null, i);
+    });
 
 /**
  * Re-render line chart
@@ -159,7 +161,7 @@ function updateLine(result) {
                 .ease(d3.easeElastic)
                 .attr("opacity", 0.1)
                 .attr("d", function(d) { return area(d.values); })
-                .style("fill", function(d, i) { return color(i); });
+                .style("fill", function(d, i) { return color(d.idxs); });
         } else {
             areaPath.attr("opacity", 0);
         }
@@ -167,7 +169,7 @@ function updateLine(result) {
         linePath.transition()
             .duration(ms)
             .ease(d3.easeElastic)
-            .style("stroke", function(d, i) { return color(i); })
+            .style("stroke", function(d, i) { console.log(d.idxs); return color(d.idxs); })
             .attr("d", function(d) { return line(d.values); });
 
         coinType.data(coinTypes).enter().append().exit();
@@ -180,7 +182,7 @@ function updateLine(result) {
             .attr("cx",function(d) { return xLine(d.date); })
             .attr("cy",function(d) { return yLine(d.quantity); })
             .attr("r", function(d) { return d.quantity ? 4 : 0 })
-            .style("fill", function() { var realI = d3.select(this)._groups[0][0].parentElement.id.substr((d3.select(this)._groups[0][0].parentElement.id.lastIndexOf('-') + 1)).toLowerCase(); return color(realI) })
+            .style("fill", function(d) { return color(d.idx) })
 
         g.transition().select(".x.axis")
             .duration(ms)
@@ -245,7 +247,8 @@ function generateCoinTypes(reply) {
                 quantity: quantity,
                 sum: quantity,
                 sumTotal: quantity * parseInt(dataBars[j].amount),
-                amount: parseInt(dataBars[j].amount)
+                amount: parseInt(dataBars[j].amount),
+                idx: coinIndex[dataBars[j].amount]
             });
         }
 
@@ -258,8 +261,10 @@ function generateCoinTypes(reply) {
 
         coinTypes.push({
             id:     dataBars[j].amount,
-            values: row
+            values: row,
+            idxs: coinIndex[dataBars[j].amount]
         });
+
     }
 
     // TODO shame on me
@@ -305,7 +310,5 @@ function generateCoinTypes(reply) {
             values: row2
         });
     }
-
-    console.log(coinTypes);
     return coinTypes;
 }

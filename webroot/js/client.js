@@ -1,14 +1,14 @@
 var eb       = new vertx.EventBus(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/eventbus');
 var config   = {};
 var dataBars = [
-    { amount: "1",   sum: 0, sumTotal: 0},
-    { amount: "2",   sum: 0, sumTotal: 0},
-    { amount: "5",   sum: 0, sumTotal: 0},
-    { amount: "10",  sum: 0, sumTotal: 0},
-    { amount: "20",  sum: 0, sumTotal: 0},
-    { amount: "50",  sum: 0, sumTotal: 0},
-    { amount: "100", sum: 0, sumTotal: 0},
-    { amount: "200", sum: 0, sumTotal: 0}
+    { idx: 0, amount: "1",   sum: 0, sumTotal: 0},
+    { idx: 1, amount: "2",   sum: 0, sumTotal: 0},
+    { idx: 2, amount: "5",   sum: 0, sumTotal: 0},
+    { idx: 3, amount: "10",  sum: 0, sumTotal: 0},
+    { idx: 4, amount: "20",  sum: 0, sumTotal: 0},
+    { idx: 5, amount: "50",  sum: 0, sumTotal: 0},
+    { idx: 6, amount: "100", sum: 0, sumTotal: 0},
+    { idx: 7, amount: "200", sum: 0, sumTotal: 0}
 ];
 
 var colorMapping = {

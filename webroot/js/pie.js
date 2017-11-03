@@ -68,7 +68,7 @@ var path1 = svg1.datum(dataBars).append("g").attr("id","gpie").selectAll("path")
     .on("mouseout", function(d, i) {
         piggySelection('off', d.data, i);
     })
-    .attr("fill", function(d, i) { return color(i); })
+    .attr("fill", function(d, i) { return color(d.idx); })
     .attr("stroke-width", 4)
     .attr("stroke", colors.background)
     .attr("d", arc1)
@@ -91,6 +91,7 @@ function updatePie(result) {
     var newData = [];
     result.forEach(function(row) {
         if (row.type !== 'virtual') {
+            row.idx = coinIndex[row.amount];
             newData.push(row);
         }
     });
