@@ -73,7 +73,7 @@ var linePath = coinType.append("path")
         return line(d.values);
     })
     .style("stroke", function(d) {
-        return color(d.idx);
+        return coinColors[d.idx];
     });
 
 var area = d3.area()
@@ -160,7 +160,7 @@ function updateLine(result) {
                 .ease(d3.easeElastic)
                 .attr("opacity", 0.1)
                 .attr("d", function(d) { return area(d.values); })
-                .style("fill", function(d, i) { return color(d.idxs); });
+                .style("fill", function(d, i) { return coinColors[d.idxs]; });
         } else {
             areaPath.attr("opacity", 0);
         }
@@ -168,7 +168,7 @@ function updateLine(result) {
         linePath.transition()
             .duration(ms)
             .ease(d3.easeElastic)
-            .style("stroke", function(d, i) {return color(d.idxs); })
+            .style("stroke", function(d, i) {return coinColors[d.idxs]; })
             .attr("d", function(d) { return line(d.values); });
 
         coinType.data(coinTypes).enter().append().exit();
@@ -181,7 +181,7 @@ function updateLine(result) {
             .attr("cx",function(d) { return xLine(d.date); })
             .attr("cy",function(d) { return yLine(d.quantity); })
             .attr("r", function(d) { return d.quantity ? 4 : 0 })
-            .style("fill", function(d) { return color(d.idx) })
+            .style("fill", function(d) { return coinColors[d.idx]; })
 
         g.transition().select(".x.axis")
             .duration(ms)

@@ -53,7 +53,7 @@ var colorMapping = {
 
 var headerFontSize  = (window.innerHeight / 17) * (layout / 2);
 
-var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231","#ff55d2"]);
+var coinColors      = ["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231","#ff55d2"];
 var colors          = {
     "header":           '#CB3577',
     "headerFont":       '#fff',

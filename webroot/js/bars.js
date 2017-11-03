@@ -28,11 +28,11 @@ var bar = svg2.selectAll(".rect")
 bar.append("rect")
     .attr("x", function(d) { return x(d.amount) - barWidth / 2; })
     .attr("width", barWidth)
-    .attr("y", function(d) { return y(5 / 100 ); })
+    .attr("y", function(d) { return y(d.sumTotal / 100 ); })
     .attr("class", "bar")
     .attr("id", function(d, i) { return "bar_" + d.idx; })
     .attr("height", function(d) { return height - 25 - y(d.amount); })
-    .attr("fill", function(d) { return color(d.idx); })
+    .attr("fill", function(d) { return coinColors[d.idx]; })
     .on("mouseover", function(d) {
         piggySelection('on', d, d.idx);
     })
@@ -121,7 +121,7 @@ function updateBars(result) {
             return height - y(d.calculatedTotal) - 25;
         })
         .attr("fill", function (d) {
-            return color(d.idx);
+            return coinColors[d.idx];
         });
 
     chart.transition().select(".x.axis")
