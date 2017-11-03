@@ -32,7 +32,7 @@ bar.append("rect")
     .attr("class", "bar")
     .attr("id", function(d, i) { return "bar_" + d.idx; })
     .attr("height", function(d) { return height - 25 - y(d.amount); })
-    .attr("fill", function(d) { return coinColors[d.idx]; })
+    .attr("fill", function(d) { return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor; })
     .on("mouseover", function(d) {
         piggySelection('on', d, d.idx);
     })
@@ -121,7 +121,7 @@ function updateBars(result) {
             return height - y(d.calculatedTotal) - 25;
         })
         .attr("fill", function (d) {
-            return coinColors[d.idx];
+            return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor;
         });
 
     chart.transition().select(".x.axis")

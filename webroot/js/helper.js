@@ -155,7 +155,7 @@ var piggySelection = function(type, d, i) {
             return (this.id === 'bar_' + i) ? 1 : .1;
         });
         d3.selectAll('.dot').transition().style('opacity', function() {
-            return (this.parentNode.id === 'dots_' + i) ? 1 : .1;
+            return (this.parentNode.id === 'coin-type-' + i) ? 1 : .1;
         });
         d3.selectAll('.lines').transition().style('opacity', function() {
             return (this.id === 'line_' + i) ? 1 : .1;
