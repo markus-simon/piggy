@@ -83,7 +83,6 @@ eb.onopen = function()
 */
             });
         }
-        updateData();
     });
 
     /**
@@ -383,7 +382,7 @@ eb.onopen = function()
                 renderThemeProperty(property, theme[property]);
             }
         }
-        d3.selectAll('form').selectAll('label').transition().duration(5000).style('color', colors.font); // doppelt hält besser
+        d3.selectAll('form').selectAll('label').transition().duration(transitionDuration).style('color', colors.font); // doppelt hält besser
     };
 
     /**
@@ -493,22 +492,22 @@ eb.onopen = function()
         };
 
         // change header color
-        d3.selectAll('.accordion-title').transition().duration(5000).style('background-color', colors.header);
-        d3.selectAll('.overlay-title').transition().duration(5000).style('background-color', colors.header);
+        d3.selectAll('.accordion-title').transition().duration(transitionDuration).style('background-color', colors.header);
+        d3.selectAll('.overlay-title').transition().duration(transitionDuration).style('background-color', colors.header);
         $('#config-overlay').css('border-color', colors.header);
 
         // change body/background color
         var colorParts = ['body', '#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
         $.each(colorParts, function(key, value) {
-            d3.select(value).transition().duration(5000).style('background-color', colors.background)
+            d3.select(value).transition().duration(transitionDuration).style('background-color', colors.background)
         });
 
         // change input color
-        d3.selectAll('.input-text').transition().duration(5000).style('background', colors.input_background);
-        d3.selectAll('.input-text').transition().duration(5000).style('box-shadow', colors.input_inset);
-        d3.selectAll('.input-text').transition().duration(5000).style('color', colors.input);
-        d3.select('#percent').transition().duration(5000).style('fill', colors.axis);
-        d3.selectAll('form').selectAll('label').transition().duration(5000).style('color', colors.font); // hä?
+        d3.selectAll('.input-text').transition().duration(transitionDuration).style('background', colors.input_background);
+        d3.selectAll('.input-text').transition().duration(transitionDuration).style('box-shadow', colors.input_inset);
+        d3.selectAll('.input-text').transition().duration(transitionDuration).style('color', colors.input);
+        d3.select('#percent').transition().duration(transitionDuration).style('fill', colors.axis);
+        d3.selectAll('form').selectAll('label').transition().duration(transitionDuration).style('color', colors.font); // hä?
 
         updateData();
     };
@@ -815,7 +814,7 @@ eb.onopen = function()
                 $.each(colorParts, function(key, value) {
                     d3.selectAll(value)
                         .transition()
-                        .duration(5000)
+                        .duration(transitionDuration)
                         .style('background-color', color);
                 });
                 $('.overlay').css('border-color', color);
@@ -823,14 +822,14 @@ eb.onopen = function()
             case 'input_':
                 d3.selectAll('.input-text')
                     .transition()
-                    .duration(5000)
+                    .duration(transitionDuration)
                     .style(property, color);
                 break;
             case 'table_':
                 $.each(property.elements, function(key, value) {
                     d3.selectAll(value)
                         .transition()
-                        .duration(5000)
+                        .duration(transitionDuration)
                         .style(property.property, color);
                 });
                 break;
@@ -839,7 +838,7 @@ eb.onopen = function()
                 $.each(colorParts, function(key, value) {
                     d3.select(value)
                         .transition()
-                        .duration(5000)
+                        .duration(transitionDuration)
                         .style('background-color', color);
                 });
                 break;
@@ -878,8 +877,8 @@ eb.onopen = function()
 
         wSvg.append("text")
             .transition()
-            .duration(5000)
-            .ease(d3.easeElastic)
+            .duration(transitionDuration)
+            .ease(transitionEasing)
             .attr("y", 0)
             .attr("x", 10)
             .attr("dy", "0.71em")
@@ -893,8 +892,8 @@ eb.onopen = function()
 
             bar.append("rect")
                 .transition()
-                .duration(5000)
-                .ease(d3.easeElastic)
+                .duration(transitionDuration)
+                .ease(transitionEasing)
                 .delay(function(d, i) { return 30 * i } )
                 .attr("x", function(d, i) {
                     if (0 === i) {
@@ -912,8 +911,8 @@ eb.onopen = function()
 
             bar.append("text")
                 .transition()
-                .duration(5000)
-                .ease(d3.easeElastic)
+                .duration(transitionDuration)
+                .ease(transitionEasing)
                 .delay(function(d, i) { return 30 * i } )
                 .attr("y", 45)
                 .attr("x", function(d, i) {
@@ -932,8 +931,8 @@ eb.onopen = function()
 
             bar.append("text")
                 .transition()
-                .duration(5000)
-                .ease(d3.easeElastic)
+                .duration(transitionDuration)
+                .ease(transitionEasing)
                 .delay(function(d, i) { return 30 * i } )
                 .attr("y", 80)
                 .attr("x", function(d, i) {
@@ -952,8 +951,8 @@ eb.onopen = function()
 
             bar.append("text")
                 .transition()
-                .duration(5000)
-                .ease(d3.easeElastic)
+                .duration(transitionDuration)
+                .ease(transitionEasing)
                 .delay(function(d, i) { return 30 * i } )
                 .attr("y", 100)
                 .attr("x", function(d, i) {

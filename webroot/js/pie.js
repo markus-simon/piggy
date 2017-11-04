@@ -48,8 +48,8 @@ var path2 = svg1.datum(dataBars).append("g").attr("id","glabel").selectAll("path
     .attr("fill", "none")
     .style("stroke-opacity", 0)
     .transition()
-    .duration(5000)
-    .ease(d3.easeSin)
+    .duration(transitionDuration)
+    .ease(transitionEasing)
 
     .style("stroke-opacity", 1)
     .attrTween("stroke-dasharray", function() {
@@ -102,8 +102,8 @@ function updatePie(result) {
 
     path1.data(pie1)
         .transition()
-        .duration(5000)
-        .ease(d3.easeElastic)
+        .duration(transitionDuration)
+        .ease(transitionEasing)
         .style("fill", function(d, i) { return color(i); })
         .style('stroke',  colors.background)
         .attrTween("d", arcTween);

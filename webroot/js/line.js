@@ -142,7 +142,8 @@ function updateLine(result) {
         xLine.domain(setDomain('date'));
         yLine.domain(setDomain('quantity'));
 
-        linePath.data(coinTypes).enter().append().remove().exit();
+        linePath.data(coinTypes);
+        g.selectAll(".coin-type").data(coinTypes).exit().remove().enter().append();
 
         line.x(function(d) { return xLine(d.date); })
             .y(function(d) { return yLine(d.quantity); })
@@ -155,8 +156,8 @@ function updateLine(result) {
                 .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
             areaPath.data(coinTypes);
             areaPath.transition()
-                .duration(5000)
-                .ease(d3.easeElastic)
+                .duration(transitionDuration)
+                .ease(transitionEasing)
                 .attr("opacity", 0.1)
                 .attr("d", function(d) { return area(d.values); })
                 .style("fill", function(d, i) { return color(i); });
@@ -165,38 +166,40 @@ function updateLine(result) {
         }
 
         linePath.transition()
-            .duration(5000)
-            .ease(d3.easeElastic)
+            .duration(transitionDuration)
+            .ease(transitionEasing)
             .style("stroke", function(d, i) { return color(i); })
             .attr("d", function(d) { return line(d.values); });
 
         coinType.data(coinTypes).enter().append().exit();
-        dots.data(function(e) { return e.values; }).enter().append().exit();
+        dots.data(function(e) { console.log(e); return e.values; }).enter().append()/*.exit()*/;
 
+/*
         dots.exit().remove();
+*/
         dots.transition()
-            .duration(5000)
-            .ease(d3.easeElastic)
+            .duration(transitionDuration)
+            .ease(transitionEasing)
             .attr("cx",function(d) { return xLine(d.date); })
             .attr("cy",function(d) { return yLine(d.quantity); })
-            .attr("r", function(d) { return d.quantity ? 4 : 0 })
+            .attr("r", function(d) { return d.quantity ? 3 : 0 })
             .style("fill", function() { var realI = d3.select(this)._groups[0][0].parentElement.id.substr((d3.select(this)._groups[0][0].parentElement.id.lastIndexOf('-') + 1)).toLowerCase(); return color(realI) })
 
         g.transition().select(".x.axis")
-            .duration(5000)
-            .ease(d3.easeElastic)
+            .duration(transitionDuration)
+            .ease(transitionEasing)
             .call(xAxisLine);
 
         g.transition().select(".y.axis")
-            .duration(5000)
-            .ease(d3.easeElastic)
+            .duration(transitionDuration)
+            .ease(transitionEasing)
             .call(yAxisLine);
 
         axisYLineText.text(config['calculation-base']);
 
-        d3.selectAll('line').transition().duration(5000).style('stroke', colors.axis);
-        d3.selectAll('.domain').transition().duration(5000).style('stroke', colors.axis);
-        d3.select('#svg3').selectAll('text').transition().duration(5000).style('fill', colors.axis);
+        d3.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
+        d3.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
+        d3.select('#svg3').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
         d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
     });
 }
@@ -306,6 +309,5 @@ function generateCoinTypes(reply) {
         });
     }
 
-    console.log(coinTypes);
     return coinTypes;
 }

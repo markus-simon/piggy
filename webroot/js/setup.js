@@ -49,6 +49,11 @@ var keyMapping = {
 d3.formatDefaultLocale(locale);
 
 var piggyLocal = d3.local();
+
+var transitionDuration = 500;
+var transitionEasing   = d3.easeExp;
+
+
 /*
 var format = d3.format("($.2f")(-3.5);
 */
