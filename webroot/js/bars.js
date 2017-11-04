@@ -90,8 +90,8 @@ function updateBars(result) {
     chart.selectAll("rect")
         .data(newData)
         .transition()
-        .duration(5000)
-        .ease(d3.easeElastic)
+        .duration(transitionDuration)
+        .ease(transitionEasing)
         .delay(function (d, i) {
             return 30 * i
         })
@@ -109,18 +109,18 @@ function updateBars(result) {
         });
 
     chart.transition().select(".x.axis")
-        .duration(5000)
-        .ease(d3.easeElastic)
+        .duration(transitionDuration)
+        .ease(transitionEasing)
         .call(xAxis);
 
     chart.transition().select(".y.axis")
-        .duration(5000)
-        .ease(d3.easeElastic)
+        .duration(transitionDuration)
+        .ease(transitionEasing)
         .call(yAxis);
 
     axisYText.text(config['calculation-base']);
 
-    chart.selectAll('.domain').transition().duration(5000).style('stroke', colors.axis);
-    chart.selectAll('line').transition().duration(5000).style('stroke', colors.axis);
-    chart.selectAll('text').transition().duration(5000).style('fill', colors.axis);
+    chart.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
+    chart.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
+    chart.selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
 }
