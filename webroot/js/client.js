@@ -77,6 +77,7 @@ eb.onopen = function()
             jsonToForm('config-', config);
             $('#config-save-id').val(config._id);
             transitionDuration = config['duration'] ? config['duration'] : transitionDuration;
+            transitionEasing = easing[config['easing']] ? easing[config['easing']] : transitionEasing;
             eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function (reply) {
                 changeTheme(reply[0]);
 /*
@@ -518,9 +519,11 @@ eb.onopen = function()
      * @param collection
      */
     var showOverlay = function(collection) {
-        eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function(reply) {
-            changeTheme(reply[0]);
-        });
+        if (config) {
+            eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function (reply) {
+                changeTheme(reply[0]);
+            });
+        }
         $(".overlay").fadeOut('slow');
         $('#' + collection + '-overlay').fadeTo("slow", 0.97);
         if ('checkout' !== collection) {

@@ -46,11 +46,23 @@ var keyMapping = {
     85: 'upgrade'
 };
 
-var ms = 5000;
-
 d3.formatDefaultLocale(locale);
 
 var piggyLocal = d3.local();
+
+var easing = {
+    easeElastic: d3.easeElastic,
+    easeBounce:  d3.easeBounce,
+    easeLinear:  d3.easeLinear,
+    easeSin:     d3.easeLinear,
+    easeQuad:    d3.easeQuad,
+    easeCubic:   d3.easeCubic,
+    easePoly:    d3.easePoly,
+    easeCircle:  d3.easeCircle,
+    easeExp:     d3.easeExp,
+    easeBack:    d3.easeBack
+};
+
 
 var transitionDuration = 500;
 var transitionEasing   = d3.easeExp;

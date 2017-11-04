@@ -3,16 +3,18 @@ var eb = vertx.eventBus();
 
 // first config init
 var config = {
-    'collection':   'config',
-    'theme':        'blossom',
-    'timeframe':     14,
-    'combine-lines': 'yes',
-    'curved':        'yes'
-
+    'collection':        'config',
+    'theme':             'blossom',
+    'timeframe':         14,
+    'combine-lines':     'yes',
+    'curved':            'yes',
+    'combine-all-lines': 'no',
+    'area-lines':        'yes',
+    'calculation-base':  'quantity',
+    'duration':          500,
+    'easing':            'easeLinear'
 };
 eb.send('save', config);
-
-
 
 // initial themes
 var themes = [

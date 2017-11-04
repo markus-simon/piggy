@@ -12,7 +12,6 @@ var y = d3.scaleLinear()
 var xAxis = d3.axisBottom(x);
 var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width  + 65);
 
-
 var svg2 = d3.select('#group2')
     .append("svg")
     .attr("id", "svg2")
