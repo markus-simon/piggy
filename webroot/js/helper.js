@@ -137,6 +137,7 @@ var piggySelection = function(type, d, i) {
         d3.selectAll(".pie-parts")
             .transition()
             .duration(transitionDuration)
+            .ease(transitionEasing)
             .style("opacity", 1);
         d3.select("#path_" + i)
             .transition()

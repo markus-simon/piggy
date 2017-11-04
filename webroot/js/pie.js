@@ -50,7 +50,6 @@ var path2 = svg1.datum(dataBars).append("g").attr("id","glabel").selectAll("path
     .transition()
     .duration(transitionDuration)
     .ease(transitionEasing)
-
     .style("stroke-opacity", 1)
     .attrTween("stroke-dasharray", function() {
         var len = this.getTotalLength();

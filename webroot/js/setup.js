@@ -46,6 +46,8 @@ var keyMapping = {
     85: 'upgrade'
 };
 
+var ms = 5000;
+
 d3.formatDefaultLocale(locale);
 
 var piggyLocal = d3.local();
