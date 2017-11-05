@@ -103,7 +103,7 @@ var piggySelection = function(type, d, i) {
         tweenText('#total-sum-pie', (d.sumTotal/100), formats.currency);
         tweenText('#total-weight', calculateWeight(d), formats.weight);
         d3.select("#percent").text(formats.percent(calculatePercent(d)));
-        d3.select("#percent").transition().style('opacity', 1);
+        d3.select("#percent").transition().duration(transitionDuration).style('opacity', 1);
         d3.selectAll('.pie-parts').transition()
             .duration(transitionDuration)
             .ease(transitionEasing)
@@ -117,23 +117,23 @@ var piggySelection = function(type, d, i) {
             .ease(transitionEasing)
             .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 120).cornerRadius(4))
             .style("opacity", "1");
-        d3.selectAll('.bar').transition().style('opacity', function() {
+        d3.selectAll('.bar').transition().duration(transitionDuration).style('opacity', function() {
             return (this.id === 'bar_' + i) ? 1 : .1;
         });
-        d3.selectAll('.dot').transition().style('opacity', function() {
+        d3.selectAll('.dot').transition().duration(transitionDuration).style('opacity', function() {
             return (this.parentNode.id === 'dots_' + i) ? 1 : .1;
         });
-        d3.selectAll('.line').transition().style('opacity', function() {
+        d3.selectAll('.line').transition().duration(transitionDuration).style('opacity', function() {
             return (this.id === 'line_' + i) ? 1 : .1;
         });
-        d3.selectAll('.area').transition().style('opacity', function() {
+        d3.selectAll('.area').transition().duration(transitionDuration).style('opacity', function() {
             return (this.id === 'area_' + i) ? 0.1 : 0.01;
         });
     } else {
         tweenText('#total-quantity', piggyLocal.get(quantityTotalLabel), formats.quantity);
         tweenText('#total-sum-pie', piggyLocal.get(sumTotalLabel), formats.currency);
         tweenText('#total-weight',  piggyLocal.get(weightTotalLabel), formats.weight);
-        d3.select("#percent").transition().style('opacity', 0);
+        d3.select("#percent").transition().duration(transitionDuration).style('opacity', 0);
         d3.selectAll(".pie-parts")
             .transition()
             .duration(transitionDuration)
@@ -144,8 +144,8 @@ var piggySelection = function(type, d, i) {
             .duration(transitionDuration)
             .ease(transitionEasing)
             .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(4));
-        d3.selectAll(".bar, .dot, .line").transition().style("opacity", 1);
-        d3.selectAll(".area").transition().style("opacity", .1);
+        d3.selectAll(".bar, .dot, .line").transition().duration(transitionDuration).style("opacity", 1);
+        d3.selectAll(".area").transition().duration(transitionDuration).style("opacity", .1);
     }
 };
 

@@ -28,6 +28,26 @@ var setDomain = function(value) {
     ];
 };
 
+var zoom = d3.zoom()
+    .scaleExtent([1, 40])
+    .translateExtent([[-100, -100], [width + 90, height]])
+    .on("zoom", zoomed);
+
+svg.call(zoom);
+
+function zoomed() {
+    g.attr("transform", d3.event.transform);
+    axisXLine.call(xAxisLine.scale(d3.event.transform.rescaleX(xLine)));
+/*    g.transition().select(".x.axis")
+        .duration(transitionDuration)
+        .ease(transitionEasing)
+        .call(xAxisLine);*/
+/*
+    axisYLine.call(yAxisLine.scale(d3.event.transform.rescaleY(y)));
+*/
+}
+
+
 var xLine = d3.scaleTime()
     .domain(setDomain('date'))
     .range([0, width * layout - 80]);
@@ -40,10 +60,10 @@ var line = d3.line()
     .x(function(d) { return xLine(d.date); })
     .y(function(d) { return yLine(d.quantity); });
 
-var xAxisLine = d3.axisBottom(xLine).tickSizeInner(-height);
+var xAxisLine = d3.axisBottom(xLine).tickSizeInner(-height).tickFormat(d3.timeFormat("%d.%m"));
 var yAxisLine = d3.axisLeft(yLine).ticks(10, ",f").tickSizeInner((-width * 2) + 20);
 
-g.append("g")
+var axisXLine = g.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + (height - 25) + ")")
     .call(xAxisLine);
