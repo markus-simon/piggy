@@ -700,12 +700,16 @@ body .theme-preview-container input {
     margin: 11px auto;
     transform: rotate(0deg);
     transition: .5s ease-in-out;
-    cursor: pointer; }
+    cursor: pointer;
+    }
 
 #nav-icon3 {
     position: absolute;
     left: 26px;
-    top: 16px; }
+    top: 16px;
+    display: contents;
+    height: 100%;
+    }
 
 #nav-icon3 span {
     display: block;
