@@ -1,14 +1,14 @@
 var eb       = new vertx.EventBus(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/eventbus');
 var config   = {};
 var dataBars = [
-    { amount: "1",   sum: 0, sumTotal: 0},
-    { amount: "2",   sum: 0, sumTotal: 0},
-    { amount: "5",   sum: 0, sumTotal: 0},
-    { amount: "10",  sum: 0, sumTotal: 0},
-    { amount: "20",  sum: 0, sumTotal: 0},
-    { amount: "50",  sum: 0, sumTotal: 0},
-    { amount: "100", sum: 0, sumTotal: 0},
-    { amount: "200", sum: 0, sumTotal: 0}
+    { idx: 0, amount: "1",   sum: 0, sumTotal: 0},
+    { idx: 1, amount: "2",   sum: 0, sumTotal: 0},
+    { idx: 2, amount: "5",   sum: 0, sumTotal: 0},
+    { idx: 3, amount: "10",  sum: 0, sumTotal: 0},
+    { idx: 4, amount: "20",  sum: 0, sumTotal: 0},
+    { idx: 5, amount: "50",  sum: 0, sumTotal: 0},
+    { idx: 6, amount: "100", sum: 0, sumTotal: 0},
+    { idx: 7, amount: "200", sum: 0, sumTotal: 0}
 ];
 
 var colorMapping = {
@@ -52,8 +52,8 @@ var colorMapping = {
 };
 
 var headerFontSize  = (window.innerHeight / 17) * (layout / 2);
-
-var color           = d3.scaleOrdinal(["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231","#ff55d2"]);
+var fallbackColor   = "#f00";
+var coinColors      = ["#ffacf6", "#d052d0", "#ff5fb8", "#ff00a5", "#6b486b", "#6b215c", "#3c1231","#ff55d2"];
 var colors          = {
     "header":           '#CB3577',
     "headerFont":       '#fff',
@@ -480,8 +480,8 @@ eb.onopen = function()
 
         $('#theme-style').remove();
         injectStyles(theme.css);
-        color  = d3.scaleOrdinal(theme.colors.amount);
-        colors = {
+        coinColors  = theme.colors.amount;
+        colors      = {
             "header":           theme.colors.header,
             "headerFont":       theme.colors.headerFont,
             "font":             theme.colors.font,

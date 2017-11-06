@@ -803,4 +803,9 @@ body .theme-preview-container input {
 
 .area {
     fill: lightsteelblue;
+    pointer-events: none;
+}
+
+.dot {
+    cursor: pointer;
 }

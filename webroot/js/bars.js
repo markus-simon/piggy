@@ -22,21 +22,21 @@ var svg2 = d3.select('#group2')
 
 var bar = svg2.selectAll(".rect")
     .data(dataBars)
-    .enter().append("g");
+    .enter().append("g").attr('class', 'bar-group');
 
 bar.append("rect")
     .attr("x", function(d) { return x(d.amount) - barWidth / 2; })
     .attr("width", barWidth)
-    .attr("y", function(d) { return y(d.sumTotal  / 100 ); })
-    .attr("class","bar")
-    .attr("id", function(d, i) { return "bar_" + i })
+    .attr("y", function(d) { return y(d.sumTotal / 100 ); })
+    .attr("class", "bar")
+    .attr("id", function(d) { return "bar_" + d.idx; })
     .attr("height", function(d) { return height - 25 - y(d.amount); })
-    .style("fill", function(d, i) { return color(i); })
-    .on("mouseover", function(d, i) {
-        piggySelection('on', d, i);
+    .attr("fill", function(d) { return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor; })
+    .on("mouseover", function(d) {
+        piggySelection('on', d, d.idx);
     })
-    .on("mouseout", function(d, i) {
-        piggySelection('off', d, i);
+    .on("mouseout", function(d) {
+        piggySelection('off', d, d.idx);
     });
 
 svg2.append("g")
@@ -65,6 +65,7 @@ function updateBars(result) {
     var newData = [];
     result.forEach(function (row) {
         if (row.type !== 'virtual') {
+            row.idx = coinIndex[row.amount];
             newData.push(row);
         }
     });
@@ -83,28 +84,43 @@ function updateBars(result) {
 
     var xAxis = d3.axisBottom(x);
     var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width + 65);
-
     var chart = d3.select('#group2').select("g");
 
-    chart.selectAll("rect")
+    var bars = chart.selectAll(".bar-group")
+        .remove()
+        .exit()
+        .data(newData);
+
+    bars.enter()
+        .append("g").attr('class', 'bar-group')
+        .append("rect")
         .data(newData)
+        .on("mouseover", function(d) {
+            piggySelection('on', d, d.idx);
+        })
+        .on("mouseout", function(d) {
+            piggySelection('off', d, d.idx);
+        })
         .transition()
         .duration(transitionDuration)
         .ease(transitionEasing)
         .delay(function (d, i) {
             return 30 * i
         })
-        .attr("x", function (d) {
+        .attr("id", function(d) { return "bar_" + d.idx; })
+        .attr("class", "bar")
+        .attr("x", function(d) {
             return x(d.amount) - barWidth / 2;
         })
         .attr("y", function (d) {
             return y(d.calculatedTotal);
         })
+        .attr("width", barWidth)
         .attr("height", function (d) {
             return height - y(d.calculatedTotal) - 25;
         })
-        .style("fill", function (d, i) {
-            return color(i);
+        .attr("fill", function (d) {
+            return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor;
         });
 
     chart.transition().select(".x.axis")

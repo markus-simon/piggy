@@ -1,3 +1,14 @@
+var coinIndex = {
+    "1": 0,
+    "2": 1,
+    "5": 2,
+    "10": 3,
+    "20": 4,
+    "50": 5,
+    "100": 6,
+    "200": 7
+};
+
 /**
  *
  * @returns {string}
@@ -91,6 +102,29 @@ var jsonToForm = function(prefix, data) {
 };
 
 /**
+ * Search in object
+ *
+ * @param items
+ * @param attribute
+ * @param value
+ * @returns {*}
+ */
+var findByAttribute = function(items, attribute, value) {
+    for (var i = 0; i < items.length; i++) {
+        if ('number' === typeof value) {
+            if (value === parseInt(items[i][attribute])) {
+                return items[i];
+            }
+        } else {
+            if (value === items[i][attribute]) {
+                return items[i];
+            }
+        }
+    }
+    return null;
+};
+
+/**
  * Highlight selected amount
  *
  * @param type
@@ -121,9 +155,9 @@ var piggySelection = function(type, d, i) {
             return (this.id === 'bar_' + i) ? 1 : .1;
         });
         d3.selectAll('.dot').transition().duration(transitionDuration).style('opacity', function() {
-            return (this.parentNode.id === 'dots_' + i) ? 1 : .1;
+            return (this.parentNode.id === 'coin-type-' + i) ? 1 : .1;
         });
-        d3.selectAll('.line').transition().duration(transitionDuration).style('opacity', function() {
+        d3.selectAll('.lines').transition().duration(transitionDuration).style('opacity', function() {
             return (this.id === 'line_' + i) ? 1 : .1;
         });
         d3.selectAll('.area').transition().duration(transitionDuration).style('opacity', function() {
@@ -144,7 +178,7 @@ var piggySelection = function(type, d, i) {
             .duration(transitionDuration)
             .ease(transitionEasing)
             .attr("d", arc1.innerRadius(radius - 20).outerRadius(radius - 40).cornerRadius(4));
-        d3.selectAll(".bar, .dot, .line").transition().duration(transitionDuration).style("opacity", 1);
+        d3.selectAll(".bar, .dot, .lines").transition().duration(transitionDuration).style("opacity", 1);
         d3.selectAll(".area").transition().duration(transitionDuration).style("opacity", .1);
     }
 };
