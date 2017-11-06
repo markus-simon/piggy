@@ -87,8 +87,7 @@ function updateBars(result) {
         return d.calculatedTotal
     })]);
 
-    var xAxis = d3.axisBottom(x)/*.tickValues(['1¢','2¢','5¢','10¢','20¢','50¢','1€','2€'])*//*.tickFormat(function(d) {  })*/;
-
+    var xAxis = d3.axisBottom(x);
     var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width + 65);
     var chart = d3.select('#group2').select("g");
 
