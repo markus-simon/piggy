@@ -33,7 +33,9 @@ var zoom = d3.zoom()
     .translateExtent([[-100, -100], [width + 90, height]])
     .on("zoom", zoomed);
 
+/*
 svg.call(zoom);
+*/
 
 function zoomed() {
     g.attr("transform", d3.event.transform);
@@ -145,7 +147,7 @@ var dots = coinType.selectAll("circle")
     .on("mouseover", function(d) {
         var aux  = findByAttribute(coinTypes, 'id', d.amount);
         var aux2 = changeCalculationBase(aux);
-        piggySelection('on', aux2.values[aux2.values.length - 1], d.idx);
+        piggySelection('on', d, d.idx);
 
         if ("no" !== config['cross'] && "undefined" !== config['cross']) {
             focus.style('display', null);
@@ -213,7 +215,7 @@ function updateLine(result) {
             .attr("d", function(d) { return line(d.values); });
 
         coinType.data(coinTypes).enter().append().exit();
-        dots.data(function(e) { console.log(e); return e.values; }).enter().append()/*.exit()*/;
+        dots.data(function(e) { /*console.log(e); */return e.values; }).enter().append()/*.exit()*/;
 
 /*
         dots.exit().remove();

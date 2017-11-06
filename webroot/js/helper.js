@@ -234,14 +234,16 @@ var calculateWeight = function (row) {
  * @returns {number}
  */
 var calculatePercent = function(row) {
-    var total = 0;
-
+    var total   = 0;
+    var percent = 0;
     if (config['calculation-base'] === 'value') {
-        total = piggyLocal.get(sumTotalLabel);
+        total = piggyLocal.get(sumTotalLabel) * 100;
+        percent = row.sumTotal / total;
     } else if (config['calculation-base'] === 'quantity') {
         total = piggyLocal.get(quantityTotalLabel);
+        percent =  row.sum / total;
     }
-    return row.calculatedTotal / total;
+    return percent;
 };
 
 /**
