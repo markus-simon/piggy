@@ -60,7 +60,7 @@ var axisYText = axisY.append("text")
     .attr("x", -15)
     .attr("dy", "0.71em")
     .attr("fill", "#000");
-var realTypes = [];
+
 function updateBars(result) {
     var newData = [];
     result.forEach(function (row) {
@@ -70,7 +70,7 @@ function updateBars(result) {
         }
     });
 
-    realTypes = newData.map(function (d) {
+    var realTypes = newData.map(function (d) {
         if (d.amount >= 100) {
             return d.amount / 100 + '€';
         } else {
@@ -78,7 +78,6 @@ function updateBars(result) {
         }
     });
 
-    console.log(realTypes);
     var x = d3.scalePoint()
         .domain(realTypes)
         .range([40, width - 40]).padding(0.9);

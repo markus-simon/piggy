@@ -40,13 +40,6 @@ svg.call(zoom);
 function zoomed() {
     g.attr("transform", d3.event.transform);
     axisXLine.call(xAxisLine.scale(d3.event.transform.rescaleX(xLine)));
-/*    g.transition().select(".x.axis")
-        .duration(transitionDuration)
-        .ease(transitionEasing)
-        .call(xAxisLine);*/
-/*
-    axisYLine.call(yAxisLine.scale(d3.event.transform.rescaleY(y)));
-*/
 }
 
 
@@ -118,24 +111,6 @@ var focus = g.append('g').style('display', 'none');
     focus.append('line')
         .attr('id', 'focusLineY')
         .attr('class', 'focusLine');
-
-
-/**
- *
- * @param d
- * @returns {*}
- */
-var changeCalculationBase = function(d) {
-    var calulatedTotal = 0;
-    $.each(d.values, function(key, value) {
-        if (config['calculation-base'] === 'quantity') {
-            d.values[key].calculatedTotal = calulatedTotal += value.sum;
-        } else if (config['calculation-base'] === 'value') {
-            d.values[key].calculatedTotal = calulatedTotal += (value.sumTotal / 100);
-        }
-    });
-    return d;
-};
 
 var dots = coinType.selectAll("circle")
     .data(function(d) { return d.values; })
@@ -346,7 +321,7 @@ function generateCoinTypes(reply) {
             });
         }
 
-        var coinTypes = [];
+        coinTypes = [];
         coinTypes.push({
             id: "999",
             values: row2
