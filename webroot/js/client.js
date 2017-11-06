@@ -137,7 +137,7 @@ eb.onopen = function()
                 case 'png':
                     var gif = '<img width="1920" src="' + document.showurl + '"/>';
                     $('#show-content').empty().append(gif);
-                    $('#show').fadeTo('slow', 1).delay(ms).fadeOut('slow');
+                    $('#show').fadeTo('slow', 1).delay(transitionDuration).fadeOut('slow');
                     break;
                 case 'wav':
                 case 'mp3':
