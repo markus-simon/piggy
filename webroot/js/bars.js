@@ -1,5 +1,10 @@
-
-var types   = dataBars.map(function(d) { if (d.type !== 'virtual') { return d.amount; }});
+var types = dataBars.map(function (d) {
+    if (d.amount >= 100) {
+        return d.amount / 100 + '€';
+    } else {
+        return d.amount + "¢";
+    }
+});
 
 var x = d3.scalePoint()
     .domain(types)
@@ -22,12 +27,13 @@ var svg2 = d3.select('#group2')
 
 var bar = svg2.selectAll(".rect")
     .data(dataBars)
-    .enter().append("g").attr('class', 'bar-group');
-
-bar.append("rect")
-    .attr("x", function(d) { return x(d.amount) - barWidth / 2; })
+    .enter()
+    .append("rect")
+    .attr("x", function(d, i) {
+        return x(types[i]) - barWidth / 2;
+    })
     .attr("width", barWidth)
-    .attr("y", function(d) { return y(d.sumTotal / 100 ); })
+    .attr("y", height - 25 )
     .attr("class", "bar")
     .attr("id", function(d) { return "bar_" + d.idx; })
     .attr("height", function(d) { return height - 25 - y(d.amount); })
@@ -62,6 +68,7 @@ var axisYText = axisY.append("text")
     .attr("fill", "#000");
 
 function updateBars(result) {
+
     var newData = [];
     result.forEach(function (row) {
         if (row.type !== 'virtual') {
@@ -90,15 +97,7 @@ function updateBars(result) {
     var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width + 65);
     var chart = d3.select('#group2').select("g");
 
-    var bars = chart.selectAll(".bar-group")
-        .remove()
-        .exit()
-        .data(newData);
-
-    bars.enter()
-        .append("g").attr('class', 'bar-group')
-        .append("rect")
-        .data(newData)
+    bar.data(newData)
         .on("mouseover", function(d) {
             piggySelection('on', d, d.idx);
         })
@@ -108,9 +107,6 @@ function updateBars(result) {
         .transition()
         .duration(transitionDuration)
         .ease(transitionEasing)
-        .delay(function (d, i) {
-            return 30 * i
-        })
         .attr("id", function(d) { return "bar_" + d.idx; })
         .attr("class", "bar")
         .attr("x", function(d, i) {
