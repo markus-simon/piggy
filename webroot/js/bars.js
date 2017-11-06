@@ -60,7 +60,7 @@ var axisYText = axisY.append("text")
     .attr("x", -15)
     .attr("dy", "0.71em")
     .attr("fill", "#000");
-
+var realTypes = [];
 function updateBars(result) {
     var newData = [];
     result.forEach(function (row) {
@@ -70,10 +70,15 @@ function updateBars(result) {
         }
     });
 
-    var realTypes = newData.map(function (d) {
-        return d.amount;
+    realTypes = newData.map(function (d) {
+        if (d.amount >= 100) {
+            return d.amount / 100 + '€';
+        } else {
+            return d.amount + "¢";
+        }
     });
 
+    console.log(realTypes);
     var x = d3.scalePoint()
         .domain(realTypes)
         .range([40, width - 40]).padding(0.9);
@@ -82,7 +87,8 @@ function updateBars(result) {
         return d.calculatedTotal
     })]);
 
-    var xAxis = d3.axisBottom(x);
+    var xAxis = d3.axisBottom(x)/*.tickValues(['1¢','2¢','5¢','10¢','20¢','50¢','1€','2€'])*//*.tickFormat(function(d) {  })*/;
+
     var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width + 65);
     var chart = d3.select('#group2').select("g");
 
@@ -109,8 +115,8 @@ function updateBars(result) {
         })
         .attr("id", function(d) { return "bar_" + d.idx; })
         .attr("class", "bar")
-        .attr("x", function(d) {
-            return x(d.amount) - barWidth / 2;
+        .attr("x", function(d, i) {
+            return x(realTypes[i]) - barWidth / 2;
         })
         .attr("y", function (d) {
             return y(d.calculatedTotal);

@@ -145,8 +145,6 @@ var dots = coinType.selectAll("circle")
     .attr("cx",function(d) { return xLine(d.date); })
     .attr("r", function(d) { return d.quantity ? 4 : 0 })
     .on("mouseover", function(d) {
-        var aux  = findByAttribute(coinTypes, 'id', d.amount);
-        var aux2 = changeCalculationBase(aux);
         piggySelection('on', d, d.idx);
 
         if ("no" !== config['cross'] && "undefined" !== config['cross']) {

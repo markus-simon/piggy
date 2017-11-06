@@ -19,7 +19,8 @@ var formats  = {
     "percent": d3.format(",.1%"),
     "quantity": d3.format(",.0f"),
     "currency": d3.format(",.2f"),
-    "weight": d3.format(",.3f")
+    "weight": d3.format(",.3f"),
+    "formatCurrency": d3.format("$,.2f")
 };
 
 var locale = {
