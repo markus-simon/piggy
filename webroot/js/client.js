@@ -384,7 +384,7 @@ eb.onopen = function()
                 renderThemeProperty(property, theme[property]);
             }
         }
-        d3.selectAll('form').selectAll('label').transition().duration(transitionDuration).style('color', colors.font); // doppelt hält besser
+        d3.selectAll('form').selectAll('label').transition().duration(transitionDuration).style('color', colors.font);
     };
 
     /**
@@ -412,7 +412,7 @@ eb.onopen = function()
             input.colorPicker({
                 renderCallback: function($elm, toggled) {
                     if (toggled !== true && toggled !== false) {
-                        var prop        = $elm[0].name; //offsetParent.innerText.replace(/(\r\n|\n|\r)/gm,"");
+                        var prop        = $elm[0].name;
                         var pickedColor = $elm.text;
                         changeColor(prop, pickedColor);
                         updateData();
@@ -496,7 +496,7 @@ eb.onopen = function()
         // change header color
         d3.selectAll('.accordion-title').transition().duration(transitionDuration).style('background-color', colors.header);
         d3.selectAll('.overlay-title').transition().duration(transitionDuration).style('background-color', colors.header);
-        $('#config-overlay').css('border-color', colors.header);
+        d3.selectAll('.overlay').style('border-color', colors.header);
 
 
         // change body/background color // TODO muss das alles gleichzeitig und am Anfang sein?
@@ -534,7 +534,7 @@ eb.onopen = function()
             });
         }
         $(".overlay").fadeOut('slow');
-        $('#' + collection + '-overlay').fadeTo("slow", 0.97);
+        $('#' + collection + '-overlay').css('top', (window.pageYOffset + headerHeight)).fadeTo("slow", 0.97);
         if ('checkout' !== collection) {
             var table = "." + collection + "-collection";
             eb.send('find', {collection: collection, matcher: {}}, function(reply) {
