@@ -119,34 +119,7 @@ var dots = coinType.selectAll("circle")
     .filter(function(d) { return d.quantity !== 0; })
     .attr("class", "dot")
     .attr("cx",function(d) { return xLine(d.date); })
-    .attr("r", 4)
-    .on("mouseover", function(d) {
-        piggySelection('on', d, d.idx);
-
-        if ("no" !== config['cross'] && "undefined" !== config['cross']) {
-            focus.style('display', null);
-
-            // Vertical line
-            focus.select('#focusLineX')
-                .style('stroke', coinColors[d.idx])
-                .attr('x1', xLine(d.date))
-                .attr('x2', xLine(d.date))
-                .attr('y1', height - 25)
-                .attr('y2', "extended" === config['cross'] ? yLine(yLine.domain()[1]) : yLine(d.quantity));
-
-            // Horizontal line
-            focus.select('#focusLineY')
-                .style('stroke', coinColors[d.idx])
-                .attr('x1', 0)
-                .attr('x2', "extended" === config['cross'] ? xLine(xLine.domain()[1]) : xLine(d.date))
-                .attr('y1', yLine(d.quantity))
-                .attr('y2', yLine(d.quantity));
-        }
-    })
-    .on("mouseout", function(d) {
-        piggySelection('off', null, d.idx);
-        focus.style('display', 'none');
-    });
+    .attr("r", 4);
 
 /**
  * Re-render line chart
@@ -199,7 +172,35 @@ function updateLine(result) {
 
         dots.data(function(e) { return e.values }).enter()
             .append('circle')
+            .attr("class", "dot")
             .filter(function(d) { return d.quantity !== 0; })
+            .on("mouseover", function(d) {
+                piggySelection('on', d, d.idx);
+
+                if ("no" !== config['cross'] && "undefined" !== config['cross']) {
+                    focus.style('display', null);
+
+                    // Vertical line
+                    focus.select('#focusLineX')
+                        .style('stroke', coinColors[d.idx])
+                        .attr('x1', xLine(d.date))
+                        .attr('x2', xLine(d.date))
+                        .attr('y1', height - 25)
+                        .attr('y2', "extended" === config['cross'] ? yLine(yLine.domain()[1]) : yLine(d.quantity));
+
+                    // Horizontal line
+                    focus.select('#focusLineY')
+                        .style('stroke', coinColors[d.idx])
+                        .attr('x1', 0)
+                        .attr('x2', "extended" === config['cross'] ? xLine(xLine.domain()[1]) : xLine(d.date))
+                        .attr('y1', yLine(d.quantity))
+                        .attr('y2', yLine(d.quantity));
+                }
+            })
+            .on("mouseout", function(d) {
+                piggySelection('off', null, d.idx);
+                focus.style('display', 'none');
+            })
             .transition()
             .delay(transitionDuration * 2)
             .duration(transitionDuration)
