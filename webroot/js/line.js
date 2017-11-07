@@ -55,7 +55,7 @@ var line = d3.line()
     .x(function(d) { return xLine(d.date); })
     .y(function(d) { return yLine(d.quantity); });
 
-var xAxisLine = d3.axisBottom(xLine).tickSizeInner(-height).tickFormat(d3.timeFormat("%d.%m"));
+var xAxisLine = d3.axisBottom(xLine).ticks(0).tickSizeInner(-height)/*.tickFormat(d3.timeFormat(tickFormat))*/;
 var yAxisLine = d3.axisLeft(yLine).ticks(10, ",f").tickSizeInner((-width * 2) + 20);
 
 var axisXLine = g.append("g")
@@ -199,12 +199,33 @@ function updateLine(result) {
             .attr("cx",function(d) { return xLine(d.date); })
             .attr("cy",function(d) { return yLine(d.quantity); })
             .attr("r", function(d) { return d.quantity ? 4 : 0 })
-            .style("fill", function(d) { return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor; })
+            .style("fill", function(d) { return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor; });
+
+
+        var timeFrame = parseInt(config['timeframe']);
+
+        var tickAmount = 0;
+        var tickFormat = "%d.%m";
+        switch (true) {
+            case timeFrame <= 7:
+                tickAmount = timeFrame;
+                break;
+            case timeFrame > 7 && timeFrame <= 31:
+                tickAmount = 7;
+                break;
+            case timeFrame > 31 && timeFrame <= 366:
+                tickAmount = 6 * layout;
+                break;
+            case timeFrame > 366:
+                tickAmount = Math.min(5, Math.ceil(timeFrame / 365));
+                tickFormat = "%Y";
+                break;
+        }
 
         g.transition().select(".x.axis")
             .duration(transitionDuration)
             .ease(transitionEasing)
-            .call(xAxisLine);
+            .call(xAxisLine.ticks(tickAmount).tickFormat(d3.timeFormat(tickFormat)));
 
         g.transition().select(".y.axis")
             .duration(transitionDuration)
