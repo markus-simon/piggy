@@ -809,3 +809,22 @@ body .theme-preview-container input {
 .dot {
     cursor: pointer;
 }
+
+.hidden {
+    display: none;
+}
+
+/* TABLE */
+.table tr:not(.hidden) th:not(.expander),
+.table tr:not(.hidden) td:not(.expander):not(.expander-content) {
+    display: none;
+}
+@media (min-width: 800px) {
+    .expander .btn {
+        display: none!important;
+    }
+    table th,
+    table td {
+        display: table-cell!important;
+    }
+}

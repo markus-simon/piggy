@@ -540,7 +540,7 @@ eb.onopen = function()
             eb.send('find', {collection: collection, matcher: {}}, function(reply) {
                 $(table + " > tbody").empty();
                 $.each(reply, function(key, value) {
-                    renderTable(value, table);
+                    renderTable(value, table)
                 });
             });
         }
@@ -999,9 +999,12 @@ eb.onopen = function()
             'created_at': 'message_created_at'
         };
 
-        html += '<tr id="' + table.replace('.','') + '-' + value._id + '">';
-        $.each(columns, function(cKey, column) {
+        var card = '';
+        html    += '<tr id="' + table.replace('.', '') + '-' + value._id + '">';
+        $.each(columns, function (cKey, column) {
+            var expander = '';
             var key = column.textContent.toLocaleLowerCase();
+
             if (true === mapping.hasOwnProperty(key.replace(' ', '_'))) {
                 key = mapping[key.replace(' ', '_')];
             }
@@ -1011,17 +1014,27 @@ eb.onopen = function()
                 deletable = true;
                 html += '<td id="delete-' + collection + '-' + value._id + '"><span class="btn">X Remove</span></td>';
             } else {
-                if ($(column).data('func')) {
-                    var func = $(column).data('func');
-                    html += '<td>' + window[func](value[$(column).data('column')]) + '</td>';
-                } else if ($(column).data('wrap')) {
-                    html += wrapValue($(column).data('wrap'), 'td', value);
+                if ('undefined' !== typeof $(column).attr('class')
+                    && 'expander' === $(column).attr('class')
+                ) {
+                    html += '<td class="expander">';
+                    html += '<span class="btn">+</span> ';
                 } else {
-                    html += '<td>' + value[key] + '</td>';
+                    html += '<td>';
                 }
+                if ($(column).data('func')) {
+                    html += window[$(column).data('func')](value[$(column).data('column')]);
+                } else if ($(column).data('wrap')) {
+                    html += wrapValue(false, $(column).data('wrap'), 'td', value);
+                } else {
+                    html += value[key];
+                }
+                html += '</td>';
+                card += '<strong>' + column.textContent + ':</strong> ' + value[key] + '<br>';
             }
         });
         html += '</tr>';
+        html += '<tr class="hidden"><td class="expander-content">' + card + '</td></tr>';
 
         $(table + " > tbody").append(html);
 
@@ -1051,15 +1064,20 @@ eb.onopen = function()
         }
     };
 
+    $(document).on('click', 'td.expander .btn' ,function() {
+        $(this).parents('tr').next().toggleClass('hidden');
+    });
+
     /**
      * Wrap given value
      *
+     * @param useElement
      * @param element
      * @param type
      * @param values
      * @returns {string}
      */
-    var wrapValue = function(element, type, values) {
+    var wrapValue = function(useElement, element, type, values) {
         var html     = '';
         var wrappers = [];
 
@@ -1072,7 +1090,9 @@ eb.onopen = function()
             wrappers[0] = element.split(/(?=[.#])/g);
         }
 
-        html += '<' + type + '>';
+        if (true === useElement) {
+            html += '<' + type + '>';
+        }
 
         // Wrappers
         $.each(wrappers, function(key, value) {
@@ -1105,7 +1125,11 @@ eb.onopen = function()
                 });
             }
         });
-        return html += '</' + type + '>';
+
+        if (true === useElement) {
+            return html += '</' + type + '>'
+        }
+        return html;
     };
 
     /**
