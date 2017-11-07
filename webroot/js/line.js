@@ -112,14 +112,22 @@ var focus = g.append('g').style('display', 'none');
         .attr('id', 'focusLineY')
         .attr('class', 'focusLine');
 
-var dots = coinType.selectAll("circle")
-    .data(function(d) { return d.values; })
-    .enter()
-    .append("circle")
-    .filter(function(d) { return d.quantity !== 0; })
-    .attr("class", "dot")
-    .attr("cx",function(d) { return xLine(d.date); })
-    .attr("r", 4);
+if (config['dots'] === 'yes') {
+    var dots = coinType.selectAll("circle")
+        .data(function (d) {
+            return d.values;
+        })
+        .enter()
+        .append("circle")
+        .filter(function (d) {
+            return d.quantity !== 0;
+        })
+        .attr("class", "dot")
+        .attr("cx", function (d) {
+            return xLine(d.date);
+        })
+        .attr("r", 4);
+}
 
 /**
  * Re-render line chart
@@ -165,51 +173,61 @@ function updateLine(result) {
 
         coinType.data(coinTypes).exit().remove().enter().append().exit();
 
-        // DIRTY DOTS REMOVAL
-        d3.selectAll('circle').transition()
-            .delay(transitionDuration)
-            .duration(transitionDuration).remove();
+        if (config['dots'] === 'yes') {
+            // DIRTY DOTS REMOVAL
+            d3.selectAll('circle').transition()
+                .delay(transitionDuration)
+                .duration(transitionDuration).remove();
 
-        dots.data(function(e) { return e.values }).enter()
-            .append('circle')
-            .attr("class", "dot")
-            .filter(function(d) { return d.quantity !== 0; })
-            .on("mouseover", function(d) {
-                piggySelection('on', d, d.idx);
+            dots.data(function (e) { return e.values })
+                .enter()
+                .append('circle')
+                .attr("class", "dot")
+                .filter(function (d) {
+                    return d.quantity !== 0;
+                })
+                .on("mouseover", function (d) {
+                    piggySelection('on', d, d.idx);
 
-                if ("no" !== config['cross'] && "undefined" !== config['cross']) {
-                    focus.style('display', null);
+                    if ("no" !== config['cross'] && "undefined" !== config['cross']) {
+                        focus.style('display', null);
 
-                    // Vertical line
-                    focus.select('#focusLineX')
-                        .style('stroke', coinColors[d.idx])
-                        .attr('x1', xLine(d.date))
-                        .attr('x2', xLine(d.date))
-                        .attr('y1', height - 25)
-                        .attr('y2', "extended" === config['cross'] ? yLine(yLine.domain()[1]) : yLine(d.quantity));
+                        // Vertical line
+                        focus.select('#focusLineX')
+                            .style('stroke', coinColors[d.idx])
+                            .attr('x1', xLine(d.date))
+                            .attr('x2', xLine(d.date))
+                            .attr('y1', height - 25)
+                            .attr('y2', "extended" === config['cross'] ? yLine(yLine.domain()[1]) : yLine(d.quantity));
 
-                    // Horizontal line
-                    focus.select('#focusLineY')
-                        .style('stroke', coinColors[d.idx])
-                        .attr('x1', 0)
-                        .attr('x2', "extended" === config['cross'] ? xLine(xLine.domain()[1]) : xLine(d.date))
-                        .attr('y1', yLine(d.quantity))
-                        .attr('y2', yLine(d.quantity));
-                }
-            })
-            .on("mouseout", function(d) {
-                piggySelection('off', null, d.idx);
-                focus.style('display', 'none');
-            })
-            .transition()
-            .delay(transitionDuration * 2)
-            .duration(transitionDuration)
-            .ease(transitionEasing)
-            .attr("cx",function(d) { return xLine(d.date); })
-            .attr("cy",function(d) { return yLine(d.quantity); })
-            .attr("r", 4)
-            .style("fill", function(d) { return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor; });
-
+                        // Horizontal line
+                        focus.select('#focusLineY')
+                            .style('stroke', coinColors[d.idx])
+                            .attr('x1', 0)
+                            .attr('x2', "extended" === config['cross'] ? xLine(xLine.domain()[1]) : xLine(d.date))
+                            .attr('y1', yLine(d.quantity))
+                            .attr('y2', yLine(d.quantity));
+                    }
+                })
+                .on("mouseout", function (d) {
+                    piggySelection('off', null, d.idx);
+                    focus.style('display', 'none');
+                })
+                .transition()
+                .delay(transitionDuration * 2)
+                .duration(transitionDuration)
+                .ease(transitionEasing)
+                .attr("cx", function (d) {
+                    return xLine(d.date);
+                })
+                .attr("cy", function (d) {
+                    return yLine(d.quantity);
+                })
+                .attr("r", 4)
+                .style("fill", function (d) {
+                    return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor;
+                });
+        }
 
         var timeFrame = parseInt(config['timeframe']);
 
