@@ -519,11 +519,6 @@ eb.onopen = function()
         d3.select('#header').select('g').transition().delay(transitionDuration).duration(transitionDuration).attr("opacity", 1);
         d3.select('#menu').style('background-color', colors.header);
 
-
-        d3.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
-        d3.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
-        d3.select('#svg3').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
-
         updateData();
     };
 
