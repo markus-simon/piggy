@@ -119,7 +119,7 @@ var dots = coinType.selectAll("circle")
     .filter(function(d) { return d.quantity !== 0; })
     .attr("class", "dot")
     .attr("cx",function(d) { return xLine(d.date); })
-    .attr("r", function(d) { return d.quantity ? 4 : 4 })
+    .attr("r", 4)
     .on("mouseover", function(d) {
         piggySelection('on', d, d.idx);
 
@@ -190,13 +190,14 @@ function updateLine(result) {
             .style("stroke", function(d) { return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor; })
             .attr("d", function(d) { return line(d.values); });
 
-        /*
-        dots.exit().remove();
-*/
+        coinType.data(coinTypes).exit().remove().enter().append().exit();
 
-        coinType.data(coinTypes).enter().append().exit();
-        dots.data(function(e) { return e.values })
-            .enter()
+        // DIRTY DOTS REMOVAL
+        d3.selectAll('circle').transition()
+            .delay(transitionDuration)
+            .duration(transitionDuration).remove();
+
+        dots.data(function(e) { return e.values }).enter()
             .append('circle')
             .filter(function(d) { return d.quantity !== 0; })
             .transition()
@@ -205,7 +206,7 @@ function updateLine(result) {
             .ease(transitionEasing)
             .attr("cx",function(d) { return xLine(d.date); })
             .attr("cy",function(d) { return yLine(d.quantity); })
-            .attr("r", function(d) { return d.quantity ? 4 : 4 })
+            .attr("r", 4)
             .style("fill", function(d) { return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor; });
 
 
