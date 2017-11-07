@@ -55,6 +55,8 @@ var quantityTotalLabel = g.append("text")
     .style("fill", colors.headerFont)
     .style("font-size", headerFontSize);
 
+d3.select('#groups').style('padding-top', headerHeight + 'px');
+
 function updateHeader(result) {
 
     var quantityTotal = 0;
@@ -77,7 +79,6 @@ function updateHeader(result) {
     quantityTotalLabel.text(formats.quantity(quantityTotal));
     sumTotalLabel.text(formats.currency(calculatedTotalSum));
     weightTotalLabel.text(formats.weight(calculatedTotalWeight));
-
 
     kgLabel.attr('x', parseInt(sumTotalLabel._groups[0][0].getBBox().x) - headerFontSize / 4 * 3);
     weightTotalLabel.attr('x', parseInt(kgLabel._groups[0][0].getBBox().x) - headerFontSize / 4);

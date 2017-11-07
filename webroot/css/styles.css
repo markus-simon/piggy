@@ -62,10 +62,6 @@ body {
     background: #ff5fb8;
 }
 
-::-webkit-scrollbar {
-    width: 0;
-}
-
 #wishes-p {
     position: absolute;
     bottom:0;
@@ -606,7 +602,7 @@ body table.table td span.btn:hover {
 }
 
 #header {
-    position: relative;
+    position: fixed;
     z-index: 11;
 }
 #header > div.title {
