@@ -3,7 +3,13 @@ var svgHeader = d3.select('#header')
     .attr("id", "svgHeader")
     .attr("width", (window.innerWidth))
     .attr("height", headerHeight)
-    .style("background", colors.header);
+    .style("background", colors.header)
+    .on("click", function() {
+        window.scroll({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
 
 var headerVerticalMiddle = headerHeight / 2;
 

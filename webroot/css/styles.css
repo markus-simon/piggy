@@ -345,6 +345,7 @@ body input[type="checkbox"]:checked:before {
     -moz-border-radius: 5px;
     border-radius: 5px;
     color: #fff;
+    font-size: 16px;
 }
 
 #config-save-li {
