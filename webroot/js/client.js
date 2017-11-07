@@ -237,7 +237,7 @@ eb.onopen = function()
     $(window).keyup(function(e) {
         if ($('input:focus').length < 1 && $('textarea:focus').length < 1) {
             if (e.keyCode === 27) {
-                $('#header, #nav-icon3').removeClass('open');
+                $('#header, #nav-icon').removeClass('open');
                 $('.overlay').fadeOut('slow');
                 eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function(reply) {
                     changeTheme(reply[0]);
@@ -458,7 +458,7 @@ eb.onopen = function()
     /**
      * Toggle navigation
      */
-    $('#nav-icon3').click(function(){
+    $('#nav-icon').click(function(){
         $(this).toggleClass('open');
         $('#header').toggleClass('open');
     });
@@ -579,7 +579,7 @@ eb.onopen = function()
      */
     $('#menu a').click(function() {
         var target = $(this).attr('id').split('-')[1];
-        $('#header, #nav-icon3').toggleClass('open');
+        $('#header, #nav-icon').toggleClass('open');
         $(".overlay").fadeOut('slow');
         if ('' !== target && 'undefined' !== typeof target) {
             if ('config' === target) {
