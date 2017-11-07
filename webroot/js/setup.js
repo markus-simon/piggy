@@ -5,11 +5,11 @@ var width, height, layout;
 
 if (window.innerWidth < 800) {
     layout = 1;
-    width  = window.innerWidth;
+    width  = window.innerWidth - 1;
     height = window.innerHeight - headerHeight;
 } else {
     layout = 2;
-    width  = window.innerWidth / 2;
+    width  = window.innerWidth / 2 - 1;
     height = (window.innerHeight / 2) - (headerHeight);
 }
 
@@ -64,11 +64,5 @@ var easing = {
     easeBack:    d3.easeBack
 };
 
-
 var transitionDuration = 500;
 var transitionEasing   = d3.easeExp;
-
-
-/*
-var format = d3.format("($.2f")(-3.5);
-*/

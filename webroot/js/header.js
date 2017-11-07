@@ -5,11 +5,12 @@ var svgHeader = d3.select('#header')
     .attr("height", headerHeight)
     .style("background", colors.header);
 
-var bla = headerHeight / 2;
+var headerVerticalMiddle = headerHeight / 2;
 
 var g = svgHeader.append('g')
     .attr('height', headerHeight)
-    .attr('transform', 'translate(0, ' + bla + ')');
+    .attr('transform', 'translate(0, ' + headerVerticalMiddle + ')')
+    .attr("opacity", 0);
 
 var begin = window.innerWidth - 40;
 
@@ -27,7 +28,7 @@ var sumTotalLabel = g.append("text")
     .attr('x', parseInt(euro._groups[0][0].getBBox().x) - headerFontSize / 4)
     .attr("text-anchor", "end")
     .attr('alignment-baseline', 'central')
-    .style("fill", colors.header)
+    .style("fill", colors.headerFont)
     .style("font-size", headerFontSize);
 
 var kgLabel = g.append("text")
@@ -44,7 +45,7 @@ var weightTotalLabel = g.append("text")
     .attr("class","header-text")
     .attr("text-anchor", "end")
     .attr('alignment-baseline', 'central')
-    .style("fill", colors.header)
+    .style("fill", colors.headerFont)
     .style("font-size", headerFontSize);
 
 var quantityTotalLabel = g.append("text")
@@ -84,10 +85,4 @@ function updateHeader(result) {
     weightTotalLabel.attr('x', parseInt(kgLabel._groups[0][0].getBBox().x) - headerFontSize / 4);
     quantityTotalLabel.attr('x', parseInt(weightTotalLabel._groups[0][0].getBBox().x) - headerFontSize / 4 * 3);
 
-    quantityTotalLabel.transition().duration(transitionDuration).style('fill',  colors.headerFont);
-    sumTotalLabel.transition().duration(transitionDuration).style('fill', colors.headerFont);
-    weightTotalLabel.transition().duration(transitionDuration).style('fill', colors.headerFont);
-    svgHeader.transition().duration(transitionDuration).style("background-color", colors.header);
-
-    d3.selectAll('#menu').transition().duration(transitionDuration).style('background-color', colors.header);
 }

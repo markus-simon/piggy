@@ -498,11 +498,15 @@ eb.onopen = function()
         d3.selectAll('.overlay-title').transition().duration(transitionDuration).style('background-color', colors.header);
         $('#config-overlay').css('border-color', colors.header);
 
-        // change body/background color
-        var colorParts = ['body', '#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
+
+        // change body/background color // TODO muss das alles gleichzeitig und am Anfang sein?
+        var colorParts = ['#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
         $.each(colorParts, function(key, value) {
-            d3.select(value).transition().duration(transitionDuration).style('background-color', colors.background)
+            d3.select(value).style('background-color', colors.background)
         });
+
+        d3.select('body').transition().duration(transitionDuration).style('background-color', colors.background);
+        d3.select('#svgHeader').transition().duration(transitionDuration).style("background-color", colors.header);
 
         // change input color
         d3.selectAll('.input-text').transition().duration(transitionDuration).style('background', colors.input_background);
@@ -510,6 +514,11 @@ eb.onopen = function()
         d3.selectAll('.input-text').transition().duration(transitionDuration).style('color', colors.input);
         d3.select('#percent').transition().duration(transitionDuration).style('fill', colors.axis);
         d3.selectAll('form').selectAll('label').transition().duration(transitionDuration).style('color', colors.font); // hä?
+
+        d3.select('#header').select('g').selectAll('text').transition().duration(transitionDuration).style("fill", colors.headerFont);
+        d3.select('#header').select('g').transition().delay(transitionDuration).duration(transitionDuration).attr("opacity", 1);
+        d3.select('#menu').style('background-color', colors.header);
+
         updateData();
     };
 

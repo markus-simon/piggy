@@ -73,6 +73,9 @@ body {
     padding: 0 20px;
 }
 
+::-webkit-scrollbar {
+    width: 1px;
+}
 
 .overlay {
     display: none;
@@ -660,7 +663,7 @@ body .theme-preview-container input {
 #menu {
     background: #CB3577;
     display: none;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
