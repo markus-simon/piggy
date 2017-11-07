@@ -458,9 +458,28 @@ eb.onopen = function()
     /**
      * Toggle navigation
      */
-    $('#nav-icon').click(function(){
-        $(this).toggleClass('open');
-        $('#header').toggleClass('open');
+    $('#nav-icon').click(function() {
+        var $this = $(this);
+        if ($(this).hasClass('open')) {
+            var t = 0;
+            var j = 1;
+            d3.select('#nav-icon').selectAll('span').select(function(d, i) {
+                d3.select('#nav-icon').select('span:nth-child(' + ++i + ')').transition()
+                    .duration(transitionDuration).style('top', ((headerHeight / 4.5) * j) + 'px');
+                if (i === 1 || i === 3) j++;
+            });
+        } else {
+            var t = parseInt(transitionDuration) + 250;
+            d3.select('#nav-icon')
+                .selectAll('span:nth-child(1n+1)')
+                .transition()
+                .duration(transitionDuration)
+                .style('top', ((headerHeight / 4.5) * 2) + 'px');
+        }
+        setTimeout(function() {
+            $this.toggleClass('open');
+            $('#header').toggleClass('open');
+        }, t);
     });
 
     /**
