@@ -172,6 +172,7 @@ function updateLine(result) {
                 .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
             areaPath.data(coinTypes);
             areaPath.transition()
+                .delay(transitionDuration * 2)
                 .duration(transitionDuration)
                 .ease(transitionEasing)
                 .attr("opacity", .1)
@@ -182,6 +183,7 @@ function updateLine(result) {
         }
 
         linePath.transition()
+            .delay(transitionDuration * 2)
             .duration(transitionDuration)
             .ease(transitionEasing)
             .style("stroke", function(d) { return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor; })
@@ -194,6 +196,7 @@ function updateLine(result) {
         dots.exit().remove();
 */
         dots.transition()
+            .delay(transitionDuration * 2)
             .duration(transitionDuration)
             .ease(transitionEasing)
             .attr("cx",function(d) { return xLine(d.date); })
@@ -223,20 +226,19 @@ function updateLine(result) {
         }
 
         g.transition().select(".x.axis")
+            .delay(transitionDuration * 2)
             .duration(transitionDuration)
             .ease(transitionEasing)
             .call(xAxisLine.ticks(tickAmount).tickFormat(d3.timeFormat(tickFormat)));
 
         g.transition().select(".y.axis")
+            .delay(transitionDuration * 2)
             .duration(transitionDuration)
             .ease(transitionEasing)
             .call(yAxisLine);
 
         axisYLineText.text(config['calculation-base']);
 
-        d3.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
-        d3.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
-        d3.select('#svg3').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
         d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
     });
 }
