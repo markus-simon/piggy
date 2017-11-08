@@ -8,7 +8,11 @@ var eb = vertx.eventBus();
 
 var options = {
     logActivity : true,
-    ssl: false,
+    ssl: true,
+    pemKeyCertOptions : {
+        keyPath  : "/home/emmes/.ssh/neuron-key.pem",
+        certPath : "/home/emmes/.ssh/neuron-crt.pem"
+    },
     outboundPermitteds : [
         {}
     ],
