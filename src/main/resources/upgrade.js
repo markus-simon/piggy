@@ -19,9 +19,13 @@ var getUpgradeFiles = function() {
  */
 var checkIfInstalled = function(verticle) {
     var fileName = verticle.substring(verticle.lastIndexOf("/") + 1);
-    eb.send('find', {collection: 'upgrade', matcher: { verticle: fileName }}, function(reply) {
-        if (reply.body().length < 1) {
-            deployUpgrade(verticle);
+    eb.send('find', {collection: 'upgrade', matcher: { verticle: fileName }}, function(res, res_err) {
+        if (res_err === null) {
+            if (res.body().length < 1) {
+                deployUpgrade(verticle);
+            }
+        } else {
+            res_err.printStackTrace();
         }
     });
 };

@@ -314,8 +314,8 @@ var getZero = function(unit) {
 var createQrCode = function(url) {
     new QRCode(document.getElementById("qr"), {
         text: url,
-        width: width,
-        height: width,
+        width: width / 2,
+        height: width / 2,
         colorDark : "#000000",
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.H

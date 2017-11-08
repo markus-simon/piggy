@@ -30,7 +30,6 @@ var retriever = ConfigRetriever.create(vertx, options);
 var verticles = [
     'httpserver.js',
     'persistor.js',
-    'upgrade.js',
     'erm.js',
     'hue.js',
     'tts.js'
@@ -44,7 +43,15 @@ retriever.getConfig(function (res, res_err) {
             'config': res
         };
         verticles.forEach(function(verticle) {
-            vertx.deployVerticle(verticle, options);
+            vertx.deployVerticle(verticle, options, function(res, res_err) {
+                if (res_err === null) {
+                    if (verticle === 'persistor.js') {
+                        vertx.deployVerticle('upgrade.js', options);
+                    }
+                } else {
+                    res_err.printStackTrace();
+                }
+            });
         });
     }
 });

@@ -26,17 +26,13 @@ if (config.ssl === true) {
 }
 
 var router = Router.router(vertx);
+router.route('/eventbus/*').handler(SockJSHandler.create(vertx).bridge(options).handle);
+router.route().handler(BodyHandler.create().handle);
+router.route().handler(StaticHandler.create().handle);
 router.route('/conf').handler(function (routingContext) {
     var response = routingContext.response();
-    response.setChunked(true);
-    response.write(JSON.stringify(config));
-    response.end();
+    response.end(JSON.stringify(config));
 });
-router.route('/eventbus/*').handler(SockJSHandler.create(vertx).bridge(options).handle);
-router.route().handler(StaticHandler.create().handle);
-router.route().handler(BodyHandler.create().handle);
-
-
 
 router.post().handler(function (routingContext) {
     var response = routingContext.response();

@@ -112,7 +112,9 @@ var focus = g.append('g').style('display', 'none');
         .attr('id', 'focusLineY')
         .attr('class', 'focusLine');
 
+/*
 if (config['dots'] === 'yes') {
+*/
     var dots = coinType.selectAll("circle")
         .data(function (d) {
             return d.values;
@@ -127,7 +129,9 @@ if (config['dots'] === 'yes') {
             return xLine(d.date);
         })
         .attr("r", 4);
+/*
 }
+*/
 
 /**
  * Re-render line chart
@@ -172,7 +176,9 @@ function updateLine(result) {
 
         coinType.data(coinTypes).exit().remove().enter().append().exit();
 
+/*
         if (config['dots'] === 'yes') {
+*/
             // DIRTY DOTS REMOVAL
             d3.selectAll('circle').transition()
                 .duration(transitionDuration).remove();
@@ -224,7 +230,9 @@ function updateLine(result) {
                 .style("fill", function (d) {
                     return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor;
                 });
+/*
         }
+*/
 
         var timeFrame = parseInt(config['timeframe']);
 
