@@ -26,8 +26,7 @@ var begin = window.innerWidth - 40;
 d3.select('#nav-icon').style('height', headerHeight + 'px');
 var j = 1;
 d3.select('#nav-icon').selectAll('span').select(function(d, i) {
-    d3.select('#nav-icon').select('span:nth-child(' + ++i + ')').style('top', ((headerHeight / 4.5) * j) + 'px');
-    if (i === 1 || i === 3) j++;
+    d3.select('#nav-icon').select('span:nth-child(' + ++i + ')').style('top', ((headerHeight / 4.5) * j++) + 'px');
 });
 
 var euro = g.append("text")
