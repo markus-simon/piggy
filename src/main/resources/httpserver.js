@@ -6,12 +6,13 @@ var SockJSHandler      = require('vertx-web-js/sock_js_handler');
 
 var eb = vertx.eventBus();
 
+var config = Vertx.currentContext().config();
+
 var options = {
-    logActivity : true,
-    ssl: true,
+    ssl: config.ssl,
     pemKeyCertOptions : {
-        keyPath  : "/home/emmes/.ssh/neuron-key.pem",
-        certPath : "/home/emmes/.ssh/neuron-crt.pem"
+        keyPath  : config.key,
+        certPath : config.crt
     },
     outboundPermitteds : [
         {}
@@ -22,9 +23,16 @@ var options = {
 };
 
 var router = Router.router(vertx);
+router.route('/conf').handler(function (routingContext) {
+    var response = routingContext.response();
+    response.setChunked(true);
+    response.write(JSON.stringify(config));
+    response.end();
+});
 router.route('/eventbus/*').handler(SockJSHandler.create(vertx).bridge(options).handle);
 router.route().handler(StaticHandler.create().handle);
 router.route().handler(BodyHandler.create().handle);
+
 
 
 router.post().handler(function (routingContext) {

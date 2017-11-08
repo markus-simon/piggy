@@ -136,7 +136,6 @@ if (config['dots'] === 'yes') {
 function updateLine(result) {
     eb.send('find', {collection: 'piggy', matcher: {}}, function(reply) {
 
-        console.log(reply);
         coinTypes = generateCoinTypes(reply);
 
         xLine.domain(setDomain('date'));
@@ -373,6 +372,5 @@ function generateCoinTypes(reply) {
             values: row2
         });
     }
-    console.log(coinTypes);
     return coinTypes;
 }
