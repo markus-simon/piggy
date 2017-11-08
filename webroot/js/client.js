@@ -458,13 +458,11 @@ eb.onopen = function()
         });
     };
 
-/*
     var showDonateOverlay = function() {
         $(".overlay").fadeOut('slow');
         $('#donate-overlay').fadeTo("slow", 0.97);
         createQrCode(config['donate-url'])
     };
-*/
 
     /**
      * Toggle navigation
