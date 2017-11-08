@@ -1,6 +1,5 @@
 var ConfigRetriever = require("vertx-config-js/config_retriever");
 
-/*
 var httpStore = {
     "type" : "http",
     "config" : {
@@ -9,7 +8,6 @@ var httpStore = {
         "path" : "/conf"
     }
 };
-*/
 
 var fileStore = {
     "type" : "file",
@@ -20,9 +18,7 @@ var fileStore = {
 
 var options = {
     "stores" : [
-/*
         httpStore,
-*/
         fileStore
     ]
 };
