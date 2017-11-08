@@ -116,7 +116,6 @@
             </ul>
         </div>
 
-
         <!-- ERM -->
         <div id="erm-overlay" class="overlay">
             <div class="overlay-title">Alerts</div>
@@ -222,10 +221,6 @@
             </ul>
         </div>
 
-
-
-
-
         <!-- Checkout -->
         <div id="checkout-overlay" class="overlay">
             <div class="overlay-title">Checkout</div>
@@ -249,12 +244,6 @@
             </div>
         </div>
 
-
-
-
-
-
-
         <!-- Piggy -->
         <div id="piggy-overlay" class="overlay">
             <div class="overlay-title">History</div>
@@ -272,12 +261,6 @@
                 </table>
             </div>
         </div>
-
-
-
-
-
-
 
         <!-- Theme -->
         <div id="theme-overlay" class="overlay">
@@ -307,11 +290,10 @@
                                 <label for="theme-name">Name</label>
                                 <input class="input-text" id="theme-name" name="name" placeholder="Name" required/>
                             </li>
+
                             <li>
                                 <div class="theme-preview-container"><ul></ul></div>
                             </li>
-
-
 
                             <li class="input textarea">
                                 <label for="theme-css">CSS</label>
@@ -338,18 +320,51 @@
             <form id="config-save-form">
                 <div class="accordion">
                     <ul>
+
                         <li>
-                            <span class="accordion-title open">Theme</span>
+                            <span class="accordion-title">General Config</span>
                             <div class="accordion-content">
                                 <ul>
-                                    <li id="rest-config-li2" class="input">
+
+                                    <li class="input">
                                         <label for="config-theme">Theme</label>
                                         <select class="input-text" id="config-theme" name="theme"></select>
                                     </li>
+
+                                    <li class="input">
+                                        <label for="config-calculation-base">Calculation base</label>
+                                        <select class="input-text" id="config-calculation-base" name="calculation-base">
+                                            <option value="quantity">Menge</option>
+                                            <option value="value">Wert</option>
+                                            <option value="both">Beides</option>
+                                        </select>
+                                    </li>
+
+                                    <li class="input">
+                                        <label for="config-duration">Duration</label>
+                                        <input id="config-duration" class="input-text" name="duration" placeholder="0" />
+                                    </li>
+
+                                    <li class="input">
+                                        <label for="config-easing">Easing</label>
+                                        <select class="input-text" id="config-easing" name="easing">
+                                            <option value="easeElastic">easeElastic</option>
+                                            <option value="easeBounce">easeBounce</option>
+                                            <option value="easeLinear">easeLinear</option>
+                                            <option value="easeSin">easeSin</option>
+                                            <option value="easeQuad">easeQuad</option>
+                                            <option value="easeCubic">easeCubic</option>
+                                            <option value="easePoly">easePoly</option>
+                                            <option value="easeCircle">easeCircle</option>
+                                            <option value="easeExp">easeExp</option>
+                                            <option value="easeBack">easeBack</option>
+                                        </select>
+                                    </li>
+
                                 </ul>
                             </div>
                         </li>
-
+                        
                         <li>
                             <span class="accordion-title">Histogram Config</span>
                             <div class="accordion-content">
@@ -406,40 +421,6 @@
                         </li>
 
                         <li>
-                            <span class="accordion-title">General Config</span>
-                            <div class="accordion-content">
-                                <ul>
-                                    <li class="input">
-                                        <label for="config-calculation-base">Calculation base</label>
-                                        <select class="input-text" id="config-calculation-base" name="calculation-base">
-                                            <option value="quantity">Menge</option>
-                                            <option value="value">Wert</option>
-                                            <option value="both">Beides</option>
-                                        </select>
-                                    </li>
-                                    <li class="input">
-                                        <label for="config-duration">Duration</label>
-                                        <input id="config-duration" class="input-text" name="duration" placeholder="0" />
-                                    </li>
-                                    <li class="input">
-                                        <label for="config-easing">Easing</label>
-                                        <select class="input-text" id="config-easing" name="easing">
-                                            <option value="easeElastic">easeElastic</option>
-                                            <option value="easeBounce">easeBounce</option>
-                                            <option value="easeLinear">easeLinear</option>
-                                            <option value="easeSin">easeSin</option>
-                                            <option value="easeQuad">easeQuad</option>
-                                            <option value="easeCubic">easeCubic</option>
-                                            <option value="easePoly">easePoly</option>
-                                            <option value="easeCircle">easeCircle</option>
-                                            <option value="easeExp">easeExp</option>
-                                            <option value="easeBack">easeBack</option>
-                                        </select>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <li>
                             <span class="accordion-title">Donate Config</span>
                             <div class="accordion-content">
                                 <ul>
@@ -456,7 +437,6 @@
                             <label for="config-save">Ready?</label>
                             <button class="input-text" id="config-save" type="button">Save</button>
                         </li>
-
 
                     </ul>
                 </div>
@@ -499,7 +479,6 @@
             <div class="overlay-title">Donate</div>
             <div id="qr"></div>
         </div>
-
 
         <div id="show"><div id="show-content"></div></div>
         <div id="notice"><div id="notice-content"></div></div>
