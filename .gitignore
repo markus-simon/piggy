@@ -1,0 +1,6 @@
+.gradle/
+.idea/
+webroot/assets/sound/
+build/
+.vertx/
+src/main/resources/conf.json
