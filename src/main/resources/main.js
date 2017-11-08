@@ -1,13 +1,13 @@
 var ConfigRetriever = require("vertx-config-js/config_retriever");
 
-var httpStore = {
+/*var httpStore = {
     "type" : "http",
     "config" : {
         "host" : "https://neuron.stayglossy.net",
         "port" : 19000,
         "path" : "/conf"
     }
-};
+};*/
 
 var fileStore = {
     "type" : "file",
@@ -18,7 +18,9 @@ var fileStore = {
 
 var options = {
     "stores" : [
+/*
         httpStore,
+*/
         fileStore
     ]
 };
