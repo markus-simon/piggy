@@ -10,10 +10,6 @@ var config = Vertx.currentContext().config();
 
 var options = {
     ssl: config.ssl,
-    pemKeyCertOptions : {
-        keyPath  : config.key,
-        certPath : config.crt
-    },
     outboundPermitteds : [
         {}
     ],
@@ -21,6 +17,13 @@ var options = {
         {}
     ]
 };
+
+if (config.ssl === true) {
+    options.pemKeyCertOptions = {
+        keyPath  : config.key,
+        certPath : config.crt
+    }
+}
 
 var router = Router.router(vertx);
 router.route('/conf').handler(function (routingContext) {
