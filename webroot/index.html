@@ -42,6 +42,9 @@
                 <li>
                     <a id="overlay-wishes" title="Wishlist" href="#">Wishlist</a>
                 </li>
+                <li>
+                    <a id="overlay-donate" title="Donate" href="#">Donate</a>
+                </li>
             </ul>
         </div>
         <div id="groups">
@@ -440,6 +443,22 @@
 
 
 
+<!--
+                        <li>
+                            <span class="accordion-title">Donate Config</span>
+                            <div class="accordion-content">
+                                <ul>
+                                    <li class="input">
+                                        <label for="config-donate-url">Duration</label>
+                                        <input id="config-donate-url" class="input-text" name="donate-url" placeholder="http://this.dev" />
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+-->
+
+
+
                         <li id="config-save-li" class="input">
                             <input id="config-save-collection" type="hidden" name="collection" value="config">
                             <input id="config-save-id" type="hidden" name="_id">
@@ -481,10 +500,17 @@
                         <button class="input-text" id="factory-reset" type="button">Reset</button>
                     </div>
                 </li>
-
             </ul>
-
         </div>
+
+        <!-- Donate -->
+        <div id="donate-overlay" class="overlay">
+            <div class="overlay-title">Donate</div>
+            <div id="qr">
+
+            </div>
+        </div>
+
 
         <div id="show"><div id="show-content"></div></div>
         <div id="notice"><div id="notice-content"></div></div>
@@ -494,6 +520,7 @@
         <script type="text/javascript" defer src="js/external/d3.v4.min.js"></script>
         <script type="text/javascript" defer src="js/external/crossfilter.min.js"></script>
         <script type="text/javascript" defer src="js/external/jquery-2.2.4.min.js"></script>
+        <script type="text/javascript" defer src="js/external/qrcode.js"></script>
         <script type="text/javascript" defer src="js/external/jqColorPicker.min.js"></script>
         <script type="text/javascript" defer src="js/problem.js"></script>
         <script type="text/javascript" defer src="js/setup.js"></script>

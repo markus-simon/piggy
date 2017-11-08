@@ -336,7 +336,7 @@ body input[type="checkbox"]:checked:before {
 }
 
 #config-save-form input, #config-save-form textarea, #config-save-form select, #config-save-form button {
-    padding: 20px;
+    padding: 7px;
     background: #ff5fb8;
     border: 1px solid #fff;
     border-right: 1px solid #c3c3c3;

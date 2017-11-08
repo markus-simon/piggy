@@ -55,7 +55,7 @@ var line = d3.line()
     .x(function(d) { return xLine(d.date); })
     .y(function(d) { return yLine(d.quantity); });
 
-var xAxisLine = d3.axisBottom(xLine).ticks(0).tickSizeInner(-height)/*.tickFormat(d3.timeFormat(tickFormat))*/;
+var xAxisLine = d3.axisBottom(xLine).ticks(0).tickSizeInner(-height);
 var yAxisLine = d3.axisLeft(yLine).ticks(10, ",f").tickSizeInner((-width * 2) + 20);
 
 var axisXLine = g.append("g")
@@ -135,6 +135,8 @@ if (config['dots'] === 'yes') {
  */
 function updateLine(result) {
     eb.send('find', {collection: 'piggy', matcher: {}}, function(reply) {
+
+        console.log(reply);
         coinTypes = generateCoinTypes(reply);
 
         xLine.domain(setDomain('date'));
@@ -154,7 +156,6 @@ function updateLine(result) {
                 .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
             areaPath.data(coinTypes);
             areaPath.transition()
-                .delay(transitionDuration * 2)
                 .duration(transitionDuration)
                 .ease(transitionEasing)
                 .attr("opacity", .1)
@@ -165,7 +166,6 @@ function updateLine(result) {
         }
 
         linePath.transition()
-            .delay(transitionDuration * 2)
             .duration(transitionDuration)
             .ease(transitionEasing)
             .style("stroke", function(d) { return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor; })
@@ -176,7 +176,6 @@ function updateLine(result) {
         if (config['dots'] === 'yes') {
             // DIRTY DOTS REMOVAL
             d3.selectAll('circle').transition()
-                .delay(transitionDuration)
                 .duration(transitionDuration).remove();
 
             dots.data(function (e) { return e.values })
@@ -214,7 +213,6 @@ function updateLine(result) {
                     focus.style('display', 'none');
                 })
                 .transition()
-                .delay(transitionDuration * 2)
                 .duration(transitionDuration)
                 .ease(transitionEasing)
                 .attr("cx", function (d) {
@@ -375,5 +373,6 @@ function generateCoinTypes(reply) {
             values: row2
         });
     }
+    console.log(coinTypes);
     return coinTypes;
 }

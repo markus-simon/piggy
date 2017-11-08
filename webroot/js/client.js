@@ -249,6 +249,9 @@ eb.onopen = function()
                 }
                 showConfigOverlay();
             }
+            if (e.keyCode === 68) {
+                showDonateOverlay();
+            }
             if (true === keyMapping.hasOwnProperty(e.keyCode)) {
                 showOverlay(keyMapping[e.keyCode]);
             }
@@ -455,6 +458,14 @@ eb.onopen = function()
         });
     };
 
+/*
+    var showDonateOverlay = function() {
+        $(".overlay").fadeOut('slow');
+        $('#donate-overlay').fadeTo("slow", 0.97);
+        createQrCode(config['donate-url'])
+    };
+*/
+
     /**
      * Toggle navigation
      */
@@ -603,6 +614,8 @@ eb.onopen = function()
         if ('' !== target && 'undefined' !== typeof target) {
             if ('config' === target) {
                 showConfigOverlay();
+            } else if ('donate' === target) {
+                showDonateOverlay();
             } else {
                 showOverlay(target);
             }

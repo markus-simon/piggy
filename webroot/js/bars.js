@@ -49,11 +49,6 @@ svg2.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + (height - 25) + ")")
     .call(xAxis)
-    .append("text")
-    .attr("x", width - margin.right - 80)
-    .attr("dy", "-5px")
-    .attr("fill", "#000")
-    .text("Type");
 
 var axisY = svg2.append("g")
     .attr("class", "y axis")
