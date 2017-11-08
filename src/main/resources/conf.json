@@ -1,5 +1,0 @@
-{
-  "ssl": true,
-  "key": "/home/emmes/.ssh/neuron-key.pem",
-  "crt": "/home/emmes/.ssh/neuron-crt.pem"
-}
