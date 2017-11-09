@@ -124,12 +124,10 @@ focus.append('line')
 var lines = {
     init: function() {
         eb.send('find', {collection: 'piggy', matcher: {}}, function (reply) {
-
             coinTypes = generateCoinTypes(reply);
 
             xLine.domain(setXYDomain('date'));
             yLine.domain(setXYDomain('quantity'));
-
 
             axisXLine.attr("class", "x axis")
                 .attr("transform", "translate(0," + (height - 25) + ")")
@@ -137,7 +135,6 @@ var lines = {
 
             axisYLine.attr("class", "y axis")
                 .call(yAxisLine);
-
 
             // Update coin types
             coinType = g.selectAll('.coin-type').data(coinTypes);
@@ -168,11 +165,6 @@ var lines = {
                     return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
                 });
 
-/*
-            g.selectAll(".coin-type").data(coinTypes).exit().remove().enter().append();
-*/
-
-
             if (config['area-lines'] === 'yes') {
                 area.x(function (d) {
                     return xLine(d.date);
@@ -197,12 +189,10 @@ var lines = {
                 areaPath.attr("opacity", 0);
             }
 
-            coinType.data(coinTypes).exit().remove().enter().append().exit();
-
-            var timeFrame = parseInt(config['timeframe']);
-
+            var timeFrame  = parseInt(config['timeframe']);
             var tickAmount = 0;
             var tickFormat = "%d.%m";
+
             switch (true) {
                 case timeFrame <= 7:
                     tickAmount = timeFrame;
@@ -218,15 +208,11 @@ var lines = {
                     tickFormat = "%Y";
                     break;
             }
-            d3.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
-            d3.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
-            d3.select('#svg3').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
-            d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
+            lines.finish();
         });
     },
     update: function () {
         eb.send('find', {collection: 'piggy', matcher: {}}, function (reply) {
-
             coinTypes = generateCoinTypes(reply);
 
             xLine.domain(setXYDomain('date'));
@@ -250,86 +236,7 @@ var lines = {
                 .transition()
                 .duration(transitionDuration)
                 .ease(transitionEasing)
-                .attr("d", function(d) { return line(d.values); })
-            /*
-                .style("stroke", function(d) { return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor; })
-*/
-
-/*
-            g.selectAll(".coin-type").data(coinTypes).exit().remove().enter().append();
-*/
-
-
-
-/*
-            linePath.data(coinTypes);
-*/
-
-
-
-/*            linePath.transition()
-                .duration(transitionDuration)
-                .ease(transitionEasing)
-                .style("stroke", function(d) { return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor; })
-                .attr("d", function(d) { return line(d.values); });*/
-
-
-
-/*
-            coinType = g.selectAll('.coin-type').data(coinTypes);
-*/
-/*
-            var group    = coinType.enter().append('g').classed("coin-type", true).attr("id", function(d) { return "coin-type-" + d.idxs });
-*/
-
-
-/*
-            group.merge(coinType);
-            group./!*select("path").*!/
-*/
-
-/*            coinType.select('path').enter().append().transition()
-                .duration(transitionDuration)
-                .ease(transitionEasing)
-                .style("stroke", function(d) { return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor; })
-                .attr("d", function(d) { return line(d.values); });*/
-/*
-            coinType.data(coinTypes).exit().remove().enter().append().exit();
-*/
-
-
-/*            coinType.transition().duration(2000).attr("d", function(d) {
-                    return line(d.values);
-                });*/
-            // Update coin types
-/*
-            var coinType = g.selectAll('.coin-type').data(coinTypes);
-            var group    = coinType.enter().append('g').classed("coin-type", true).attr("id", function(d) { return "coin-type-" + d.idxs });
-*/
-
-
-/*            group.merge(coinType);
-            group.append("path")
-                .classed("line", true)
-                .attr("id", function(d) { return "line_" + d.idxs })
-                .merge(coinType.select('.line'))
-                .style("fill", "none")
-                .style("stroke-width", "1")
-                .attr("d", function(d) {
-                    return line(d.values);
-                })
-                .transition()
-                .duration(transitionDuration)
-                .ease(transitionEasing)
-/!*                .attrTween("stroke-dasharray", function() {
-                    var len = this.getTotalLength();
-                    return function(t) { return (d3.interpolateString("0," + len, len + ",0"))(t) };
-                })*!/
-                .style("stroke", function(d) {
-                    return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
-                });*/
-
-
+                .attr("d", function(d) { return line(d.values); });
 
             if (config['area-lines'] === 'yes') {
                 area.x(function (d) { return xLine(d.date); })
@@ -351,10 +258,10 @@ var lines = {
                 areaPath.attr("opacity", 0);
             }
 
-            var timeFrame = parseInt(config['timeframe']);
-
+            var timeFrame  = parseInt(config['timeframe']);
             var tickAmount = 0;
             var tickFormat = "%d.%m";
+
             switch (true) {
                 case timeFrame <= 7:
                     tickAmount = timeFrame;
@@ -370,15 +277,15 @@ var lines = {
                     tickFormat = "%Y";
                     break;
             }
-
-
-            axisYLineText.text(config['calculation-base']);
-
-            d3.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
-            d3.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
-            d3.select('#svg3').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
-            d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
+            lines.finish();
         });
+    },
+    finish: function() {
+        axisYLineText.text(config['calculation-base']);
+        d3.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
+        d3.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
+        d3.select('#svg3').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
+        d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
     }
 };
 
