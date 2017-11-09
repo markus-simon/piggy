@@ -99,7 +99,6 @@ var area = d3.area()
     .y1(function(d) { return yLine(d.quantity); });
 
 var areaPath = coinType.append("path")
-    .data(coinTypes)
     .attr("class", "area")
     .attr("id", function(d) { return "area_" + d.idxs })
     .attr("d", function(d) {
@@ -140,11 +139,13 @@ var lines = {
             var coinType = g.selectAll('.coin-type').data(coinTypes);
             var group    = coinType.enter().append('g').classed("coin-type", true).attr("id", function(d) { return "coin-type-" + d.idxs });
 
+            group.merge(coinType);
+
+            // Update path
             line.x(function (d) { return xLine(d.date); })
                 .y(function (d) { return yLine(d.quantity); })
                 .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
 
-            group.merge(coinType);
             group.append("path")
                 .classed("line", true)
                 .attr("id", function(d) { return "line_" + d.idxs })
@@ -165,31 +166,38 @@ var lines = {
                     return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
                 });
 
-            coinType.exit().remove();
-
+            // Update area
+            /**
+             * @todo: entrance animation
+             */
             if (config['area-lines'] === 'yes') {
-                area.x(function (d) {
-                    return xLine(d.date);
-                })
+                area.x(function (d) { return xLine(d.date); })
                     .y0(height - 25)
-                    .y1(function (d) {
-                        return yLine(d.quantity);
-                    })
+                    .y1(function (d) { return yLine(d.quantity); })
                     .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
-                areaPath.data(coinTypes);
-                areaPath.transition()
+
+                group.append("path")
+                    .classed("area", true)
+                    .attr("id", function(d) { return "line_" + d.idxs; })
+                    .merge(coinType.select('.area'))
+                    .attr("d", function(d) { return area(d.values); })
+                    .transition()
                     .duration(transitionDuration)
                     .ease(transitionEasing)
-                    .attr("opacity", .1)
-                    .attr("d", function (d) {
-                        return area(d.values);
+                    .attrTween("stroke-dasharray", function () {
+                        var len = this.getTotalLength();
+                        return function (t) {
+                            return (d3.interpolateString("0," + len, len + ",0"))(t)
+                        };
                     })
+                    .attr("opacity", .1)
                     .style("fill", function (d) {
                         return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
                     });
-            } else {
-                areaPath.attr("opacity", 0);
             }
+
+            // Remove old stuff
+            coinType.exit().remove();
 
             var timeFrame    = parseInt(config['timeframe']);
             var timeSettings = setTimeSettings();
@@ -218,28 +226,23 @@ var lines = {
                 .ease(transitionEasing)
                 .call(yAxisLine);
 
-            g.selectAll('.coin-type').select('path').data(coinTypes)
+            g.selectAll('.coin-type').select('.line').data(coinTypes)
                 .transition()
                 .duration(transitionDuration)
                 .ease(transitionEasing)
                 .attr("d", function(d) { return line(d.values); });
 
             if (config['area-lines'] === 'yes') {
-                area.x(function (d) { return xLine(d.date); })
+                area.x(function(d) { return xLine(d.date); })
                     .y0(height - 25)
-                    .y1(function (d) { return yLine(d.quantity); })
+                    .y1(function(d) { return yLine(d.quantity); })
                     .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
-                areaPath.data(coinTypes);
-                areaPath.transition()
+                g.selectAll('.coin-type').select('.area').data(coinTypes)
+                    .transition()
                     .duration(transitionDuration)
                     .ease(transitionEasing)
                     .attr("opacity", .1)
-                    .attr("d", function (d) {
-                        return area(d.values);
-                    })
-                    .style("fill", function (d) {
-                        return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
-                    });
+                    .attr("d", function (d) { return area(d.values); });
             } else {
                 areaPath.attr("opacity", 0);
             }
