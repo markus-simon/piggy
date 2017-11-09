@@ -91,8 +91,6 @@ var linePath = coinType.append("path")
         return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor;
     });
 
-
-
 var area = d3.area()
     .x(function(d) { return xLine(d.date); })
     .y0(height - 25)
@@ -117,7 +115,6 @@ focus.append('line')
 
 
 /**
- *
  * @type {{update: lines.update}}
  */
 var lines = {
@@ -181,6 +178,7 @@ var lines = {
                     .attr("id", function(d) { return "line_" + d.idxs; })
                     .merge(coinType.select('.area'))
                     .attr("d", function(d) { return area(d.values); })
+                    .attr('opacity', 0)
                     .transition()
                     .duration(transitionDuration)
                     .ease(transitionEasing)
@@ -190,10 +188,15 @@ var lines = {
                             return (d3.interpolateString("0," + len, len + ",0"))(t)
                         };
                     })
-                    .attr("opacity", .1)
                     .style("fill", function (d) {
                         return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
-                    });
+                    })
+                    .transition()
+                    .delay(250)
+                    .duration(500)
+                    .ease(d3.easeCircle)
+                    .attr("opacity", .1)
+
             }
 
             // Remove old stuff
@@ -244,7 +247,11 @@ var lines = {
                     .attr("opacity", .1)
                     .attr("d", function (d) { return area(d.values); });
             } else {
-                areaPath.attr("opacity", 0);
+                g.selectAll('.coin-type').select('.area').data(coinTypes)
+                    .transition()
+                    .duration(transitionDuration)
+                    .ease(transitionEasing)
+                    .attr("opacity", 0);
             }
 
             var timeFrame    = parseInt(config['timeframe']);
@@ -288,7 +295,7 @@ function setTimeSettings() {
     }
 
     return tickSettings;
-};
+}
 
 /**
  * Generate array of objects, for each coin type and given timeframe.
@@ -398,4 +405,4 @@ function generateCoinTypes(reply) {
         });
     }
     return coinTypes;
-};
+}

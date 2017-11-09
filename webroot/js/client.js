@@ -79,7 +79,7 @@ eb.onopen = function()
             transitionDuration = config['duration'] ? config['duration'] : transitionDuration;
             transitionEasing = easing[config['easing']] ? easing[config['easing']] : transitionEasing;
             eb.send('find', {collection: 'theme', matcher: {name: config.theme}}, function (reply) {
-                changeTheme(reply[0]);
+                changeTheme(reply[0], true);
 /*
                 wishesList(reply[0]);
 */
@@ -170,7 +170,7 @@ eb.onopen = function()
      * Update data
      * @param init
      */
-   var updateData = function(init) {
+    var updateData = function(init) {
         var init  = init || false;
         var query = {
             "aggregate": "piggy",
@@ -507,7 +507,7 @@ eb.onopen = function()
     /**
      * Change theme colors undso
      */
-    var changeTheme = function(theme) {
+    var changeTheme = function(theme, now) {
         renderTheme(theme);
 
         $('#theme-style').remove();
@@ -525,31 +525,54 @@ eb.onopen = function()
             "input":            theme.colors.input[2]
         };
 
-        // change header color
-        d3.selectAll('.accordion-title').transition().duration(transitionDuration).style('background-color', colors.header);
-        d3.selectAll('.overlay-title').transition().duration(transitionDuration).style('background-color', colors.header);
-        d3.selectAll('.overlay').style('border-color', colors.header);
+        if (now) {
+            // change header color
+            d3.selectAll('.accordion-title').style('background-color', colors.header);
+            d3.selectAll('.overlay-title').style('background-color', colors.header);
+            d3.selectAll('.overlay').style('border-color', colors.header);
+            var colorParts = ['#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
+            $.each(colorParts, function (key, value) {
+                d3.select(value).style('background-color', colors.background)
+            });
+            d3.select('body').style('background-color', colors.background);
+            d3.select('#svgHeader').style("background-color", colors.header);
+            d3.selectAll('.input-text').style('background', colors.input_background);
+            d3.selectAll('.input-text').style('box-shadow', colors.input_inset);
+            d3.selectAll('.input-text').style('color', colors.input);
+            d3.select('#percent').style('fill', colors.axis);
+            d3.selectAll('form').selectAll('label').style('color', colors.font); // hä?
 
+            d3.select('#header').select('g').selectAll('text').style("fill", colors.headerFont);
+            d3.select('#header').select('g').attr("opacity", 1);
+            d3.select('#menu').style('background-color', colors.header);
+        } else {
 
-        // change body/background color // TODO muss das alles gleichzeitig und am Anfang sein?
-        var colorParts = ['#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
-        $.each(colorParts, function(key, value) {
-            d3.select(value).style('background-color', colors.background)
-        });
+            // change header color
+            d3.selectAll('.accordion-title').transition().duration(transitionDuration).style('background-color', colors.header);
+            d3.selectAll('.overlay-title').transition().duration(transitionDuration).style('background-color', colors.header);
+            d3.selectAll('.overlay').style('border-color', colors.header);
 
-        d3.select('body').transition().duration(transitionDuration).style('background-color', colors.background);
-        d3.select('#svgHeader').transition().duration(transitionDuration).style("background-color", colors.header);
+            // change body/background color // TODO muss das alles gleichzeitig und am Anfang sein?
+            var colorParts = ['#wishes-overlay', '#config-overlay', '#erm-overlay', '#piggy-overlay', '#checkout-overlay', '#theme-overlay', '#upgrade-overlay'];
+            $.each(colorParts, function (key, value) {
+                d3.select(value).style('background-color', colors.background)
+            });
 
-        // change input color
-        d3.selectAll('.input-text').transition().duration(transitionDuration).style('background', colors.input_background);
-        d3.selectAll('.input-text').transition().duration(transitionDuration).style('box-shadow', colors.input_inset);
-        d3.selectAll('.input-text').transition().duration(transitionDuration).style('color', colors.input);
-        d3.select('#percent').transition().duration(transitionDuration).style('fill', colors.axis);
-        d3.selectAll('form').selectAll('label').transition().duration(transitionDuration).style('color', colors.font); // hä?
+            d3.select('body').transition().duration(transitionDuration).style('background-color', colors.background);
+            d3.select('#svgHeader').transition().duration(transitionDuration).style("background-color", colors.header);
 
-        d3.select('#header').select('g').selectAll('text').transition().duration(transitionDuration).style("fill", colors.headerFont);
-        d3.select('#header').select('g').transition().delay(transitionDuration).duration(transitionDuration).attr("opacity", 1);
-        d3.select('#menu').style('background-color', colors.header);
+            // change input color
+            d3.selectAll('.input-text').transition().duration(transitionDuration).style('background', colors.input_background);
+            d3.selectAll('.input-text').transition().duration(transitionDuration).style('box-shadow', colors.input_inset);
+            d3.selectAll('.input-text').transition().duration(transitionDuration).style('color', colors.input);
+            d3.select('#percent').transition().duration(transitionDuration).style('fill', colors.axis);
+            d3.selectAll('form').selectAll('label').transition().duration(transitionDuration).style('color', colors.font); // hä?
+
+            d3.select('#header').select('g').selectAll('text').transition().duration(transitionDuration).style("fill", colors.headerFont);
+            d3.select('#header').select('g').transition().delay(transitionDuration).duration(transitionDuration).attr("opacity", 1);
+            d3.select('#menu').style('background-color', colors.header);
+        }
+
 
         lines.init();
         updateData(true);
