@@ -124,8 +124,8 @@ function updateBars(result) {
         .call(xAxis);
 
     chart.transition().select(".y.axis")
-        .duration(transitionDuration)
-        .ease(transitionEasing)
+/*        .duration(transitionDuration)
+        .ease(transitionEasing)*/
         .call(yAxis);
 
     axisYText.text(config['calculation-base']);

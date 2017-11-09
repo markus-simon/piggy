@@ -58,7 +58,6 @@ function updatePie(result) {
 
     path1.data(pie1)
         .transition()
-        .delay(transitionDuration)
         .duration(transitionDuration)
         .ease(transitionEasing)
         .attr("id", function(d) { return "path_" + d.data.idx })
