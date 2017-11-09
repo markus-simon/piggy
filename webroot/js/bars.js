@@ -62,75 +62,87 @@ var axisYText = axisY.append("text")
     .attr("dy", "0.71em")
     .attr("fill", "#000");
 
-function updateBars(result) {
 
-    var newData = [];
-    result.forEach(function (row) {
-        if (row.type !== 'virtual') {
-            row.idx = coinIndex[row.amount];
-            newData.push(row);
-        }
-    });
+/**
+ *
+ * @type {{update: lines.update}}
+ */
+var bars = {
+    init: function() {
 
-    var realTypes = newData.map(function (d) {
-        if (d.amount >= 100) {
-            return d.amount / 100 + '€';
-        } else {
-            return d.amount + "¢";
-        }
-    });
-
-    var x = d3.scalePoint()
-        .domain(realTypes)
-        .range([40, width - 40]).padding(0.9);
-
-    y.domain([0, d3.max(newData, function (d) {
-        return d.calculatedTotal
-    })]);
-
-    var xAxis = d3.axisBottom(x);
-    var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width + 65);
-    var chart = d3.select('#group2').select("g");
-
-    bar.data(newData)
-        .on("mouseover", function(d) {
-            piggySelection('on', d, d.idx);
-        })
-        .on("mouseout", function(d) {
-            piggySelection('off', d, d.idx);
-        })
-        .transition()
-        .duration(transitionDuration)
-        .ease(transitionEasing)
-        .attr("id", function(d) { return "bar_" + d.idx; })
-        .attr("class", "bar")
-        .attr("x", function(d, i) {
-            return x(realTypes[i]) - barWidth / 2;
-        })
-        .attr("y", function (d) {
-            return y(d.calculatedTotal);
-        })
-        .attr("width", barWidth)
-        .attr("height", function (d) {
-            return height - y(d.calculatedTotal) - 25;
-        })
-        .attr("fill", function (d) {
-            return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor;
+    },
+    update: function(result) {
+        var newData = [];
+        result.forEach(function (row) {
+            if (row.type !== 'virtual') {
+                row.idx = coinIndex[row.amount];
+                newData.push(row);
+            }
         });
 
-    chart.transition().select(".x.axis")
-        .duration(transitionDuration)
-        .ease(transitionEasing)
-        .call(xAxis);
+        var realTypes = newData.map(function (d) {
+            if (d.amount >= 100) {
+                return d.amount / 100 + '€';
+            } else {
+                return d.amount + "¢";
+            }
+        });
 
-    chart.transition().select(".y.axis")
-/*        .duration(transitionDuration)
-        .ease(transitionEasing)*/
-        .call(yAxis);
+        var x = d3.scalePoint()
+            .domain(realTypes)
+            .range([40, width - 40]).padding(0.9);
 
-    axisYText.text(config['calculation-base']);
+        y.domain([0, d3.max(newData, function (d) {
+            return d.calculatedTotal
+        })]);
 
-    chart.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
-    chart.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
-    chart.selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
-}
+        var xAxis = d3.axisBottom(x);
+        var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width + 65);
+        var chart = d3.select('#group2').select("g");
+
+        bar.data(newData)
+            .on("mouseover", function (d) {
+                piggySelection('on', d, d.idx);
+            })
+            .on("mouseout", function (d) {
+                piggySelection('off', d, d.idx);
+            })
+            .transition()
+            .duration(transitionDuration)
+            .ease(transitionEasing)
+            .attr("id", function (d) {
+                return "bar_" + d.idx;
+            })
+            .attr("class", "bar")
+            .attr("x", function (d, i) {
+                return x(realTypes[i]) - barWidth / 2;
+            })
+            .attr("y", function (d) {
+                return y(d.calculatedTotal);
+            })
+            .attr("width", barWidth)
+            .attr("height", function (d) {
+                return height - y(d.calculatedTotal) - 25;
+            })
+            .attr("fill", function (d) {
+                return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor;
+            });
+
+        chart.transition().select(".x.axis")
+            .duration(transitionDuration)
+            .ease(transitionEasing)
+            .call(xAxis);
+
+        chart.transition().select(".y.axis")
+            .duration(transitionDuration)
+            .ease(transitionEasing)
+            .call(yAxis);
+
+        axisYText.text(config['calculation-base']);
+
+        d3.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
+        d3.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
+        d3.select('#svg2').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
+        d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
+    }
+};

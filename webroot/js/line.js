@@ -13,7 +13,7 @@ var coinTypes = generateCoinTypes([]);
  *
  * @param value
  */
-var setDomain = function(value) {
+var setXYDomain = function(value) {
     return [
         d3.min(coinTypes, function(c) {
             return d3.min(c.values, function(d) {
@@ -63,7 +63,7 @@ var yLine = d3.scaleLinear().range([height - 25, 25]);
 var axisXLine = g.append("g");
 var axisYLine = g.append("g");
 
-var xAxisLine = d3.axisBottom(xLine).ticks(0).tickSizeInner(-height);
+var xAxisLine = d3.axisBottom(xLine).tickSizeInner(-height);
 var yAxisLine = d3.axisLeft(yLine).ticks(10, ",f").tickSizeInner((-width * 2) + 20);
 
 var axisYLineText = axisYLine.append("text")
@@ -74,9 +74,6 @@ var axisYLineText = axisYLine.append("text")
 
 var coinType = g.selectAll(".coin-type")
     .data(coinTypes)
-    .enter().append("g")
-    .attr("class", "coin-type")
-    .attr("id", function(d) { return "coin-type-" + d.idxs })
 
 var area = d3.area()
     .x(function(d) { return xLine(d.date); })
@@ -103,218 +100,221 @@ focus.append('line')
 
 
 /**
- * Render line chart
+ *
+ * @type {{update: lines.update}}
  */
-var initUpdateLine = function() {
-    eb.send('find', {collection: 'piggy', matcher: {}}, function (reply) {
+var lines = {
+    init: function() {
+        eb.send('find', {collection: 'piggy', matcher: {}}, function (reply) {
 
-        coinTypes = generateCoinTypes(reply);
+            coinTypes = generateCoinTypes(reply);
 
-        xLine.domain(setDomain('date'));
-        yLine.domain(setDomain('quantity'));
+            xLine.domain(setXYDomain('date'));
+            yLine.domain(setXYDomain('quantity'));
 
-        line.curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
+            line.curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
 
-        axisXLine.attr("class", "x axis")
-            .attr("transform", "translate(0," + (height - 25) + ")")
-            .call(xAxisLine);
+            axisXLine.attr("class", "x axis")
+                .attr("transform", "translate(0," + (height - 25) + ")")
+                .call(xAxisLine);
 
-        axisYLine.attr("class", "y axis")
-            .call(yAxisLine);
+            axisYLine.attr("class", "y axis")
+                .call(yAxisLine);
 
-        coinType.append("path").data(coinTypes)
-            .attr("class", "lines")
-            .attr("id", function(d) { return "line_" + d.idxs })
-            .style("fill", "none")
-            .style("stroke-width", "1")
-            .attr("d", function(d) {
-                return line(d.values);
-            })
-            .transition()
-            .duration(transitionDuration)
-            .ease(transitionEasing)
-            .attrTween("stroke-dasharray", function() {
-                var len = this.getTotalLength();
-                return function(t) { return (d3.interpolateString("0," + len, len + ",0"))(t) };
-            })
-            .style("stroke", function(d) {
-                return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
-            });
 
-        g.selectAll(".coin-type").data(coinTypes).exit().remove().enter().append();
+            // Update coin types
+            var coinType = g.selectAll('.coin-type').data(coinTypes);
+            var group    = coinType.enter().append('g').classed("coin-type", true).attr("id", function(d) { return "coin-type-" + d.idxs });
 
-        line.x(function (d) {
+
+            group.merge(coinType);
+            group.append("path")
+                .classed("line", true)
+                .attr("id", function(d) { return "line_" + d.idxs })
+                .merge(coinType.select('.line'))
+                .style("fill", "none")
+                .style("stroke-width", "1")
+                .attr("d", function(d) {
+                    return line(d.values);
+                })
+                .transition()
+                .duration(transitionDuration)
+                .ease(transitionEasing)
+                .attrTween("stroke-dasharray", function() {
+                    var len = this.getTotalLength();
+                    return function(t) { return (d3.interpolateString("0," + len, len + ",0"))(t) };
+                })
+                .style("stroke", function(d) {
+                    return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
+                });
+
+            g.selectAll(".coin-type").data(coinTypes).exit().remove().enter().append();
+
+            line.x(function (d) {
                 return xLine(d.date);
             })
-            .y(function (d) {
-                return yLine(d.quantity);
-            })
-            .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
-
-        if (config['area-lines'] === 'yes') {
-            area.x(function (d) {
-                return xLine(d.date);
-            })
-                .y0(height - 25)
-                .y1(function (d) {
+                .y(function (d) {
                     return yLine(d.quantity);
                 })
                 .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
-            areaPath.data(coinTypes);
-            areaPath.transition()
-                .duration(transitionDuration)
-                .ease(transitionEasing)
-                .attr("opacity", .1)
-                .attr("d", function (d) {
-                    return area(d.values);
+
+            if (config['area-lines'] === 'yes') {
+                area.x(function (d) {
+                    return xLine(d.date);
                 })
-                .style("fill", function (d) {
-                    return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
-                });
-        } else {
-            areaPath.attr("opacity", 0);
-        }
+                    .y0(height - 25)
+                    .y1(function (d) {
+                        return yLine(d.quantity);
+                    })
+                    .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
+                areaPath.data(coinTypes);
+                areaPath.transition()
+                    .duration(transitionDuration)
+                    .ease(transitionEasing)
+                    .attr("opacity", .1)
+                    .attr("d", function (d) {
+                        return area(d.values);
+                    })
+                    .style("fill", function (d) {
+                        return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
+                    });
+            } else {
+                areaPath.attr("opacity", 0);
+            }
 
-/*        linePath.transition()
-            .duration(transitionDuration)
-            .ease(transitionEasing)
-            .style("stroke", function (d) {
-                return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
-            })
-            .attr("d", function (d) {
-                return line(d.values);
-            });*/
+            coinType.data(coinTypes).exit().remove().enter().append().exit();
 
-        coinType.data(coinTypes).exit().remove().enter().append().exit();
+            var timeFrame = parseInt(config['timeframe']);
 
-        var timeFrame = parseInt(config['timeframe']);
+            var tickAmount = 0;
+            var tickFormat = "%d.%m";
+            switch (true) {
+                case timeFrame <= 7:
+                    tickAmount = timeFrame;
+                    break;
+                case timeFrame > 7 && timeFrame <= 31:
+                    tickAmount = 7;
+                    break;
+                case timeFrame > 31 && timeFrame <= 366:
+                    tickAmount = 6 * layout;
+                    break;
+                case timeFrame > 366:
+                    tickAmount = Math.min(5, Math.ceil(timeFrame / 365));
+                    tickFormat = "%Y";
+                    break;
+            }
+            d3.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
+            d3.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
+            d3.select('#svg3').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
+            d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
+        });
+    },
+    update: function () {
+        eb.send('find', {collection: 'piggy', matcher: {}}, function (reply) {
 
-        var tickAmount = 0;
-        var tickFormat = "%d.%m";
-        switch (true) {
-            case timeFrame <= 7:
-                tickAmount = timeFrame;
-                break;
-            case timeFrame > 7 && timeFrame <= 31:
-                tickAmount = 7;
-                break;
-            case timeFrame > 31 && timeFrame <= 366:
-                tickAmount = 6 * layout;
-                break;
-            case timeFrame > 366:
-                tickAmount = Math.min(5, Math.ceil(timeFrame / 365));
-                tickFormat = "%Y";
-                break;
-        }
+            coinTypes = generateCoinTypes(reply);
 
-/*        g.select(".x.axis").transition()
-            .duration(transitionDuration)
-            .ease(transitionEasing)
-            .call(xAxisLine.ticks(tickAmount).tickFormat(d3.timeFormat(tickFormat)));
+            xLine.domain(setXYDomain('date'));
+            yLine.domain(setXYDomain('quantity'));
 
-        g.select(".y.axis").transition()
-/!*            .duration(transitionDuration)
-            .ease(transitionEasing)*!/
-            .call(yAxisLine);*/
-
-/*
-        axisYLineText.text(config['calculation-base']);
-*/
-/*
-        d3.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
-        d3.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
-        d3.select('#svg3').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
-        d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);*/
-    });
-};
-
-/**
- * Re-render line chart
- * @param result
- */
-function updateLine(result) {
-    eb.send('find', {collection: 'piggy', matcher: {}}, function(reply) {
-
-        coinTypes = generateCoinTypes(reply);
-
-        xLine.domain(setDomain('date'));
-        yLine.domain(setDomain('quantity'));
-
-/*
-        coinType.append("path").data(coinTypes);
-*/
-/*
-        g.selectAll(".coin-type").data(coinTypes).exit().remove().enter().append();
-*/
-
-        line.x(function(d) { return xLine(d.date); })
-            .y(function(d) { return yLine(d.quantity); })
-            .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
-
-        if (config['area-lines'] === 'yes') {
-            area.x(function(d) { return xLine(d.date); })
-                .y0(height - 25)
-                .y1(function(d) { return yLine(d.quantity); })
+            line.x(function (d) { return xLine(d.date); })
+                .y(function (d) { return yLine(d.quantity); })
                 .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
-            areaPath.data(coinTypes);
-            areaPath.transition()
+
+
+            coinType.transition().duration(2000).attr("d", function(d) {
+                    return line(d.values);
+                });
+            // Update coin types
+/*
+            var coinType = g.selectAll('.coin-type').data(coinTypes);
+            var group    = coinType.enter().append('g').classed("coin-type", true).attr("id", function(d) { return "coin-type-" + d.idxs });
+*/
+
+
+/*            group.merge(coinType);
+            group.append("path")
+                .classed("line", true)
+                .attr("id", function(d) { return "line_" + d.idxs })
+                .merge(coinType.select('.line'))
+                .style("fill", "none")
+                .style("stroke-width", "1")
+                .attr("d", function(d) {
+                    return line(d.values);
+                })
+                .transition()
                 .duration(transitionDuration)
                 .ease(transitionEasing)
-                .attr("opacity", .1)
-                .attr("d", function(d) { return area(d.values); })
-                .style("fill", function(d) { return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor; });
-        } else {
-            areaPath.attr("opacity", 0);
-        }
+/!*                .attrTween("stroke-dasharray", function() {
+                    var len = this.getTotalLength();
+                    return function(t) { return (d3.interpolateString("0," + len, len + ",0"))(t) };
+                })*!/
+                .style("stroke", function(d) {
+                    return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
+                });*/
 
-/*        coinType.append("path").transition()
-            .duration(transitionDuration)
-            .ease(transitionEasing)
-            .style("stroke", function(d) { return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor; })
-            .attr("d", function(d) { return line(d.values); });*/
 
-/*
-        coinType.data(coinTypes).exit().remove().enter().append().exit();
-*/
 
-        var timeFrame = parseInt(config['timeframe']);
 
-        var tickAmount = 0;
-        var tickFormat = "%d.%m";
-        switch (true) {
-            case timeFrame <= 7:
-                tickAmount = timeFrame;
-                break;
-            case timeFrame > 7 && timeFrame <= 31:
-                tickAmount = 7;
-                break;
-            case timeFrame > 31 && timeFrame <= 366:
-                tickAmount = 6 * layout;
-                break;
-            case timeFrame > 366:
-                tickAmount = Math.min(5, Math.ceil(timeFrame / 365));
-                tickFormat = "%Y";
-                break;
-        }
+            if (config['area-lines'] === 'yes') {
+                area.x(function (d) { return xLine(d.date); })
+                    .y0(height - 25)
+                    .y1(function (d) { return yLine(d.quantity); })
+                    .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
+                areaPath.data(coinTypes);
+                areaPath.transition()
+                    .duration(transitionDuration)
+                    .ease(transitionEasing)
+                    .attr("opacity", .1)
+                    .attr("d", function (d) {
+                        return area(d.values);
+                    })
+                    .style("fill", function (d) {
+                        return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
+                    });
+            } else {
+                areaPath.attr("opacity", 0);
+            }
 
-        g.select(".x.axis").transition()
-/*            .duration(transitionDuration)
-            .ease(transitionEasing)*/
-            .call(xAxisLine.ticks(tickAmount).tickFormat(d3.timeFormat(tickFormat)));
+            var timeFrame = parseInt(config['timeframe']);
 
-        g.select(".y.axis").transition()
-/*            .duration(transitionDuration)
-            .ease(transitionEasing)*/
-            .call(yAxisLine);
+            var tickAmount = 0;
+            var tickFormat = "%d.%m";
+            switch (true) {
+                case timeFrame <= 7:
+                    tickAmount = timeFrame;
+                    break;
+                case timeFrame > 7 && timeFrame <= 31:
+                    tickAmount = 7;
+                    break;
+                case timeFrame > 31 && timeFrame <= 366:
+                    tickAmount = 6 * layout;
+                    break;
+                case timeFrame > 366:
+                    tickAmount = Math.min(5, Math.ceil(timeFrame / 365));
+                    tickFormat = "%Y";
+                    break;
+            }
 
-        axisYLineText.text(config['calculation-base']);
+/*            g.select(".x.axis").transition()
+                .call(xAxisLine.ticks(tickAmount).tickFormat(d3.timeFormat(tickFormat)));
 
-        d3.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
-        d3.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
-        d3.select('#svg3').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
-        d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
-    });
-}
+            g.select(".y.axis").transition()
+                .call(yAxisLine);*/
+
+
+
+
+
+            axisYLineText.text(config['calculation-base']);
+
+            d3.selectAll('line').transition().duration(transitionDuration).style('stroke', colors.axis);
+            d3.selectAll('.domain').transition().duration(transitionDuration).style('stroke', colors.axis);
+            d3.select('#svg3').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
+            d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
+        });
+    }
+};
 
 /**
  * Generate array of objects, for each coin type and given timeframe.

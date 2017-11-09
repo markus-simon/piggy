@@ -84,7 +84,8 @@ eb.onopen = function()
                 wishesList(reply[0]);
 */
             });
-            initUpdateLine();
+            bars.init();
+            lines.init();
         }
     });
 
@@ -214,9 +215,9 @@ eb.onopen = function()
                     });
                 }
 
-                updateBars(newData);
+                bars.update(newData);
                 updatePie(newData);
-                updateLine(newData);
+                lines.update(newData);
                 updateHeader(newData);
             } else {
                 piggyError('Konnte Kommando nicht ausfuehren', false, reply.cause);
