@@ -137,7 +137,7 @@ var lines = {
                 .call(yAxisLine);
 
             // Update coin types
-            coinType = g.selectAll('.coin-type').data(coinTypes);
+            var coinType = g.selectAll('.coin-type').data(coinTypes);
             var group    = coinType.enter().append('g').classed("coin-type", true).attr("id", function(d) { return "coin-type-" + d.idxs });
 
             line.x(function (d) { return xLine(d.date); })
@@ -146,7 +146,7 @@ var lines = {
 
             group.merge(coinType);
             group.append("path")
-                .classed("lines", true)
+                .classed("line", true)
                 .attr("id", function(d) { return "line_" + d.idxs })
                 .merge(coinType.select('.line'))
                 .style("fill", "none")
@@ -164,6 +164,8 @@ var lines = {
                 .style("stroke", function(d) {
                     return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
                 });
+
+            coinType.exit().remove();
 
             if (config['area-lines'] === 'yes') {
                 area.x(function (d) {

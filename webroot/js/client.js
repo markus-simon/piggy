@@ -552,6 +552,7 @@ eb.onopen = function()
         d3.select('#header').select('g').transition().delay(transitionDuration).duration(transitionDuration).attr("opacity", 1);
         d3.select('#menu').style('background-color', colors.header);
 
+        lines.init();
         updateData(true);
     };
 
