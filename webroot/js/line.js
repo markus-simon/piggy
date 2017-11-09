@@ -189,25 +189,9 @@ var lines = {
                 areaPath.attr("opacity", 0);
             }
 
-            var timeFrame  = parseInt(config['timeframe']);
-            var tickAmount = 0;
-            var tickFormat = "%d.%m";
+            var timeFrame    = parseInt(config['timeframe']);
+            var timeSettings = setTimeSettings();
 
-            switch (true) {
-                case timeFrame <= 7:
-                    tickAmount = timeFrame;
-                    break;
-                case timeFrame > 7 && timeFrame <= 31:
-                    tickAmount = 7;
-                    break;
-                case timeFrame > 31 && timeFrame <= 366:
-                    tickAmount = 6 * layout;
-                    break;
-                case timeFrame > 366:
-                    tickAmount = Math.min(5, Math.ceil(timeFrame / 365));
-                    tickFormat = "%Y";
-                    break;
-            }
             lines.finish();
         });
     },
@@ -258,25 +242,8 @@ var lines = {
                 areaPath.attr("opacity", 0);
             }
 
-            var timeFrame  = parseInt(config['timeframe']);
-            var tickAmount = 0;
-            var tickFormat = "%d.%m";
-
-            switch (true) {
-                case timeFrame <= 7:
-                    tickAmount = timeFrame;
-                    break;
-                case timeFrame > 7 && timeFrame <= 31:
-                    tickAmount = 7;
-                    break;
-                case timeFrame > 31 && timeFrame <= 366:
-                    tickAmount = 6 * layout;
-                    break;
-                case timeFrame > 366:
-                    tickAmount = Math.min(5, Math.ceil(timeFrame / 365));
-                    tickFormat = "%Y";
-                    break;
-            }
+            var timeFrame    = parseInt(config['timeframe']);
+            var timeSettings = setTimeSettings();
             lines.finish();
         });
     },
@@ -287,6 +254,35 @@ var lines = {
         d3.select('#svg3').selectAll('text').transition().duration(transitionDuration).style('fill', colors.axis);
         d3.selectAll(".tick").selectAll("line").attr("opacity", 0.1);
     }
+};
+
+/**
+ * Set timeframe
+ */
+function setTimeSettings() {
+    var timeFrame    = parseInt(config['timeframe']);
+    var tickSettings = {
+        "amount": 0,
+        "format": "%d.%m"
+    };
+
+    switch (true) {
+        case timeFrame <= 7:
+            tickSettings.amount = timeFrame;
+            break;
+        case timeFrame > 7 && timeFrame <= 31:
+            tickSettings.amount = 7;
+            break;
+        case timeFrame > 31 && timeFrame <= 366:
+            tickSettings.amount = 6 * layout;
+            break;
+        case timeFrame > 366:
+            tickSettings.amount = Math.min(5, Math.ceil(timeFrame / 365));
+            tickSettings.format = "%Y";
+            break;
+    }
+
+    return tickSettings;
 };
 
 /**
@@ -397,4 +393,4 @@ function generateCoinTypes(reply) {
         });
     }
     return coinTypes;
-}
+};

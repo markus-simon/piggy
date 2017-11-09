@@ -167,82 +167,12 @@ eb.onopen = function()
         renderTable(document, '.' + document.collection + '-collection');
     });
 
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * Init data
-     */
-    var initData = function() {
-        var query = {
-            "aggregate": "piggy",
-            "pipeline": [
-                {
-                    "$group": {
-                        "_id": "$amount",
-                        "amount": { "$first": "$amount" },
-                        "type": { "$first": "$type" },
-                        "sum": { "$sum": 1 }
-                    }
-                },{
-                    "$sort": {
-                        "amount": 1
-                    }
-                },{
-                    "$project": {
-                        "_id": 0,
-                        "type": 1,
-                        "amount": 1,
-                        "sum": 1,
-                        "sumTotal": { "$multiply": [ "$sum", "$amount" ] }
-                    }
-                }
-            ]
-        };
-
-        eb.send("runCommand", JSON.stringify(query), function(reply) {
-            if (!reply.cause) {
-                var result  = reply.result;
-                var newData = [];
-
-                if (config['calculation-base'] === 'quantity') {
-                    result.forEach(function(row) {
-                        row.calculatedTotal = row.sum;
-                        newData.push(row);
-                    });
-                } else if (config['calculation-base'] === 'value') {
-                    result.forEach(function(row) {
-                        row.calculatedTotal = row.sumTotal / 100;
-                        newData.push(row);
-                    });
-                }
-
-                bars.update(newData);
-                updatePie(newData);
-                /*
-                                lines.update(newData);
-                */
-                updateHeader(newData);
-            } else {
-                piggyError('Konnte Kommando nicht ausfuehren', false, reply.cause);
-            }
-        });
-    };
-
-
-
     /**
      * Update data
+     * @param init
      */
-    var updateData = function() {
+   var updateData = function(init) {
+        var init  = init || false;
         var query = {
             "aggregate": "piggy",
             "pipeline": [
@@ -288,8 +218,11 @@ eb.onopen = function()
 
                 bars.update(newData);
                 updatePie(newData);
-                lines.update(newData);
                 updateHeader(newData);
+
+                if (!init) {
+                    lines.update(newData);
+                }
             } else {
                 piggyError('Konnte Kommando nicht ausfuehren', false, reply.cause);
             }
@@ -619,7 +552,7 @@ eb.onopen = function()
         d3.select('#header').select('g').transition().delay(transitionDuration).duration(transitionDuration).attr("opacity", 1);
         d3.select('#menu').style('background-color', colors.header);
 
-        initData();
+        updateData(true);
     };
 
     /**
