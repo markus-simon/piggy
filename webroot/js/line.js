@@ -73,7 +73,25 @@ var axisYLineText = axisYLine.append("text")
     .attr("fill", "#000");
 
 var coinType = g.selectAll(".coin-type")
-    .data(coinTypes)
+    .data(coinTypes);
+
+
+
+
+
+var linePath = coinType.append("path")
+    .attr("class", "lines")
+    .attr("id", function(d) { return "line_" + d.idxs })
+    .style("fill", "none")
+    .style("stroke-width", "1")
+    .attr("d", function(d) {
+        return line(d.values);
+    })
+    .style("stroke", function(d) {
+        return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor;
+    });
+
+
 
 var area = d3.area()
     .x(function(d) { return xLine(d.date); })
@@ -112,7 +130,6 @@ var lines = {
             xLine.domain(setXYDomain('date'));
             yLine.domain(setXYDomain('quantity'));
 
-            line.curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
 
             axisXLine.attr("class", "x axis")
                 .attr("transform", "translate(0," + (height - 25) + ")")
@@ -123,13 +140,16 @@ var lines = {
 
 
             // Update coin types
-            var coinType = g.selectAll('.coin-type').data(coinTypes);
+            coinType = g.selectAll('.coin-type').data(coinTypes);
             var group    = coinType.enter().append('g').classed("coin-type", true).attr("id", function(d) { return "coin-type-" + d.idxs });
 
+            line.x(function (d) { return xLine(d.date); })
+                .y(function (d) { return yLine(d.quantity); })
+                .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
 
             group.merge(coinType);
             group.append("path")
-                .classed("line", true)
+                .classed("lines", true)
                 .attr("id", function(d) { return "line_" + d.idxs })
                 .merge(coinType.select('.line'))
                 .style("fill", "none")
@@ -148,15 +168,10 @@ var lines = {
                     return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
                 });
 
+/*
             g.selectAll(".coin-type").data(coinTypes).exit().remove().enter().append();
+*/
 
-            line.x(function (d) {
-                return xLine(d.date);
-            })
-                .y(function (d) {
-                    return yLine(d.quantity);
-                })
-                .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
 
             if (config['area-lines'] === 'yes') {
                 area.x(function (d) {
@@ -221,10 +236,71 @@ var lines = {
                 .y(function (d) { return yLine(d.quantity); })
                 .curve("yes" === config["curved"] ? d3.curveMonotoneX : d3.curveLinear);
 
+            axisXLine.transition()
+                .duration(transitionDuration)
+                .ease(transitionEasing)
+                .call(xAxisLine);
 
-            coinType.transition().duration(2000).attr("d", function(d) {
+            axisYLine.transition()
+                .duration(transitionDuration)
+                .ease(transitionEasing)
+                .call(yAxisLine);
+
+            g.selectAll('.coin-type').select('path').data(coinTypes)
+                .transition()
+                .duration(transitionDuration)
+                .ease(transitionEasing)
+                .attr("d", function(d) { return line(d.values); })
+            /*
+                .style("stroke", function(d) { return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor; })
+*/
+
+/*
+            g.selectAll(".coin-type").data(coinTypes).exit().remove().enter().append();
+*/
+
+
+
+/*
+            linePath.data(coinTypes);
+*/
+
+
+
+/*            linePath.transition()
+                .duration(transitionDuration)
+                .ease(transitionEasing)
+                .style("stroke", function(d) { return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor; })
+                .attr("d", function(d) { return line(d.values); });*/
+
+
+
+/*
+            coinType = g.selectAll('.coin-type').data(coinTypes);
+*/
+/*
+            var group    = coinType.enter().append('g').classed("coin-type", true).attr("id", function(d) { return "coin-type-" + d.idxs });
+*/
+
+
+/*
+            group.merge(coinType);
+            group./!*select("path").*!/
+*/
+
+/*            coinType.select('path').enter().append().transition()
+                .duration(transitionDuration)
+                .ease(transitionEasing)
+                .style("stroke", function(d) { return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor; })
+                .attr("d", function(d) { return line(d.values); });*/
+/*
+            coinType.data(coinTypes).exit().remove().enter().append().exit();
+*/
+
+
+/*            coinType.transition().duration(2000).attr("d", function(d) {
                     return line(d.values);
-                });
+                });*/
             // Update coin types
 /*
             var coinType = g.selectAll('.coin-type').data(coinTypes);
@@ -252,7 +328,6 @@ var lines = {
                 .style("stroke", function(d) {
                     return coinColors[d.idxs] ? coinColors[d.idxs] : fallbackColor;
                 });*/
-
 
 
 
@@ -295,15 +370,6 @@ var lines = {
                     tickFormat = "%Y";
                     break;
             }
-
-/*            g.select(".x.axis").transition()
-                .call(xAxisLine.ticks(tickAmount).tickFormat(d3.timeFormat(tickFormat)));
-
-            g.select(".y.axis").transition()
-                .call(yAxisLine);*/
-
-
-
 
 
             axisYLineText.text(config['calculation-base']);

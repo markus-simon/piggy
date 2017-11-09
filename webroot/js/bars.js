@@ -45,7 +45,7 @@ var bar = svg2.selectAll(".rect")
         piggySelection('off', d, d.idx);
     });
 
-svg2.append("g")
+var axisX = svg2.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + (height - 25) + ")")
     .call(xAxis)
@@ -96,10 +96,6 @@ var bars = {
             return d.calculatedTotal
         })]);
 
-        var xAxis = d3.axisBottom(x);
-        var yAxis = d3.axisLeft(y).ticks(10, ",f").tickSizeInner(-width + 65);
-        var chart = d3.select('#group2').select("g");
-
         bar.data(newData)
             .on("mouseover", function (d) {
                 piggySelection('on', d, d.idx);
@@ -128,12 +124,12 @@ var bars = {
                 return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor;
             });
 
-        chart.transition().select(".x.axis")
+        axisX.transition()
             .duration(transitionDuration)
             .ease(transitionEasing)
             .call(xAxis);
 
-        chart.transition().select(".y.axis")
+        axisY.transition()
             .duration(transitionDuration)
             .ease(transitionEasing)
             .call(yAxis);
