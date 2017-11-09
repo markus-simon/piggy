@@ -85,7 +85,6 @@ eb.onopen = function()
 */
             });
             bars.init();
-            lines.init();
         }
     });
 
@@ -480,14 +479,14 @@ eb.onopen = function()
             var j = 1;
             d3.select('#nav-icon').selectAll('span').select(function(d, i) {
                 d3.select('#nav-icon').select('span:nth-child(' + ++i + ')').transition().delay(250)
-                    .duration(transitionDuration).style('top', ((headerHeight / 4.5) * j++) + 'px');
+                    .duration(250).style('top', ((headerHeight / 4.5) * j++) + 'px');
             });
         } else {
-            var t = parseInt(transitionDuration) + 250;
+            var t = 500;
             d3.select('#nav-icon')
                 .selectAll('span:nth-child(1n+1)')
                 .transition()
-                .duration(transitionDuration)
+                .duration(250)
                 .style('top', ((headerHeight / 4.5) * 2) + 'px');
         }
         setTimeout(function() {
@@ -618,14 +617,14 @@ eb.onopen = function()
             var j = 1;
             d3.select('#nav-icon').selectAll('span').select(function (d, i) {
                 d3.select('#nav-icon').select('span:nth-child(' + ++i + ')').transition().delay(250)
-                    .duration(transitionDuration).style('top', ((headerHeight / 4.5) * j++) + 'px');
+                    .duration(250).style('top', ((headerHeight / 4.5) * j++) + 'px');
             });
         } else {
-            var t = parseInt(transitionDuration) + 250;
+            var t = 500;
             d3.select('#nav-icon')
                 .selectAll('span:nth-child(1n+1)')
                 .transition()
-                .duration(transitionDuration)
+                .duration(250)
                 .style('top', ((headerHeight / 4.5) * 2) + 'px');
         }
         setTimeout(function() {
