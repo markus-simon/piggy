@@ -29,9 +29,7 @@ var bar = svg2.selectAll(".rect")
     .data(dataBars)
     .enter()
     .append("rect")
-    .attr("x", function(d, i) {
-        return x(types[i]) - barWidth / 2;
-    })
+    .attr("x", function(d, i) { return x(types[i]) - barWidth / 2; })
     .attr("width", barWidth)
     .attr("y", height - 25 )
     .attr("class", "bar")
@@ -48,7 +46,7 @@ var bar = svg2.selectAll(".rect")
 var axisX = svg2.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + (height - 25) + ")")
-    .call(xAxis)
+    .call(xAxis);
 
 var axisY = svg2.append("g")
     .attr("class", "y axis")
@@ -65,10 +63,10 @@ var axisYText = axisY.append("text")
 
 /**
  *
- * @type {{update: lines.update}}
+ * @type {{update: bars.update}}
  */
 var bars = {
-    init: function() {
+    init: function(result) {
 
     },
     update: function(result) {
@@ -88,13 +86,8 @@ var bars = {
             }
         });
 
-        var x = d3.scalePoint()
-            .domain(realTypes)
-            .range([40, width - 40]).padding(0.9);
-
-        y.domain([0, d3.max(newData, function (d) {
-            return d.calculatedTotal
-        })]);
+        x.domain(realTypes);
+        y.domain([0, d3.max(newData, function (d) { return d.calculatedTotal })]);
 
         bar.data(newData)
             .on("mouseover", function (d) {
@@ -106,23 +99,13 @@ var bars = {
             .transition()
             .duration(transitionDuration)
             .ease(transitionEasing)
-            .attr("id", function (d) {
-                return "bar_" + d.idx;
-            })
+            .attr("id", function (d) { return "bar_" + d.idx; })
             .attr("class", "bar")
-            .attr("x", function (d, i) {
-                return x(realTypes[i]) - barWidth / 2;
-            })
-            .attr("y", function (d) {
-                return y(d.calculatedTotal);
-            })
+            .attr("x", function (d, i) { return x(realTypes[i]) - barWidth / 2; })
+            .attr("y", function (d) { return y(d.calculatedTotal); })
             .attr("width", barWidth)
-            .attr("height", function (d) {
-                return height - y(d.calculatedTotal) - 25;
-            })
-            .attr("fill", function (d) {
-                return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor;
-            });
+            .attr("height", function (d) { return height - y(d.calculatedTotal) - 25; })
+            .attr("fill", function (d) { return coinColors[d.idx] ? coinColors[d.idx] : fallbackColor; });
 
         axisX.transition()
             .duration(transitionDuration)

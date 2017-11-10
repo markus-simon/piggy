@@ -308,6 +308,14 @@ function generateCoinTypes(reply) {
     var entriesByAmount = entries.dimension(function(d) { return d.amount; });
     var coinTypes       = [];
 
+    var period = 'day';
+    if (parseInt(timeframe) >= 365) {
+        timeframe = 12;
+        period = 'year';
+    }
+    var currentParsedDate;
+    var currentOrgDate;
+
     for(var j = 0; j < dataBars.length; j++) {
         entriesByAmount.filter(function(d) { return d === parseInt(dataBars[j].amount)});
 
@@ -316,17 +324,28 @@ function generateCoinTypes(reply) {
         var entriesFiltered       = crossfilter(entriesByAmount.top(Infinity));
         var entriesByAmountByDate = entriesFiltered.dimension(function(d) { return d.message_created_at; });
 
-        if (parseInt(timeframe) === 0) {
+        // TODO vom Anbeginn der zeit ....
+/*        if (parseInt(timeframe) === 0) {
             console.log('ss');
             console.log(entriesByAmountByDate.top(Infinity));
-        }
+        }*/
 
         for(var i = 0; i <= timeframe; i++) {
-            entriesByAmountByDate.filterRange([
-                calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
-                calculateDate(0, 0, 0 - timeframe + i + 1, -getZero('hours'), -getZero('minutes'), -getZero('seconds') -1)
-            ]);
-
+            if (period === 'day') {
+                entriesByAmountByDate.filterRange([
+                    calculateDate(0, 0, 0 - timeframe + i,     -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
+                    calculateDate(0, 0, 0 - timeframe + i + 1, -getZero('hours'), -getZero('minutes'), -getZero('seconds') - 1)
+                ]);
+                currentParsedDate = parseTime(calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')));
+                currentOrgDate    = calculateDate(0, 0, 0 - timeframe + i,           -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+            } else if (period === 'year') {
+                entriesByAmountByDate.filterRange([
+                    calculateDate(0, 0 - timeframe + i, 0,     -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
+                    calculateDate(0, 0 - timeframe + i + 1, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds') - 1)
+                ]);
+                currentParsedDate = parseTime(calculateDate(0, 0 - timeframe + i, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds')));
+                currentOrgDate    = calculateDate(0, 0 - timeframe + i, 0,           -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+            }
             var amount = entriesByAmountByDate.top(Infinity).length;
 
             if (config['combine-lines'] === 'yes') {
@@ -336,13 +355,13 @@ function generateCoinTypes(reply) {
             }
 
             row.push({
-                date: parseTime(calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds'))),
-                orgDate: calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
+                date:     currentParsedDate,
+                orgDate:  currentOrgDate,
                 quantity: quantity,
-                sum: quantity,
+                sum:      quantity,
                 sumTotal: quantity * parseInt(dataBars[j].amount),
-                amount: parseInt(dataBars[j].amount),
-                idx: coinIndex[dataBars[j].amount]
+                amount:   parseInt(dataBars[j].amount),
+                idx:      coinIndex[dataBars[j].amount]
             });
         }
 
@@ -358,7 +377,6 @@ function generateCoinTypes(reply) {
             values: row,
             idxs: coinIndex[dataBars[j].amount]
         });
-
     }
 
     // TODO shame on me
@@ -379,30 +397,44 @@ function generateCoinTypes(reply) {
 
         for (var i = 0; i <= timeframe; i++) {
             var qtyPerDay = 0;
-            entriesByDate.filterRange([
-                calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
-                calculateDate(0, 0, 0 - timeframe + i + 1, -getZero('hours'), -getZero('minutes'), -getZero('seconds') - 1)
-            ]);
+
+            if (period === 'day') {
+                entriesByDate.filterRange([
+                    calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
+                    calculateDate(0, 0, 0 - timeframe + i + 1, -getZero('hours'), -getZero('minutes'), -getZero('seconds') - 1)
+                ]);
+                currentParsedDate = parseTime(calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')));
+                currentOrgDate    = calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+            } else if (period === 'year') {
+                entriesByDate.filterRange([
+                    calculateDate(0, 0 - timeframe + i, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
+                    calculateDate(0, 0 - timeframe + i + 1, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds') - 1)
+                ]);
+                currentParsedDate = parseTime(calculateDate(0, 0 - timeframe + i, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds')));
+                currentOrgDate    = calculateDate(0, 0 - timeframe + i, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+            }
+
             var entriesByDateByAmount = entriesByDate.top(Infinity);
             entriesByDateByAmount.forEach(function(entry4) {
                 qtyPerDay = qtyPerDay + entry4.quantity;
             });
 
             row2.push({
-                date: parseTime(calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds'))),
-                orgDate: calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
+                date:     currentParsedDate,
+                orgDate:  currentOrgDate,
                 quantity: qtyPerDay,
-                sum: quantity,
+                sum:      quantity,
                 sumTotal: 999,
-                amount: 999
+                amount:   999
             });
         }
 
         coinTypes = [];
         coinTypes.push({
-            id: "999",
+            id:     "999",
             values: row2
         });
     }
+    console.log(coinTypes);
     return coinTypes;
 }
