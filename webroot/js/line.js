@@ -28,11 +28,6 @@ var setXYDomain = function(value) {
     ];
 };
 
-
-
-
-
-
 var zoom = d3.zoom()
     .scaleExtent([1, 40])
     .translateExtent([[-100, -100], [width + 90, height]])
@@ -47,18 +42,12 @@ function zoomed() {
     axisXLine.call(xAxisLine.scale(d3.event.transform.rescaleX(xLine)));
 }
 
-
-
-
-
 var line = d3.line()
     .x(function(d) { return xLine(d.date); })
     .y(function(d) { return yLine(d.quantity); });
 
-
 var xLine = d3.scaleTime().range([0, width * layout - 80]);
 var yLine = d3.scaleLinear().range([height - 25, 25]);
-
 
 var axisXLine = g.append("g");
 var axisYLine = g.append("g");
@@ -74,10 +63,6 @@ var axisYLineText = axisYLine.append("text")
 
 var coinType = g.selectAll(".coin-type")
     .data(coinTypes);
-
-
-
-
 
 var linePath = coinType.append("path")
     .attr("class", "lines")
@@ -112,7 +97,6 @@ focus.append('line')
 focus.append('line')
     .attr('id', 'focusLineY')
     .attr('class', 'focusLine');
-
 
 /**
  * @type {{update: lines.update}}
@@ -203,7 +187,7 @@ var lines = {
             coinType.exit().remove();
 
             var timeFrame    = parseInt(config['timeframe']);
-            var timeSettings = setTimeSettings();
+            var tickSettings = setTickSettings();
 
             lines.finish();
         });
@@ -255,7 +239,7 @@ var lines = {
             }
 
             var timeFrame    = parseInt(config['timeframe']);
-            var timeSettings = setTimeSettings();
+            var tickSettings = setTickSettings();
             lines.finish();
         });
     },
@@ -269,9 +253,9 @@ var lines = {
 };
 
 /**
- * Set timeframe
+ * Set tick settings
  */
-function setTimeSettings() {
+function setTickSettings() {
     var timeFrame    = parseInt(config['timeframe']);
     var tickSettings = {
         "amount": 0,
@@ -435,6 +419,5 @@ function generateCoinTypes(reply) {
             values: row2
         });
     }
-    console.log(coinTypes);
     return coinTypes;
 }
