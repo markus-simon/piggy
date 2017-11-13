@@ -77,8 +77,7 @@ d3.select('#groups').style('padding-top', headerHeight + 'px');
 
 var fpsLabel = g.append("text")
     .attr("id","fps")
-    .attr('x','150px')
-    .attr('y','0px')
+    .attr('x','100px')
     .attr("class","header-text")
     .attr("text-anchor", "start")
     .attr('alignment-baseline', 'central')
