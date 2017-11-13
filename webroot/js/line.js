@@ -79,12 +79,11 @@ var axisYLineText = axisYLine.append("text")
 var coinType = g.selectAll(".coin-type")
     .data(coinTypes);
 
-var linePath = coinType.append("path")
+coinType.append("path")
     .attr("class", "lines")
     .attr("id", function(d) { return "line_" + d.idxs })
     .style("fill", "none")
     .style("stroke-width", "1")
-    .style("filter", "url(#glow)")
     .attr("d", function(d) {
         return line(d.values);
     })
@@ -97,7 +96,7 @@ var area = d3.area()
     .y0(height - 25)
     .y1(function(d) { return yLine(d.quantity); });
 
-var areaPath = coinType.append("path")
+coinType.append("path")
     .attr("class", "area")
     .attr("id", function(d) { return "area_" + d.idxs })
     .attr("d", function(d) {
@@ -366,19 +365,17 @@ function generateCoinTypes(reply) {
             var qtyPerDay = 0;
 
             if (period === 'day') {
-                entriesByDate.filterRange([
-                    calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
-                    calculateDate(0, 0, 0 - timeframe + i + 1, -getZero('hours'), -getZero('minutes'), -getZero('seconds') - 1)
-                ]);
-                currentParsedDate = parseTime(calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')));
-                currentOrgDate    = calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+                from = calculateDate(0, 0, 0 - timeframe + i,     -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+                to   = calculateDate(0, 0, 0 - timeframe + i + 1, -getZero('hours'), -getZero('minutes'), -getZero('seconds') - 1);
+                entriesByDate.filterRange([from,to]);
+                currentParsedDate = parseTime(from);
+                currentOrgDate    = from;
             } else if (period === 'year') {
-                entriesByDate.filterRange([
-                    calculateDate(0, 0 - timeframe + i, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
-                    calculateDate(0, 0 - timeframe + i + 1, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds') - 1)
-                ]);
-                currentParsedDate = parseTime(calculateDate(0, 0 - timeframe + i, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds')));
-                currentOrgDate    = calculateDate(0, 0 - timeframe + i, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+                from = calculateDate(0, 0 - timeframe + i, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+                to = calculateDate(0, 0 - timeframe + i + 1, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+                entriesByDate.filterRange([from, to]);
+                currentParsedDate = parseTime(from);
+                currentOrgDate = from;
             }
 
             var entriesByDateByAmount = entriesByDate.top(Infinity);
