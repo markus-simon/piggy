@@ -67,11 +67,38 @@ var quantityTotalLabel = g.append("text")
     .attr("id","total-quantity")
     .attr("class","header-text")
     .attr("text-anchor", "end")
+    .attr('x', '50px')
     .attr('alignment-baseline', 'central')
     .style("fill", colors.headerFont)
     .style("font-size", headerFontSize);
 
 d3.select('#groups').style('padding-top', headerHeight + 'px');
+
+
+var fpsLabel = g.append("text")
+    .attr("id","fps")
+    .attr('x','150px')
+    .attr('y','0px')
+    .attr("class","header-text")
+    .attr("text-anchor", "start")
+    .attr('alignment-baseline', 'central')
+    .style("fill", colors.headerFont)
+    .style("font-size", headerFontSize);
+
+var time0 = Date.now();
+var time1;
+
+d3.timer(function() {
+    time1 = Date.now();
+    fpsLabel.text(parseInt(Math.round(1000 / (time1 - time0))));
+    time0 = time1;
+
+
+/*    time1 = Date.now();
+    fps.text(Math.round(1000 / (time1 - time0)));
+    time0 = time1;*/
+});
+
 
 /**
  *

@@ -49,7 +49,7 @@ var defs = svg.append("defs");
 var filter = defs.append("filter")
     .attr("id","glow");
 filter.append("feGaussianBlur")
-    .attr("stdDeviation","8.5")
+    .attr("stdDeviation","9.5")
     .attr("result","coloredBlur");
 var feMerge = filter.append("feMerge");
 feMerge.append("feMergeNode")

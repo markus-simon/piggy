@@ -175,7 +175,7 @@ var piggySelection = function(type, d, i) {
  */
 var tweenText = function(id, value, format) {
     d3.select(id).transition()
-        .duration(transitionDuration)
+        .duration(transitionDuration / 2)
         .ease(transitionEasing)
         .on("start", function repeat() {
             d3.active(this)
