@@ -6,9 +6,9 @@ var svg = d3.select('#group3')
 
 g = svg.append("g").attr("transform", "translate(40, 0)");
 
-var parseTime = d3.timeParse("%Y-%m-%d %H:%M:%S");
-var coinTypes = generateCoinTypes([]);
-
+var parseTime    = d3.timeParse("%Y-%m-%d %H:%M:%S");
+var coinTypes    = generateCoinTypes([]);
+var timeSettings = {};
 /**
  *
  * @param value
@@ -48,7 +48,20 @@ function zoomed() {
 }
 
 
+//Container for the gradients
+var defs = svg.append("defs");
 
+//Filter for the outside glow
+var filter = defs.append("filter")
+    .attr("id","glow");
+filter.append("feGaussianBlur")
+    .attr("stdDeviation","8.5")
+    .attr("result","coloredBlur");
+var feMerge = filter.append("feMerge");
+feMerge.append("feMergeNode")
+    .attr("in","coloredBlur");
+feMerge.append("feMergeNode")
+    .attr("in","SourceGraphic");
 
 
 var line = d3.line()
@@ -75,15 +88,12 @@ var axisYLineText = axisYLine.append("text")
 var coinType = g.selectAll(".coin-type")
     .data(coinTypes);
 
-
-
-
-
 var linePath = coinType.append("path")
     .attr("class", "lines")
     .attr("id", function(d) { return "line_" + d.idxs })
     .style("fill", "none")
     .style("stroke-width", "1")
+    .style("filter", "url(#glow)")
     .attr("d", function(d) {
         return line(d.values);
     })
@@ -120,14 +130,16 @@ focus.append('line')
 var lines = {
     init: function() {
         eb.send('find', {collection: 'piggy', matcher: {}}, function (reply) {
-            coinTypes = generateCoinTypes(reply);
+
+            timeSettings = getTimeSettings();
+            coinTypes    = generateCoinTypes(reply);
 
             xLine.domain(setXYDomain('date'));
             yLine.domain(setXYDomain('quantity'));
 
             axisXLine.attr("class", "x axis")
                 .attr("transform", "translate(0," + (height - 25) + ")")
-                .call(xAxisLine);
+                .call(xAxisLine.ticks(timeSettings.amount, timeSettings.format));
 
             axisYLine.attr("class", "y axis")
                 .call(yAxisLine);
@@ -153,7 +165,7 @@ var lines = {
                     return line(d.values);
                 })
                 .transition()
-                .duration(transitionDuration)
+                .duration(transitionDuration * 2)
                 .ease(transitionEasing)
                 .attrTween("stroke-dasharray", function() {
                     var len = this.getTotalLength();
@@ -175,12 +187,12 @@ var lines = {
 
                 group.append("path")
                     .classed("area", true)
-                    .attr("id", function(d) { return "line_" + d.idxs; })
+                    .attr("id", function(d) { return "area_" + d.idxs; })
                     .merge(coinType.select('.area'))
                     .attr("d", function(d) { return area(d.values); })
                     .attr('opacity', 0)
                     .transition()
-                    .duration(transitionDuration)
+                    .duration(transitionDuration * 2)
                     .ease(transitionEasing)
                     .attrTween("stroke-dasharray", function () {
                         var len = this.getTotalLength();
@@ -198,19 +210,15 @@ var lines = {
                     .attr("opacity", .1)
 
             }
-
-            // Remove old stuff
             coinType.exit().remove();
-
-            var timeFrame    = parseInt(config['timeframe']);
-            var timeSettings = setTimeSettings();
-
             lines.finish();
         });
     },
     update: function () {
         eb.send('find', {collection: 'piggy', matcher: {}}, function (reply) {
-            coinTypes = generateCoinTypes(reply);
+
+            timeSettings = getTimeSettings();
+            coinTypes    = generateCoinTypes(reply);
 
             xLine.domain(setXYDomain('date'));
             yLine.domain(setXYDomain('quantity'));
@@ -225,13 +233,13 @@ var lines = {
                 .call(xAxisLine);
 
             axisYLine.transition()
-                .duration(transitionDuration)
+                .duration(transitionDuration * 2)
                 .ease(transitionEasing)
-                .call(yAxisLine);
+                .call(yAxisLine.ticks(timeSettings.amount/*, timeSettings.format*/));
 
             g.selectAll('.coin-type').select('.line').data(coinTypes)
                 .transition()
-                .duration(transitionDuration)
+                .duration(transitionDuration * 2)
                 .ease(transitionEasing)
                 .attr("d", function(d) { return line(d.values); });
 
@@ -253,9 +261,6 @@ var lines = {
                     .ease(transitionEasing)
                     .attr("opacity", 0);
             }
-
-            var timeFrame    = parseInt(config['timeframe']);
-            var timeSettings = setTimeSettings();
             lines.finish();
         });
     },
@@ -269,35 +274,6 @@ var lines = {
 };
 
 /**
- * Set timeframe
- */
-function setTimeSettings() {
-    var timeFrame    = parseInt(config['timeframe']);
-    var tickSettings = {
-        "amount": 0,
-        "format": "%d.%m"
-    };
-
-    switch (true) {
-        case timeFrame <= 7:
-            tickSettings.amount = timeFrame;
-            break;
-        case timeFrame > 7 && timeFrame <= 31:
-            tickSettings.amount = 7;
-            break;
-        case timeFrame > 31 && timeFrame <= 366:
-            tickSettings.amount = 6 * layout;
-            break;
-        case timeFrame > 366:
-            tickSettings.amount = Math.min(5, Math.ceil(timeFrame / 365));
-            tickSettings.format = "%Y";
-            break;
-    }
-
-    return tickSettings;
-}
-
-/**
  * Generate array of objects, for each coin type and given timeframe.
  * @param reply
  * @returns {Array}
@@ -309,10 +285,13 @@ function generateCoinTypes(reply) {
     var coinTypes       = [];
 
     var period = 'day';
-    if (parseInt(timeframe) >= 365) {
-        timeframe = 12;
+    if (config['group-dates'] === 'yes' && parseInt(timeframe) >= 366) {
+        timeframe = parseInt(timeframe / 30);
         period = 'year';
     }
+
+    var from;
+    var to;
     var currentParsedDate;
     var currentOrgDate;
 
@@ -332,19 +311,17 @@ function generateCoinTypes(reply) {
 
         for(var i = 0; i <= timeframe; i++) {
             if (period === 'day') {
-                entriesByAmountByDate.filterRange([
-                    calculateDate(0, 0, 0 - timeframe + i,     -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
-                    calculateDate(0, 0, 0 - timeframe + i + 1, -getZero('hours'), -getZero('minutes'), -getZero('seconds') - 1)
-                ]);
-                currentParsedDate = parseTime(calculateDate(0, 0, 0 - timeframe + i, -getZero('hours'), -getZero('minutes'), -getZero('seconds')));
-                currentOrgDate    = calculateDate(0, 0, 0 - timeframe + i,           -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+                from = calculateDate(0, 0, 0 - timeframe + i,     -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+                to   = calculateDate(0, 0, 0 - timeframe + i + 1, -getZero('hours'), -getZero('minutes'), -getZero('seconds') - 1);
+                entriesByAmountByDate.filterRange([from,to]);
+                currentParsedDate = parseTime(from);
+                currentOrgDate    = from;
             } else if (period === 'year') {
-                entriesByAmountByDate.filterRange([
-                    calculateDate(0, 0 - timeframe + i, 0,     -getZero('hours'), -getZero('minutes'), -getZero('seconds')),
-                    calculateDate(0, 0 - timeframe + i + 1, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds') - 1)
-                ]);
-                currentParsedDate = parseTime(calculateDate(0, 0 - timeframe + i, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds')));
-                currentOrgDate    = calculateDate(0, 0 - timeframe + i, 0,           -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+                from = calculateDate(0, 0 - timeframe + i,     0, -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+                to   = calculateDate(0, 0 - timeframe + i + 1, 0, -getZero('hours'), -getZero('minutes'), -getZero('seconds'));
+                entriesByAmountByDate.filterRange([from, to]);
+                currentParsedDate = parseTime(from);
+                currentOrgDate    = from;
             }
             var amount = entriesByAmountByDate.top(Infinity).length;
 
@@ -434,7 +411,7 @@ function generateCoinTypes(reply) {
             id:     "999",
             values: row2
         });
+
     }
-    console.log(coinTypes);
     return coinTypes;
 }
