@@ -28,11 +28,6 @@ var setXYDomain = function(value) {
     ];
 };
 
-
-
-
-
-
 var zoom = d3.zoom()
     .scaleExtent([1, 40])
     .translateExtent([[-100, -100], [width + 90, height]])
@@ -46,7 +41,6 @@ function zoomed() {
     g.attr("transform", d3.event.transform);
     axisXLine.call(xAxisLine.scale(d3.event.transform.rescaleX(xLine)));
 }
-
 
 //Container for the gradients
 var defs = svg.append("defs");
@@ -63,15 +57,12 @@ feMerge.append("feMergeNode")
 feMerge.append("feMergeNode")
     .attr("in","SourceGraphic");
 
-
 var line = d3.line()
     .x(function(d) { return xLine(d.date); })
     .y(function(d) { return yLine(d.quantity); });
 
-
 var xLine = d3.scaleTime().range([0, width * layout - 80]);
 var yLine = d3.scaleLinear().range([height - 25, 25]);
-
 
 var axisXLine = g.append("g");
 var axisYLine = g.append("g");
@@ -122,7 +113,6 @@ focus.append('line')
 focus.append('line')
     .attr('id', 'focusLineY')
     .attr('class', 'focusLine');
-
 
 /**
  * @type {{update: lines.update}}

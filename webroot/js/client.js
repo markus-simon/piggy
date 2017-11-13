@@ -216,8 +216,8 @@ eb.onopen = function()
                 }
 
                 bars.update(newData);
-                updatePie(newData);
-                updateHeader(newData);
+                pie.update(newData);
+                header.update(newData);
 
                 if (!init) {
                     lines.update(newData);

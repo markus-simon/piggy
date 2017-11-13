@@ -42,29 +42,31 @@ svg1.append("text")
 
 /**
  *
- * @param result
+ * @type {{updatePie: (function(*))}}
  */
-function updatePie(result) {
-    var newData = [];
-    result.forEach(function(row) {
-        if (row.type !== 'virtual') {
-            row.idx = coinIndex[row.amount];
-            newData.push(row);
-        }
-    });
+var pie = {
+    update: function(result) {
+        var newData = [];
+        result.forEach(function(row) {
+            if (row.type !== 'virtual') {
+                row.idx = coinIndex[row.amount];
+                newData.push(row);
+            }
+        });
 
-    svg1.datum(newData).select("#gpie").selectAll("path").data(pie1);
-    pie1.value(function(d) { return d.calculatedTotal; });
+        svg1.datum(newData).select("#gpie").selectAll("path").data(pie1);
+        pie1.value(function(d) { return d.calculatedTotal; });
 
-    path1.data(pie1)
-        .transition()
-        .duration(transitionDuration)
-        .ease(transitionEasing)
-        .attr("id", function(d) { return "path_" + d.data.idx })
-        .attr("fill", function(d) { return coinColors[d.data.idx] ? coinColors[d.data.idx] : fallbackColor; })
-        .style('stroke',  colors.background)
-        .attrTween("d", arcTween);
-}
+        path1.data(pie1)
+            .transition()
+            .duration(transitionDuration)
+            .ease(transitionEasing)
+            .attr("id", function(d) { return "path_" + d.data.idx })
+            .attr("fill", function(d) { return coinColors[d.data.idx] ? coinColors[d.data.idx] : fallbackColor; })
+            .style('stroke',  colors.background)
+            .attrTween("d", arcTween);
+    }
+};
 
 /**
  *
