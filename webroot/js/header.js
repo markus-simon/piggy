@@ -14,6 +14,7 @@ var svgHeader = d3.select('#header')
 var headerVerticalMiddle = headerHeight / 2;
 
 var g = svgHeader.append('g')
+    .attr('id', 'headerBg')
     .attr('height', headerHeight)
     .attr('transform', 'translate(0, ' + headerVerticalMiddle + ')')
     .attr("opacity", 0);
@@ -74,36 +75,32 @@ var quantityTotalLabel = g.append("text")
 
 d3.select('#groups').style('padding-top', headerHeight + 'px');
 
-
-var fpsLabel = g.append("text")
-    .attr("id","fps")
-    .attr('x','100px')
-    .attr("class","header-text")
-    .attr("text-anchor", "start")
-    .attr('alignment-baseline', 'central')
-    .style("fill", colors.headerFont)
-    .style("font-size", headerFontSize);
-
-var time0 = Date.now();
-var time1;
-
-d3.timer(function() {
-    time1 = Date.now();
-    fpsLabel.text(parseInt(Math.round(1000 / (time1 - time0))));
-    time0 = time1;
-
-
-/*    time1 = Date.now();
-    fps.text(Math.round(1000 / (time1 - time0)));
-    time0 = time1;*/
-});
-
-
 /**
  *
  * @type {{update: header.update}}
  */
 var header = {
+    init: function(result) {
+        if (config['show-fps'] === 'yes') {
+            var fpsLabel = d3.select('#headerBg').append("text")
+                .attr("id", "fps")
+                .attr('x', '100px')
+                .attr('y', '0px')
+                .attr("class", "header-text")
+                .attr("text-anchor", "start")
+                .attr('alignment-baseline', 'central')
+                .style("fill", colors.headerFont)
+                .style("font-size", headerFontSize);
+
+            var time0 = Date.now();
+            var time1;
+            d3.timer(function () {
+                time1 = Date.now();
+                fpsLabel.text(parseInt(Math.round(1000 / (time1 - time0))));
+                time0 = time1;
+            });
+        }
+    },
     update: function(result) {
         var quantityTotal = 0;
         var sumTotal      = 0;

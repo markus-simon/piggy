@@ -84,6 +84,7 @@ eb.onopen = function()
                 wishesList(reply[0]);
 */
             });
+            header.init();
             bars.init();
         }
     });
