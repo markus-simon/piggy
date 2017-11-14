@@ -49,7 +49,7 @@ var defs = svg.append("defs");
 var filter = defs.append("filter")
     .attr("id","glow");
 filter.append("feGaussianBlur")
-    .attr("stdDeviation","9.5")
+    .attr("stdDeviation","6.5")
     .attr("result","coloredBlur");
 var feMerge = filter.append("feMerge");
 feMerge.append("feMergeNode")
@@ -400,5 +400,6 @@ function generateCoinTypes(reply) {
         });
 
     }
+    console.log(coinTypes);
     return coinTypes;
 }

@@ -140,9 +140,9 @@ var piggySelection = function(type, d, i) {
         });
         d3.selectAll('.line').transition().duration(transitionDuration / 2).style('opacity', function() {
             return (this.id === 'line_' + i) ? 1 : .1;
-        }).style('filter', function() {
-            return (this.id === 'line_' + i) ?  "url(#glow)" : "url(#sss)";
-        });
+        })/*.style('filter', function() {
+            return (this.id === 'line_' + i) ?  "url(#glow)" : null;
+        });*/
 
         d3.selectAll('.area').transition().duration(transitionDuration / 2).style('opacity', function() {
             return (this.id === 'area_' + i) ? 0.1 : 0.01;
