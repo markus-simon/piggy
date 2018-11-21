@@ -24,7 +24,7 @@ repositories {
     }
 }
 
-version = '3.5.0'
+version = '3.5.4'
 
 dependencies {
     compile "io.vertx:vertx-core:$version"
@@ -59,7 +59,7 @@ shadowJar {
 
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.2'
+    gradleVersion = '4.10.2'
 }
 
 configurations {
