@@ -11,7 +11,6 @@ var client = MongoClient.createShared(vertx, {
 var consumerSave = eb.consumer('save');
 consumerSave.handler(function (message) {
     var document = message.body();
-
     if (!document.message_created_at) {
         document.message_created_at = calculateDate();
     }
@@ -118,7 +117,7 @@ consumerRunCommand.handler(function (message) {
     var command = message.body();
     client.runCommand('aggregate', JSON.parse(command) , function (res, res_err) {
         if (res_err === null) {
-            message.reply(res);
+            message.reply(res.cursor);
         } else {
             var reply = {};
             reply.cause  = res_err.toString();

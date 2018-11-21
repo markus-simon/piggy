@@ -196,12 +196,15 @@ eb.onopen = function()
                         "sumTotal": { "$multiply": [ "$sum", "$amount" ] }
                     }
                 }
-            ]
+            ],
+            "cursor": {
+                "batchSize": 999999999
+            }
         };
 
         eb.send("runCommand", JSON.stringify(query), function(reply) {
             if (!reply.cause) {
-                var result  = reply.result;
+                var result  = reply.firstBatch;
                 var newData = [];
 
                 if (config['calculation-base'] === 'quantity') {

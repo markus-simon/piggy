@@ -1,31 +1,6 @@
 var ConfigRetriever = require("vertx-config-js/config_retriever");
 
-/*var httpStore = {
-    "type" : "http",
-    "config" : {
-        "host" : "https://neuron.stayglossy.net",
-        "port" : 19000,
-        "path" : "/conf"
-    }
-};*/
-
-var fileStore = {
-    "type" : "file",
-    "config" : {
-        "path" : "conf.json"
-    }
-};
-
-var options = {
-    "stores" : [
-/*
-        httpStore,
-*/
-        fileStore
-    ]
-};
-
-var retriever = ConfigRetriever.create(vertx, options);
+var retriever = ConfigRetriever.create(vertx);
 
 var verticles = [
     'httpserver.js',
@@ -34,6 +9,7 @@ var verticles = [
     'hue.js',
     'tts.js'
 ];
+
 
 retriever.getConfig(function (res, res_err) {
     if (res_err !== null) {
@@ -55,3 +31,4 @@ retriever.getConfig(function (res, res_err) {
         });
     }
 });
+
